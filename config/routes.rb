@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  
+
   get 'home/documentacion'
 
   get 'home/index'
