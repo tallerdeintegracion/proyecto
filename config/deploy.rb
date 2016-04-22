@@ -1,18 +1,35 @@
 # config valid only for current version of Capistrano
 lock '3.4.1'
 
-set :application, 'ProyectoIntegracion'
-set :repo_url, 'git@github.com:tallerdeintegracion/proyecto.git'
-set :user, "administrator"
-set :scm_passphrase, "ZUtEaUgr"
-set :use_sudo, false
-set :rails_env, "production"
+#set :application, 'ProyectoIntegracion'
+#set :repo_url, 'git@github.com:tallerdeintegracion/proyecto.git'
+#set :user, "administrator"
+#set :scm_passphrase, "ZUtEaUgr"
+#set :use_sudo, false
+#set :rails_env, "production"
 
-set :deploy_via, :copy
+#set :deploy_via, :copy
 
-set :keep_releases, 5
+#set :keep_releases, 5
 
+#set :ssh_options, { :forward_agent => true }
+
+set :application, "ProyectoIntegracion"
+
+# Source code
+set :scm, :git
+set :repository, "git@github.com:tallerdeintegracion/proyecto.git"
+set :branch, "master"
+set :repository_cache, "git_cache"
+set :deploy_via, :remote_cache
 set :ssh_options, { :forward_agent => true }
+
+# Deployment servers
+role :app, "integra3.ing.puc.cl"
+role :web, "integra3.ing.puc.cl"
+role :db,  "integra3.ing.puc.cl", :primary => true
+#set :deploy_to, "/var/www/#{application}"
+
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
