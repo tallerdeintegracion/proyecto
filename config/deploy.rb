@@ -2,9 +2,9 @@
 lock '3.4.1'
 
 set :application, 'ProyectoIntegracion'
-set :repo_url, 'ssh://git@github.com:tallerdeintegracion/proyecto.git'
+set :repo_url, 'git@github.com:tallerdeintegracion/proyecto.git'
 set :user, "administrator"
-set :scm_passphrase, "ZUtEaUgr"
+set :scm_passphrase, ""
 set :use_sudo, false
 set :rails_env, "production"
 
