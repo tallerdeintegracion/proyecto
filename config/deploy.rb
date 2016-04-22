@@ -12,6 +12,7 @@ set :deploy_via, :copy
 
 set :keep_releases, 5
 
+set :ssh_options, { :forward_agent => true }
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
