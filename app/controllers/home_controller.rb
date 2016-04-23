@@ -5,11 +5,13 @@ class HomeController < ApplicationController
 
 
   	#Etaba probando  =)
-  	#almacen id example = 571262aaa980ba030058a1f1
+  	#almacen id example (79 producto)= 571262aaa980ba030058a1f3
+    #producto id 571262aaa980ba030058a23c
   	#@show = getAlmacenes()
-  	#@show = getSKUWithStock('571262aaa980ba030058a1f1')
+  	#@show = getSKUWithStock('571262aaa980ba030058a1f3')
   	#@show = getCuentaFabrica()
-  	
+  	#@show = getStock('571262aaa980ba030058a1f3' , 49 )
+    @show = moverStock( '571262aaa980ba030058a23c', '571262aaa980ba030058a1f1' )
   	
   end
 end
