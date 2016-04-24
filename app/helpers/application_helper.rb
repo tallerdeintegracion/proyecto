@@ -57,9 +57,9 @@ module ApplicationHelper
 		url =bodegaBaseUrl+path+"?"+"productoId="+productoId+'&'+"almacenId="+almacenId
 		#render :text => url
 		String toEncode = "POST"+productoId+almacenId
-		render :text => toEncode
+		#render :text => toEncode
         authHeader = encodeHmac(toEncode)
-       # render :text => authHeader
+        render :text => authHeader
         data =  httpRequest(url, authHeader,"POST")
         return  data
 	end	
