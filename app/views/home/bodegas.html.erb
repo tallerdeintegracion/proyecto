@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+}
+</style>
+</head>
+<body>
+
+<h1>Bodegas</h1>
+<br>
+
+<% @almacenesInfo.each do |almacen| %>
+  <h3>Almacen: <%= almacen["_id"]%>  </h3>
+  <h3>Total Space  <%= almacen["totalSpace"]%> </h3>
+  <h3>Used Space <%= almacen["usedSpace"]%></h3>
+
+  	<table style="width:100%">
+  	<tr>
+    	<th>SKU</th>
+    	<th>Nombre</th>		
+    	<th>Cantidad</th>
+  	</tr>
+  	<% @products = JSON.parse(getSKUWithStock(almacen["_id"]))%>
+  	<% @products.each do |product| %>	
+  	<tr>
+  		<th><%=product["_id"] %>	</th>
+    	<th>Nombre</th>		
+    	<th><%=product["total"] %></th>
+    </tr>
+
+	<% end %>
+
+	</table>
+
+<% end %>
+
+
+</body>
+</html>
