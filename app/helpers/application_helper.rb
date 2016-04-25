@@ -106,12 +106,13 @@ module ApplicationHelper
 		url =bancoBaseUrl+path
 		data =  httpGetRequest(url ,nil)
         return  data
+
 	end
 	def obtenerCartola(fechaInicio , fechaFin, id)
 
 		path ='/cartola'
 		url =bancoBaseUrl+path
-		params = {"fechaInicio": fechaInicio,"fechaFin": fechaFin,"id": id}
+		params = {"fechaInicio"=> fechaInicio,"fechaFin"=> fechaFin,"id"=> id}
 		data =  httpPostRequest(url , nil, params)
 		return  data
 	end
@@ -124,6 +125,22 @@ module ApplicationHelper
 	end
 
 	#orden de compra
+
+	def crearOrdenDeCompra(canal , cantidad , sku , proveedor , precio , notas)
+		path ='/crear'
+		url =ocBaseUrl+path
+		params={ "canal" => canal , 
+				"cantidad" => cantidad,
+				"sku" => sku,
+				"proveedor" => proveedor,
+				"precio" => precio,
+				"notas" => notas
+				}
+
+		#data =  httpPostRequest(url , nil, params)
+		return  data
+
+	end
 
 	def recepcionarOrdenDeCompra(idOrdenDeCompra)
 		path ='/recepcionar/'+idOrdenDeCompra
@@ -139,6 +156,16 @@ module ApplicationHelper
 		params={ "id" => idOrdenDeCompra , "rechazo" => motivo}
 		data =  httpPostRequest(url , nil, params)
 		return  data
+	end
+
+	def anularOrdenDeCompra(idOrdenDeCompra , motivo)
+
+		path ='/anular/'+idOrdenDeCompra
+		url =ocBaseUrl+path
+		params={'id'=> "571262c3a980ba030058ab5d",'motivo'=> "abc"	}
+		data =  httpDeleteRequest(url , nil, params)
+		
+
 	end
 
 	def obtenerOrdenDeCompra(idOrdenDeCompra)
@@ -176,6 +203,31 @@ module ApplicationHelper
 
         uri = URI.parse(url)
         http = Net::HTTP.new(uri.host, uri.port)
+
+        if params.nil?
+		response = http.post(uri.path,'{}', headers)
+		else
+		response = http.post(uri.path, params.to_json, headers)	 
+		end	
+    	data = response.body
+
+	end
+
+
+
+
+
+	def httpPutRequest( url, authHeader ,params)
+		require 'net/http'
+		require 'uri'
+		
+		if authHeader.nil?
+		headers = {'Content-Type' => 'application/json'}
+		else
+		headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
+		end	
+        uri = URI.parse(url)
+        http = Net::HTTP::Put.new(uri.host)
         if params.nil?
 		response = http.post(uri.path,'{}', headers)
 		else
@@ -184,6 +236,28 @@ module ApplicationHelper
     	data = response.body
 	end
 
+
+
+	def httpDeleteRequest( url, authHeader ,params)
+		
+		require 'net/http'
+		require 'uri'
+		if authHeader.nil?
+		headers = {'Content-Type' => 'application/json'}
+		else
+		headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
+		end	
+        uri = URI.parse(url)
+        http = Net::HTTP::Delete.new(uri.host)
+        http.set_form_data(params)
+        if params.nil?
+		response = http.delete(uri.path)
+		else
+		response = http.delete(uri.path)	  
+		end	
+    	data = response.body
+
+	end
 
 	def httpGetRequest( url, authHeader)
 		require 'net/http'
@@ -194,7 +268,6 @@ module ApplicationHelper
 		else
 			headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
 		end	
-
         uri = URI.parse(url)    
         request = Net::HTTP::Get.new(uri, headers)
         response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) }
