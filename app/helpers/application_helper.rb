@@ -10,7 +10,12 @@ module ApplicationHelper
 	def bancoBaseUrl
 		return 'http://mare.ing.puc.cl/banco'
 	end
-
+	def ocBaseUrl
+		return 'http://mare.ing.puc.cl/oc'
+	end
+	def facturaBaseUrl
+		return 'http://mare.ing.puc.cl/facturas'
+	end
 
 
 	## Metodos bodega###
@@ -118,6 +123,44 @@ module ApplicationHelper
 	
 	end
 
+	#orden de compra
+
+	def recepcionarOrdenDeCompra(idOrdenDeCompra)
+		path ='/recepcionar/'+idOrdenDeCompra
+		url =ocBaseUrl+path
+		params={ "id" => idOrdenDeCompra }
+		data =  httpPostRequest(url , nil, params)
+		return  data
+	
+	end
+	def rechazarOrdenDeCompra(idOrdenDeCompra, motivo)
+		path ='/rechazar/'+idOrdenDeCompra
+		url =ocBaseUrl+path
+		params={ "id" => idOrdenDeCompra , "rechazo" => motivo}
+		data =  httpPostRequest(url , nil, params)
+		return  data
+	end
+
+	def obtenerOrdenDeCompra(idOrdenDeCompra)
+		path ='/obtener/'+idOrdenDeCompra
+		url =ocBaseUrl+path
+        data =  httpGetRequest(url , nil )
+        return  data
+
+	end
+
+	#Sistema facturas
+	def emitirFactura (idOrdenDeCompra )
+
+	end
+	def obtenerFactura(idfactura)
+
+		path ='/'+idfactura
+		url =facturaBaseUrl+path
+        data =  httpGetRequest(url , nil )
+        return  data
+	end
+
 
 
 
@@ -130,10 +173,14 @@ module ApplicationHelper
 		else
 		headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
 		end	
+
         uri = URI.parse(url)
         http = Net::HTTP.new(uri.host, uri.port)
-		response = http.post(uri.path, params.to_json, headers)
-
+        if params.nil?
+		response = http.post(uri.path,'{}', headers)
+		else
+		response = http.post(uri.path, params.to_json, headers)	 
+		end	
     	data = response.body
 	end
 
