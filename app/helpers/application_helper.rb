@@ -125,6 +125,14 @@ module ApplicationHelper
 	end
 
 	#orden de compra
+	#
+	#
+	#
+	#
+	#
+	#
+	#
+	#
 
 	def crearOrdenDeCompra(canal , cantidad , sku , proveedor , precio , notas)
 		path ='/crear'
@@ -177,6 +185,15 @@ module ApplicationHelper
 	end
 
 	#Sistema facturas
+	#
+	#
+	#
+	#
+	#
+	#
+	#
+	#
+	#
 	def emitirFactura (idOrdenDeCompra )
 
 	end
