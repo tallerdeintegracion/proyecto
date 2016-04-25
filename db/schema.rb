@@ -11,7 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160425193013) do
+ActiveRecord::Schema.define(version: 20160425231031) do
+
+  create_table "formulas", force: :cascade do |t|
+    t.string   "sku",               limit: 255
+    t.string   "descripcion",       limit: 255
+    t.integer  "lote",              limit: 4
+    t.integer  "unidad",            limit: 4
+    t.string   "skuIngerdiente",    limit: 255
+    t.string   "ingrediente",       limit: 255
+    t.integer  "requerimiento",     limit: 4
+    t.integer  "unidadIngrediente", limit: 4
+    t.integer  "precioIngrediente", limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  create_table "precios", force: :cascade do |t|
+    t.string   "sku",            limit: 255
+    t.string   "descripcion",    limit: 255
+    t.integer  "precioUnitario", limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
 
   create_table "skus", force: :cascade do |t|
     t.string   "sku",              limit: 255

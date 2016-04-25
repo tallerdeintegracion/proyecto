@@ -1,0 +1,53 @@
+<%= form_for(@formula) do |f| %>
+  <% if @formula.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@formula.errors.count, "error") %> prohibited this formula from being saved:</h2>
+
+      <ul>
+      <% @formula.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :sku %><br>
+    <%= f.text_field :sku %>
+  </div>
+  <div class="field">
+    <%= f.label :descripcion %><br>
+    <%= f.text_field :descripcion %>
+  </div>
+  <div class="field">
+    <%= f.label :lote %><br>
+    <%= f.number_field :lote %>
+  </div>
+  <div class="field">
+    <%= f.label :unidad %><br>
+    <%= f.number_field :unidad %>
+  </div>
+  <div class="field">
+    <%= f.label :skuIngerdiente %><br>
+    <%= f.text_field :skuIngerdiente %>
+  </div>
+  <div class="field">
+    <%= f.label :ingrediente %><br>
+    <%= f.text_field :ingrediente %>
+  </div>
+  <div class="field">
+    <%= f.label :requerimiento %><br>
+    <%= f.number_field :requerimiento %>
+  </div>
+  <div class="field">
+    <%= f.label :unidadIngrediente %><br>
+    <%= f.number_field :unidadIngrediente %>
+  </div>
+  <div class="field">
+    <%= f.label :precioIngrediente %><br>
+    <%= f.number_field :precioIngrediente %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

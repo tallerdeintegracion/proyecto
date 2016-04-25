@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Formulas</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sku</th>
+      <th>Descripcion</th>
+      <th>Lote</th>
+      <th>Unidad</th>
+      <th>Skuingerdiente</th>
+      <th>Ingrediente</th>
+      <th>Requerimiento</th>
+      <th>Unidadingrediente</th>
+      <th>Precioingrediente</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @formulas.each do |formula| %>
+      <tr>
+        <td><%= formula.sku %></td>
+        <td><%= formula.descripcion %></td>
+        <td><%= formula.lote %></td>
+        <td><%= formula.unidad %></td>
+        <td><%= formula.skuIngerdiente %></td>
+        <td><%= formula.ingrediente %></td>
+        <td><%= formula.requerimiento %></td>
+        <td><%= formula.unidadIngrediente %></td>
+        <td><%= formula.precioIngrediente %></td>
+        <td><%= link_to 'Show', formula %></td>
+        <td><%= link_to 'Edit', edit_formula_path(formula) %></td>
+        <td><%= link_to 'Destroy', formula, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Formula', new_formula_path %>

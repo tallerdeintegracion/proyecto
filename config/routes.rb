@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
   
 
+  resources :precios
+  resources :formulas
   resources :skus
   get 'home/documentacion'
   get 'skus/index'
@@ -9,7 +11,16 @@ Rails.application.routes.draw do
   get 'skus/show'
   get 'skus/edit'
   get 'skus/destroy'
-
+  get 'formulas/index'
+  get 'formulas/new'
+  get 'formulas/show'
+  get 'formulas/edit'
+  get 'formulas/destroy'
+  get 'precios/index'
+  get 'precios/new'
+  get 'precios/show'
+  get 'precios/edit'
+  get 'precios/destroy'
   root 'home#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
