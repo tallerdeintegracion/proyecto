@@ -62,6 +62,7 @@ namespace :final do
   desc 'Arregla datos'
   task :ejecutar do
     on roles(:app) do
+    execute "rm #{ current_path }/config/database.yml"
     execute "ln -s #{ deploy_to }/shared/config/database.yml #{ current_path }/config/database.yml"
     execute "touch #{ File.join(current_path, 'tmp', 'restart.txt') }"
     execute "passenger-config restart-app"
