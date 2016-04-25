@@ -2,9 +2,14 @@ Rails.application.routes.draw do
 
   
 
+  resources :skus
   get 'home/documentacion'
+  get 'skus/index'
+  get 'skus/new'
+  get 'skus/show'
+  get 'skus/edit'
+  get 'skus/destroy'
 
-  get 'home/index'
   root 'home#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

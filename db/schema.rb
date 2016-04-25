@@ -11,6 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20160425193013) do
+
+  create_table "skus", force: :cascade do |t|
+    t.string   "sku",              limit: 255
+    t.string   "descripcion",      limit: 255
+    t.string   "tipo",             limit: 255
+    t.string   "grupoProyecto",    limit: 255
+    t.string   "unidades",         limit: 255
+    t.integer  "costoUnitario",    limit: 4
+    t.integer  "loteProduccion",   limit: 4
+    t.float    "tiempoProduccion", limit: 24
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
 
 end

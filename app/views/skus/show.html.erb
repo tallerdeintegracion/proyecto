@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Sku:</strong>
+  <%= @sku.sku %>
+</p>
+
+<p>
+  <strong>Descripcion:</strong>
+  <%= @sku.descripcion %>
+</p>
+
+<p>
+  <strong>Tipo:</strong>
+  <%= @sku.tipo %>
+</p>
+
+<p>
+  <strong>Grupoproyecto:</strong>
+  <%= @sku.grupoProyecto %>
+</p>
+
+<p>
+  <strong>Unidades:</strong>
+  <%= @sku.unidades %>
+</p>
+
+<p>
+  <strong>Costounitario:</strong>
+  <%= @sku.costoUnitario %>
+</p>
+
+<p>
+  <strong>Loteproduccion:</strong>
+  <%= @sku.loteProduccion %>
+</p>
+
+<p>
+  <strong>Tiempoproduccion:</strong>
+  <%= @sku.tiempoProduccion %>
+</p>
+
+<%= link_to 'Edit', edit_sku_path(@sku) %> |
+<%= link_to 'Back', skus_path %>
