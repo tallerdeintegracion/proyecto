@@ -15,7 +15,7 @@ class HomeController < ApplicationController
     #@show = obtenerCartola(1429832246 , 1461454686, '571262c3a980ba030058ab5d')
     #@show = obtenerTransaccion('1234')
     @show = obtenerCuenta('571262c3a980ba030058ab5d')
-
+    @show = "ejemplo";
   	
   end
 end
