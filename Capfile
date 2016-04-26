@@ -14,7 +14,9 @@ require 'capistrano/deploy'
 #   https://github.com/capistrano/bundler
 #   https://github.com/capistrano/rails
 #   https://github.com/capistrano/passenger
-#
+
+## es para gema tde shedules
+require "whenever/capistrano"
 require 'capistrano/rvm'
 # require 'capistrano/rbenv'
 # require 'capistrano/chruby'

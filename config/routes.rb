@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
   
 
+  get 'receive_orders/receive'
+
   resources :precios
   resources :formulas
   resources :skus
