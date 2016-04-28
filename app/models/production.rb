@@ -24,4 +24,17 @@ def self.lastProductionQuantity(sku)
 	return prod.cantidad
 
 end	
+
+def updateProduccion(cantidad , sku)
+	prod = Production.find_by(sku: sku)
+	if prod.nil?
+		prod.timeStamp=Time.now.to_i
+		prod.cantidad = cantidad
+	else
+		prod = Production.new	
+		prod.sku = sku
+		prod.cantidad =cantidad
+		prod.timeStamp= Time.now.to_i
+	end
+end
 end
