@@ -18,6 +18,7 @@ module ApplicationHelper
 	end
 
 
+
 	## Metodos bodega###
 	# -getAlmacenes
 	# -getSKUWithStock
