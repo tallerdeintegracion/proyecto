@@ -4,6 +4,10 @@ module ApplicationHelper
 
 	
 
+	
+
+
+
 	def bodegaBaseUrl
 		return 'http://integracion-2016-dev.herokuapp.com/bodega'
 	end
@@ -101,6 +105,21 @@ module ApplicationHelper
 	# => obtener cartola
 	# => obtener cuenta
 	# => transferir
+
+	def transferir(monto , origen , destino  )
+
+		path ='/trx'
+		url =bancoBaseUrl+path
+		params = { 
+			"monto" => monto,
+			"origen" => origen,
+			"destino" => destino
+		}
+
+		data =  httpPutRequest(url , nil, params)
+		return  data
+
+	end
 
 	def obtenerTransaccion(id)
 		path ='/trx/'+id
@@ -227,6 +246,7 @@ module ApplicationHelper
 		else
 		response = http.post(uri.path, params.to_json, headers)	 
 		end	
+
     	data = response.body
 
 	end
@@ -238,20 +258,25 @@ module ApplicationHelper
 	def httpPutRequest( url, authHeader ,params)
 		require 'net/http'
 		require 'uri'
+		require 'httparty'
 		
 		if authHeader.nil?
 		headers = {'Content-Type' => 'application/json'}
 		else
 		headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
 		end	
+        
         uri = URI.parse(url)
-        http = Net::HTTP::Put.new(uri.host)
+        http = Net::HTTP::new(uri.host, uri.port)
+
+		
         if params.nil?
-		response = http.post(uri.path,'{}', headers)
+			response = HTTParty.put(urls, :headers =>authHeader)
 		else
-		response = http.post(uri.path, params.to_json, headers)	 
+			response = HTTParty.put(url,:headers =>authHeader,:body => params )
 		end	
-    	data = response.body
+    	data =  response.body
+    	return data
 	end
 
 

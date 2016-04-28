@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
   
 
+  get 'inventario/run'
+
   get 'receive_orders/receive'
 
   resources :precios
