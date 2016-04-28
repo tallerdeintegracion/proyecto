@@ -87,6 +87,20 @@ module ApplicationHelper
         return  data
 	end	
 
+	def producirStock(sku , trxId , cantidad)
+		path ='/fabrica/fabricar'
+		url =bodegaBaseUrl+path
+		params = { 
+			"sku" => sku,
+			"trxId" => trxId,
+			"cantidad" => cantidad
+		}
+		String toEncode = "PUT"+sku+cantidad.to_s+trxId
+		authHeader = encodeHmac(toEncode)
+		data =  httpPutRequest(url , authHeader, params)
+		return  data
+	end	
+
 
 	def getCuentaFabrica()
 
@@ -234,7 +248,7 @@ module ApplicationHelper
 		if authHeader.nil?
 			headers = {'Content-Type' => 'application/json'}
 		else
-		headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
+			headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
 		end	
 
         uri = URI.parse(url)
@@ -260,9 +274,9 @@ module ApplicationHelper
 		require 'httparty'
 		
 		if authHeader.nil?
-		headers = {'Content-Type' => 'application/json'}
+			headers = {"Content-Type" => "application/json"}
 		else
-		headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
+			headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
 		end	
         
         uri = URI.parse(url)
@@ -270,9 +284,12 @@ module ApplicationHelper
 
 		
         if params.nil?
-			response = HTTParty.put(urls, :headers =>authHeader)
+			#response = HTTParty.put(url, :headers => headers)
 		else
-			response = HTTParty.put(url,:headers =>authHeader,:body => params )
+			response = HTTParty.put(url ,
+				:headers =>  headers,
+				:body => params.to_json	
+				)
 		end	
     	data =  response.body
     	return data

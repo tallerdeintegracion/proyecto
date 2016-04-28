@@ -40,8 +40,15 @@ class InventarioController < ApplicationController
   def self.checkMateriasPrimas(bodega)
 
   sku = "8"	
+  costeTrigo =1313
+  tamañoLote = 100
+
+
   stock = checkStock(sku, bodega)
   lotes = calcularLotes(stock, sku)
+  	if lotes > 0
+  	producirMateriaPrima(sku , lotes  , tamañoLote ,costeTrigo)
+	end
 
 
   end
@@ -77,16 +84,18 @@ class InventarioController < ApplicationController
 
 
 
-  def self.producir(sku , lotes , trx)
+  def self.producirMateriaPrima(sku , lotes ,tamañoLote , costoUnitario)
 
-  	cuentaFabrica = getCuentaFabrica.cuentaId.to_s
-  	cuentaGrupo = "571262c3a980ba030058ab5d"
+  	#cuentaFabrica = getCuentaFabrica.cuentaId.to_s
+  	#cuentaGrupo = "571262c3a980ba030058ab5d"
+  	#monto= lotes*(tamañoLote*costoUnitario)
+
 
   	
   end
 
   
-
+#572283e304c78e0300ce3ee2"
 
 
 end

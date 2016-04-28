@@ -13,8 +13,8 @@ class HomeController < ApplicationController
   	#@show = getAlmacenes()
   	#show = getSKUWithStock('571262aaa980ba030058a1f3')
   	#@show= getCuentaFabrica()
-    @show= transferir(10 , "571262c3a980ba030058ab5d", "571262aea980ba030058a5d8")
-
+    #@show= transferir(10 , "571262c3a980ba030058ab5d", "571262aea980ba030058a5d8")
+    @show = producirStock("8","572283e304c78e0300ce3ee2", 10 )
     #@show = getStock('571262aaa980ba030058a1f3' , 49 ,10)  
     #@show = moverStock( '571262aaa980ba030058a23c', '571262aaa980ba030058a1f3' )
     #@moverStock = moverStockBodega( '571262aaa980ba030058a23c', '571262aaa980ba030058a1f3' )
