@@ -16,4 +16,11 @@ every 1.minute do
   runner "ReceiveOrdersController.run", :output => 'log/shedule_logs.log' 
 
 end
+
+every 1.minute do
+
+  runner "InventarioController.run", :output => 'log/inventario_logs.log'
+   
+
+end
 # Learn more: http://github.com/javan/whenever
