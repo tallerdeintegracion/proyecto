@@ -18,23 +18,26 @@ def self.lastProductionQuantity(sku)
 
 	prod = Production.find_by(sku: sku)
 	if prod.nil?
-		return 0 ##numero suficientemente grande
+		return 0 
 	end	
 
 	return prod.cantidad
 
 end	
 
-def updateProduccion(cantidad , sku)
-	prod = Production.find_by(sku: sku)
-	if prod.nil?
-		prod.timeStamp=Time.now.to_i
-		prod.cantidad = cantidad
-	else
+def self.updateProduction(cantidad , sku)
+
+	
+		p "creating new element"
 		prod = Production.new	
 		prod.sku = sku
 		prod.cantidad =cantidad
-		prod.timeStamp= Time.now.to_i
-	end
+		prod.disponible= Time.now
+		prod.save
+		p Production.find_by(sku)
+	
 end
+
+
+
 end

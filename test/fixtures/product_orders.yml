@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sku: 
+  cantidad: 1
+  disponibe: 2016-04-29 08:30:11
+
+two:
+  sku: 
+  cantidad: 1
+  disponibe: 2016-04-29 08:30:11
