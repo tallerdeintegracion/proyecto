@@ -15,8 +15,8 @@ class InventarioController < ApplicationController
   
   def self.run
   
-  @returnPoint = 300
-  @bodegaPrincipal = "571262aaa980ba030058a149"
+  @returnPoint = 500
+  @bodegaPrincipal = "571262aaa980ba030058a1f3"
   @cuentaGrupo = "571262c3a980ba030058ab5d"
   @cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
   puts "Inicia revicion de inventario "
@@ -43,22 +43,29 @@ class InventarioController < ApplicationController
   puts "### Lotes a producir " + lotes.to_s
   
   monto = lotes*coste*tamañoLote	
- 	if lotes < 0
+ 	if lotes <= 0
  		puts "### No es necesario producir"
  		return	
  	end
-  ## trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
+  trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
   puts "### Transferencia exitosa " + trx
   cantidad= lotes*tamañoLote
   detallesProd = producir(sku, trx, cantidad)
   p detallesProd
 
  	 ### Agregarhistorial de producciones
-
+ actualizarRegistoProduccion(detallesProd , sku , cantidad)
  	 
 
   end	
 
+  def self.actualizarRegistoProduccion(detallesProd , sku , cantidad)
+
+  jsonDetalles = JSON.parse(detallesProd)
+  disponible= jsonDetalles["disponible"]
+  Production.find_or_create_by(sku: sku , cantidad: cantidad , disponible: disponible)
+
+  end	
   def self.pagar(monto , origen , destino)
 
 
@@ -152,6 +159,6 @@ class InventarioController < ApplicationController
 
   
 #572283e304c78e0300ce3ee2"
-
-
+#Ejemplo respuesta prod
+#"{\"__v\":0,\"created_at\":\"2016-04-29T19:03:07.371Z\",\"updated_at\":\"2016-04-29T19:03:07.371Z\",\"sku\":\"8\",\"grupo\":3,\"cantidad\":200,\"_id\":\"5723afeb5f9931030058a3f0\",\"disponible\":\"2016-04-29T20:15:19.611Z\",\"despachado\":false}"
 end
