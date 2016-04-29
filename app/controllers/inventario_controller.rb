@@ -2,6 +2,7 @@ class InventarioController < ApplicationController
  	
  	
  	extend	ApplicationHelper
+ 	#include	ProductOrdersController
  	
 
 #6	Crema	Producto procesado	3	Lts	  2,402 	  30 	0.979
@@ -13,85 +14,140 @@ class InventarioController < ApplicationController
 
   
   def self.run
-  @returnPoint = 200
-  @loteSku8 = 100
-  bodegaPrincipal = "571262aaa980ba030058a1f3"
+  
+  @returnPoint = 300
+  @bodegaPrincipal = "571262aaa980ba030058a149"
+  @cuentaGrupo = "571262c3a980ba030058ab5d"
+  @cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
   puts "Inicia revicion de inventario "
-  checkMateriasPrimas(bodegaPrincipal)
+  
+  cleanProduccionesDespachadas()
+  checkMateriasPrimas(@bodegaPrincipal)
   end
+	
+  def self.checkMateriasPrimas(bodega)
 
+  ##TODO sacar info de bases de datos y replicas 
+  sku = "8"	
+  coste =1313
+  tamañoLote = 100
+
+
+  stock = checkStock(sku, bodega)
+  puts "### Stock del " + sku.to_s + " es de " + stock.to_s 
+	
+  produccion = enProduccion(sku)
+  puts "### Existen en produccion " + produccion.to_s
+
+  lotes = calcularLotes(stock, produccion , tamañoLote, @returnPoint)
+  puts "### Lotes a producir " + lotes.to_s
+  
+  monto = lotes*coste*tamañoLote	
+ 	if lotes < 0
+ 		puts "### No es necesario producir"
+ 		return	
+ 	end
+  ## trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
+  puts "### Transferencia exitosa " + trx
+  cantidad= lotes*tamañoLote
+  detallesProd = producir(sku, trx, cantidad)
+  p detallesProd
+
+ 	 ### Agregarhistorial de producciones
+
+ 	 
+
+  end	
+
+  def self.pagar(monto , origen , destino)
+
+
+  	trx = JSON.parse(transferir(monto , origen, destino))['_id']
+  	if trx.nil?
+  		p "#### Hubo un error en la transferencia !!" 
+  		return	
+  	end
+  	return trx
+
+  end	
+
+  def self.producir(sku , trx , cantidad )
+
+	prod =producirStock(sku , trx , cantidad)
+	return prod
+
+
+  end	
   def self.checkStock(sku , bodega)
   	require 'json'
   	result = JSON.parse(getSKUWithStock(bodega))
   	stock =0
 	for counter in 0..(result.length-1)
+
 		actualSku =result[counter]['_id'].to_i
 		actualTotal =result[counter]['total'].to_i
+
 		if(sku == actualSku)
 			stock = actualTotal 
 		end
 	end
-	puts "Actualmente hay " + stock.to_s+ " del sku "+ sku.to_s 
 	return actualTotal
   		
   end
 
 
-  def self.checkMateriasPrimas(bodega)
-
-  sku = "8"	
-  costeTrigo =1313
-  tamañoLote = 100
-
-
-  stock = checkStock(sku, bodega)
-  lotes = calcularLotes(stock, sku)
-  	if lotes > 0
-  	producirMateriaPrima(sku , lotes  , tamañoLote ,costeTrigo)
-	end
-
+  def self.enProduccion(sku)
+  		
+  	produccion = Production.where(sku: sku)
+  	if produccion.nil?
+  	return 0
+  	else
+  	return produccion.sum("cantidad")
+  	end
 
   end
 
 
-  def self.calcularLotes(stock , sku )
+  def self.calcularLotes(stock , enproduccion , tamañoLote ,returnPoint )
 
-  	tMedioProd = 4
-
-
-  	difTime = Production.timeStampDiference(sku)
-  	lastProd = Production.lastProductionQuantity(sku)
-
-  	if tMedioProd < difTime
-  		newReturnPoint = @returnPoint - lastProd
-  	else
-  		newReturnPoint = @returnPoint
-  	end
-  	 
-  	lotes = (newReturnPoint-stock)/@loteSku8
-
-  	p "Se deveven producir  " + lotes.to_s
-
-  	if lotes < 1 
+  	total= stock + enproduccion
+  	faltante = returnPoint - total
+  	lotes = (faltante/tamañoLote).to_i
+  	if lotes < 0
   		return 0
-  	else
-  		return lotes
-  	end
+  	end	
+  	return lotes
 
-  
-  
   end
+
+
+  def self.cleanProduccionesDespachadas()
+  	
+  	time = Time.now
+  	produccion = Production.where( 'disponible <= ?', time ).destroy_all
+	
+  end	
 
 
 
   def self.producirMateriaPrima(sku , lotes ,tamañoLote , costoUnitario)
 
-  	#cuentaFabrica = getCuentaFabrica.cuentaId.to_s
-  	#cuentaGrupo = "571262c3a980ba030058ab5d"
-  	#monto= lotes*(tamañoLote*costoUnitario)
+  	cuentaGrupo = "571262c3a980ba030058ab5d"
+  	cuentaFabrica =  JSON.parse(getCuentaFabrica)["cuentaId"]
+  	monto= lotes*(tamañoLote*costoUnitario)
 
+  
 
+  	#trx = JSON.parse(transferir(monto , cuentaGrupo, cuentaFabrica))['_id']
+  	#if trx.nil?
+  	#	p Error en la transaccion 
+  	#	return	
+  	#end
   	
+  	#prod =producirStock(sku , trx , lotes*tamañoLote)
+  	#p prod
+ 	Production.updateProduction(lotes*tamañoLote , sku)
+
   end
 
   

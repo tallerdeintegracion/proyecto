@@ -3,7 +3,7 @@ class CreateProductions < ActiveRecord::Migration
     create_table :productions do |t|
       t.string :sku
       t.integer :cantidad
-      t.integer :timeStamp
+      t.datetime :disponible
 
       t.timestamps null: false
     end
