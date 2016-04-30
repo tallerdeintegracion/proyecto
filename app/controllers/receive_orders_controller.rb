@@ -30,6 +30,8 @@ def self.connect()
     port = 22
 
     sftp = Net::SFTP.start(host, username, :password => password) 
+
+    return sftp
  	
 	
 end 
