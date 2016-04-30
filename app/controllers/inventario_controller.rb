@@ -18,8 +18,10 @@ class InventarioController < ApplicationController
   definirVariables 
   puts "\n \n #{Time.now}  Inicia revicion de inventario "
   
+
+
   cleanProduccionesDespachadas()
-  recibirMateriasPrimas(@bodegaRecepcion , @bodegaPrincipal)
+  vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal)
   checkMateriasPrimas(@bodegaPrincipal)
   end
 	
@@ -28,14 +30,20 @@ class InventarioController < ApplicationController
   	@returnPoint = 400
   	@bodegaPrincipal = "571262aaa980ba030058a1f3"
   	@bodegaRecepcion = "571262aaa980ba030058a1f1"
+  	@bodegaPulmon = "571262aaa980ba030058a23e"
   	@cuentaGrupo = "571262c3a980ba030058ab5d"
   	@cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
 
   end	
+
+
+
   def self.checkMateriasPrimas(bodega)
 
   ##TODO sacar info de bases de datos y replicas 
   puts "3) #{Time.now}  Revisando si son necesarias materias primas "
+  
+
   sku = "8"	
   coste =1313
   tamañoLote = 100
@@ -59,7 +67,7 @@ class InventarioController < ApplicationController
   puts "### Transferencia exitosa " + trx
   cantidad= lotes*tamañoLote
   detallesProd = producir(sku, trx, cantidad)
-  p detallesProd
+  p "### se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
 
  actualizarRegistoProduccion(detallesProd , sku , cantidad)
  	 
@@ -89,9 +97,8 @@ class InventarioController < ApplicationController
 
 	prod =producirStock(sku , trx , cantidad)
 	return prod
-
-
   end	
+
 
   def self.checkStock(sku , bodega)
   	require 'json'
@@ -100,7 +107,6 @@ class InventarioController < ApplicationController
   	if result.nil?
   		return 0
   	end	
-
   	stock =0
 	for counter in 0..(result.length-1)
 
@@ -113,14 +119,13 @@ class InventarioController < ApplicationController
 	end
 
 	if stock.nil?
-		# Error 
+	  # Error 
 		return 9000000 
 	end
 
 	return stock
   		
   end
-
 
   def self.enProduccion(sku)
   		
@@ -155,20 +160,27 @@ class InventarioController < ApplicationController
 	produccion.destroy_all
   end	
 
+  def self.vaciarAlmacenesRecepcion(bodegaRecepcion , bodegaPulmon, bodegaPrincipal)
+	
+	puts "2) #{Time.now} Reciviendo materias primas "
+  	sku = "8"
+
+  	recibirMateriasPrimas(sku, bodegaRecepcion, bodegaPrincipal)
+  	recibirMateriasPrimas(sku, bodegaPulmon, bodegaPrincipal)
 
 
-  def self.recibirMateriasPrimas( almacenRecepcion , bodegaMateriasPrimas)
-  		puts "2) #{Time.now} Reciviendo materias primas "
-  		sku= 8 
-  		stock = checkStock(sku ,almacenRecepcion) 
+  end	
+
+
+  def self.recibirMateriasPrimas( sku , almacenRecepcion , bodegaMateriasPrimas)
   		
-  		puts "### Stock de " + stock.to_s + " disponibles en almacen de recepcion"	
+  		
+  		stock = checkStock(sku ,almacenRecepcion) 	
+  		puts "### Stock de " + stock.to_s + " disponibles en almacen de recepcion "	+ almacenRecepcion
 
   		if stock == 0
   			return
   		end
-
-
 
   		while stock > 0
   			stock = checkStock(sku ,almacenRecepcion)
@@ -181,9 +193,8 @@ class InventarioController < ApplicationController
 			moveProducts(resp ,cantidadMover,  bodegaMateriasPrimas )
 			
   		end	
-  
-
   end 	
+
 
   def self.moveProducts(products , cantidad , destino)
   	puts "### Moviendo  " + cantidad.to_s + " a bodega principal"
@@ -196,13 +207,11 @@ class InventarioController < ApplicationController
   		id = products[counter]["_id"]
   		moverStock(id , destino)
   	end
-
   end	
 
- 
+
+	 
 
   
-#572283e304c78e0300ce3ee2"
-#Ejemplo respuesta prod
-#"{\"__v\":0,\"created_at\":\"2016-04-29T19:03:07.371Z\",\"updated_at\":\"2016-04-29T19:03:07.371Z\",\"sku\":\"8\",\"grupo\":3,\"cantidad\":200,\"_id\":\"5723afeb5f9931030058a3f0\",\"disponible\":\"2016-04-29T20:15:19.611Z\",\"despachado\":false}"
+
 end
