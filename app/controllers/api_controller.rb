@@ -28,6 +28,7 @@ class ApiController < ApplicationController
 
   def ocRecibir
     id = params[:id]
-    result = ReceiveOrdersController.analizarOC(id)    
+    result = ReceiveOrdersController.analizarOC(id)  
+    render :json => {:aceptado => false, :idoc => id}  #el false debiera se result
   end
 end
