@@ -93,10 +93,15 @@ def self.processOrder(id , sku , cantidad)
     puts "oc existente en el sistema"+"\n"
   else
     rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
-    puts "oc NO EXISTE en el sistema o tiene errores"+"\n"    
-    
-  end
-  #puts "oc cantidad: "+ oc[0]['cantidad'].to_s+ " . oc sku: "+ oc[0]['sku'].to_s+"\n"
+    puts "oc NO EXISTE en el sistema o tiene errores"+"\n"        
+  end  
+  #analizarOC(id)
+
+end
+
+def self.analizarOC(id)
+  require 'json'
+    #puts "oc cantidad: "+ oc[0]['cantidad'].to_s+ " . oc sku: "+ oc[0]['sku'].to_s+"\n"
   oc_db = Oc.where(oc: id)
   if oc_db.nil?
     Oc.find_or_create_by(oc: id , estados: "defectuosa")#los estados son: defectuosa, aceptada, rechazada
@@ -105,10 +110,9 @@ def self.processOrder(id , sku , cantidad)
     puts "AAAAA             "+ oc_db.oc.to_s
     Oc.where(oc: id).limit(1).update_all( "estados = 'aceptada'")
   end    
- 
-
-
   
+
+
   if sku != "6" && sku != "55" && sku != "49" && sku != "8" && sku != "14" && sku != "31" #&& sku != "52" && sku != "20" && sku != "2" && sku != "7"
     #si no son los sku que producimos (son 6). Los 4 faltantes los requerimos pero no producimos 
     rechazarOrdenDeCompra(id, "No producimos algunos de los requerimientos")
@@ -134,11 +138,6 @@ def self.processOrder(id , sku , cantidad)
       
     end
   end
-
-end
-
-def self.analizarOC(id)
-
 
     return true
 end
