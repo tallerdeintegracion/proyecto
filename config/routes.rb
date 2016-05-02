@@ -34,6 +34,7 @@ end
 #  post 'api/pagos/recibir/:id' => 'api#pagosRecibir'
 #  post 'api/oc/recibir/:id' => 'api#ocRecibir'
 
+  resources :ocs
   resources :product_orders
   get 'inventario/run'
 

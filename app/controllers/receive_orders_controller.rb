@@ -93,15 +93,26 @@ def self.processOrder(id , sku , cantidad)
     puts "oc existente en el sistema"+"\n"
   else
     rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
-    puts "oc NO EXISTE en el sistema o tiene errores"+"\n"
-    return 0
+    puts "oc NO EXISTE en el sistema o tiene errores"+"\n"    
+    
   end
   #puts "oc cantidad: "+ oc[0]['cantidad'].to_s+ " . oc sku: "+ oc[0]['sku'].to_s+"\n"
+  oc_db = Oc.where(oc: id)
+  if oc_db.nil?
+    Oc.find_or_create_by(oc: id , estados: "defectuosa")#los estados son: defectuosa, aceptada, rechazada
+  else
+    #oc_id_db = oc_db
+    puts "AAAAA             "+ oc_db.oc.to_s
+    Oc.where(oc: id).limit(1).update_all( "estados = 'aceptada'")
+  end    
+ 
+
 
   
   if sku != "6" && sku != "55" && sku != "49" && sku != "8" && sku != "14" && sku != "31" #&& sku != "52" && sku != "20" && sku != "2" && sku != "7"
     #si no son los sku que producimos (son 6). Los 4 faltantes los requerimos pero no producimos 
     rechazarOrdenDeCompra(id, "No producimos algunos de los requerimientos")
+    #Oc.find_or_create_by(oc: id , estados: "rechazada")#los estados son: defectuosa, aceptada, rechazada
     puts "oc " + id.to_s + " rechazada por no producir sku "+sku.to_s+"\n"
   else 
     #se validará que se tenga stock por ahora para satisfacer el pedido, sino se tiene se rechaza:
@@ -125,6 +136,14 @@ def self.processOrder(id , sku , cantidad)
   end
 
 end
+
+def self.analizarOC(id)
+
+
+    return true
+end
+
+
 
 #método sacado de inventario_controller.rb
 def self.checkStock(sku , bodega)
