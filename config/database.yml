@@ -19,6 +19,9 @@ default: &default
 
 development:
   <<: *default
+  host: proyectotallerdeintegracion.clxyfho9udmq.us-east-1.rds.amazonaws.com
+  username: tdeintegracion
+  password: Rc$38pZ+q
   database: ProyectoIntegracion_development
   host: proyectotallerdeintegracion.clxyfho9udmq.us-east-1.rds.amazonaws.com
   password: Rc$38pZ+q
