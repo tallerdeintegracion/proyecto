@@ -1,6 +1,38 @@
 Rails.application.routes.draw do
 
-  
+
+scope '/api' do
+    scope '/consultar' do
+      scope '/:sku' do
+        get '/' => 'api#inventarioConsultar'
+      end
+    end
+    scope '/facturas' do
+      scope '/recibir' do
+        scope '/:id' do
+          post '/' => 'api#facturarRecibir'
+        end
+      end
+    end
+    scope '/oc' do
+      scope '/recibir' do
+        scope '/:id' do
+          post '/' => 'api#ocRecibir'
+        end
+      end
+    end
+    scope '/pagos' do
+      scope '/recibir' do
+        scope '/:id' do
+          post '/' => 'api#pagosRecibir'
+        end
+      end
+    end
+end   
+
+#  post 'api/facturas/recibir/:id' => 'api#facturarRecibir'
+#  post 'api/pagos/recibir/:id' => 'api#pagosRecibir'
+#  post 'api/oc/recibir/:id' => 'api#ocRecibir'
 
   resources :product_orders
   get 'inventario/run'
