@@ -19,6 +19,9 @@ default: &default
 
 development:
   <<: *default
+  host: proyectotallerdeintegracion.clxyfho9udmq.us-east-1.rds.amazonaws.com
+  username: tdeintegracion
+  password: Rc$38pZ+q
   database: ProyectoIntegracion_development
 
 # Warning: The database defined as "test" will be erased and

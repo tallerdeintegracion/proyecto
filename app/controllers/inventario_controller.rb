@@ -18,24 +18,38 @@ class InventarioController < ApplicationController
   definirVariables 
   puts "\n \n #{Time.now}  Inicia revicion de inventario "
   
-
-
   cleanProduccionesDespachadas()
   vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal)
   checkMateriasPrimas(@bodegaPrincipal)
+  #checkProductos(@bodegaPrincipal)
+
   end
+
 	
   def self.definirVariables 
   		
   	@returnPoint = 400
+  	@returnPointProcesados = 400
   	@bodegaPrincipal = "571262aaa980ba030058a1f3"
   	@bodegaRecepcion = "571262aaa980ba030058a1f1"
   	@bodegaPulmon = "571262aaa980ba030058a23e"
   	@cuentaGrupo = "571262c3a980ba030058ab5d"
+  	@Grupoproyecto="3";
   	@cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
 
   end	
+  
 
+
+  def generarOrdenesDeCompra(sku , cantidad , precio )
+
+  	## get id grupo
+  	canal ="b2b"
+  	nota = "Lo quiero ahora"
+  	id = crearOrdenDeCompra(canal , cantidad , sku , proveedor , precio , nota )
+  	return id
+
+  end	
 
 
   def self.checkMateriasPrimas(bodega)
@@ -43,11 +57,16 @@ class InventarioController < ApplicationController
   ##TODO sacar info de bases de datos y replicas 
   puts "3) #{Time.now}  Revisando si son necesarias materias primas "
   
+  materias = Production.where("Grupoproyecto = ? AND Tipo = ?"  , @Grupoproyecto , "Materia Prima")
+  materias.each do |row|
+  	puts row.Sku
+  	puts row.Loteproduccion
+  	puts row.Costounitario
+  end
 
   sku = "8"	
   coste =1313
   tamañoLote = 100
-
 
   stock = checkStock(sku, bodega)
   puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s 
@@ -68,8 +87,7 @@ class InventarioController < ApplicationController
   cantidad= lotes*tamañoLote
   detallesProd = producir(sku, trx, cantidad)
   p "### se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
-
- actualizarRegistoProduccion(detallesProd , sku , cantidad)
+  actualizarRegistoProduccion(detallesProd , sku , cantidad)
  	 
 
   end	
@@ -197,6 +215,7 @@ class InventarioController < ApplicationController
 
 
   def self.moveProducts(products , cantidad , destino)
+
   	puts "### Moviendo  " + cantidad.to_s + " a bodega principal"
   	
   	if cantidad.nil? | products.nil? | cantidad==0
@@ -210,7 +229,15 @@ class InventarioController < ApplicationController
   end	
 
 
-	 
+  
+
+  def comprarProductos
+
+  	
+  end
+
+
+  	 
 
   
 
