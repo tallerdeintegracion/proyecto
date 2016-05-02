@@ -229,6 +229,11 @@ module ApplicationHelper
 	#
 	#
 	def emitirFactura (idOrdenDeCompra )
+		path ='/'
+		url =facturaBaseUrl+path
+		params={ "oc" => idOrdenDeCompra }
+		data =  httpPutRequest(url , nil, params)
+		return  data		
 
 	end
 	def obtenerFactura(idfactura)
