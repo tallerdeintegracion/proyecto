@@ -163,27 +163,22 @@ module ApplicationHelper
 	end
 
 	#orden de compra
-	#
-	#
-	#
-	#
-	#
-	#
-	#
-	#
 
-	def crearOrdenDeCompra(canal , cantidad , sku , proveedor , precio , notas)
+	
+	def crearOrdenDeCompra(canal , cantidad , sku , cliente, proveedor , precioUnitario , fechaEntrega , notas)
 		path ='/crear'
 		url =ocBaseUrl+path
 		params={ "canal" => canal , 
 				"cantidad" => cantidad,
 				"sku" => sku,
+				"cliente" => proveedor,
 				"proveedor" => proveedor,
-				"precio" => precio,
+				"precioUnitario" =>  precioUnitario,
+				"fechaEntrega" => fechaEntrega,
 				"notas" => notas
 				}
 
-		#data =  httpPostRequest(url , nil, params)
+		data =  httpPutRequest(url , nil, params)
 		return  data
 
 	end

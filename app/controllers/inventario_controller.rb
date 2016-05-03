@@ -29,7 +29,7 @@ class InventarioController < ApplicationController
 	
   def self.definirVariables 
   		
-  	@returnPoint = 0
+  	@returnPoint = 200
   	@returnPointProcesados = 400
   	@bodegaPrincipal = "571262aaa980ba030058a1f3"
   	@bodegaRecepcion = "571262aaa980ba030058a1f1"
@@ -37,18 +37,35 @@ class InventarioController < ApplicationController
   	@cuentaGrupo = "571262c3a980ba030058ab5d"
   	@GrupoProyecto="3";
   	@cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
+  	@horasEntrega = 4
 
   end	
   
 
-  def self.generarOrdenesDeCompra(sku , cantidad , precio , grupo )
-
+  def self.generarOrdenesDeCompra(sku , cantidad , precioUnitario, grupo )
+  	require 'json'
+  	require 'rubygems'
   	## get id grupo
   	canal ="b2b"
-  	nota = "Lo quiero ahora"
-  	orden = crearOrdenDeCompra(canal , cantidad , sku , proveedor , precio , nota )
-  	id = orden[""]
-  	return id
+  	nota = "LoQuieroAhora" ## no deven haver espacioss
+  	resp = Grupo.find_by(nGrupo: grupo.to_i) 
+  	proveedor = resp.idGrupo 	
+  	resp = Grupo.find_by(nGrupo: @GrupoProyecto) 
+  	cliente = resp.idGrupo 	
+  	puts "Generando orden canal: " + canal + " proveedor: " + proveedor + " cliente: " + cliente + " cantidad: " + cantidad.to_s
+  	fechaHoy = Time.now.to_i*1000
+  	fechaEntrega= fechaHoy + 4*3600*1000
+  	if cliente.empty? or proveedor.empty?
+  		return nil
+  	end	
+  	String orden = eval(crearOrdenDeCompra(canal , cantidad , sku , cliente , proveedor , precioUnitario ,   fechaEntrega , nota ))
+  
+  	json = orden.to_json
+  	puts json  + "SDFsdfasdfasdfasdfsadf"
+  	unHash = JSON.parse(json)
+  	retorno = unHash["_id"]
+  	return retorno
+  
 
   end	
 
@@ -58,6 +75,7 @@ class InventarioController < ApplicationController
   		materias.each do |row|
   		end		  	
   end	
+
   def self.checkCompraMaterial(bodega)
 
   	puts "4) #{Time.now}  Revisando si son necesarios comprar material para productos procesados "
@@ -77,35 +95,58 @@ class InventarioController < ApplicationController
  				stock = checkStock(skuMaterial, bodega)
   				puts "######## Stock del sku " + skuMaterial + " es de " + stock.to_s 
   				resp = Sku.find_by(sku:skuMaterial)
-  				grupo =  resp.grupoProyecto
+  				grupo =  resp.grupoProyecto 
   				faltante = @returnPoint -(stock + pedidas(skuMaterial))
+  				
+
   				puts "######## faltan " + faltante.to_s + " pidiendo al grupo " + grupo.to_s 
   				stock = getStockOfGroup(skuMaterial , grupo)
+  				
   				puts "######## El grupo tiene stock de  " + stock.to_s  
 
   				if faltante <= 0
   					puts "######## No es necesario comprar stock"  
   				else
-  					puts "######## Genereando la oc"
-  					if faltante > stock
+  					
+  					orden = 0
+  				    if stock < 0 
+  						puts "######## No existe inventario "
+  					elsif faltante > stock
+  						puts "######## Genereando la oc"
   						orden = stock
   					else
+  						puts "######## Genereando la oc"
   						orden = faltante
   					end
+
+
   					resp = Precio.find_by(sku:skuMaterial)
-  					precioOrden = resp.precioUnitario* orden
-  					#id = generarOrdenesDeCompra(skuMaterial , orden , precioOrden)
+  					precioOrden = resp.precioUnitario
+
+  					if orden > 0
+
+  						id = generarOrdenesDeCompra(skuMaterial , orden , precioOrden , grupo)
+  						puts "El id es " + id.to_s 
+
+  						if !id.nil?
+  							aceptado = sendOc(grupo , id)
+  							puts "Oc fue aceptada" + aceptado.to_s
+  						end	
+  					
+  						if aceptado == true 
+  							puts "Oc fue aceptada"
+  						else
+  							puts "Oc fue rechazada"
+
+  						end
+
+  					end
   				end
 
  		end	
   	end
  	
   end	
-
-  def comprar(sku, faltante )
-
-
-  end 	
 
   def self.getStockOfGroup(sku , group)
   	url = "http://integra"+group+".ing.puc.cl/api/consultar/" +sku
@@ -117,8 +158,24 @@ class InventarioController < ApplicationController
 
   	json =JSON.parse(resp)
   	stock = json["stock"]
-  
   	return  stock
+
+  end
+
+  def self.sendOc(group , oc)
+  	url = "http://integra"+ group.to_s + ".ing.puc.cl/oc/recibir/" +oc
+  	puts "sending " + url  
+  	resp = httpGetRequest( url, nil)
+  	puts  "el json devuelto"
+  	if valid_json?(resp) ==false
+  		return -1
+  	end
+  	json =JSON.parse(resp)
+  	puts  "el json devuelto" + json
+
+  	aceptado = json["aceptado"]
+  	
+  	return  aceptado
   end
 
   def self.pedidas(sku)
