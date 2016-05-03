@@ -9,7 +9,6 @@ include ApplicationHelper
 
 ### ve si la factura es correcta y la paga
 def analizarFactura(id)
-    error = false
     factura = JSON.parse(obtenerFactura(id))
     if factura[0] == nil
       return false      
@@ -23,16 +22,16 @@ def analizarFactura(id)
     if factura[0]["total"].to_i != oc[0]["precioUnitario"].to_i * oc[0]["cantidad"].to_i
         return false
     end
-    ######### Esto debe ser activado antes de enviar IMPORTANTE
-    #if factura[0]["cliente"] != idGrupo
-    #    return false
-    #end
+    if factura[0]["cliente"] != idGrupo
+        return false
+    end
     
     response = pagarFactura(factura)
     ## Falta confirmar si se pago correctamente
     Thread.new do
         avisarTransferencia(factura,response)
     end
+    ## Actualizamos la oc
     ocBD = SentOrder.find_by(oc: idoc)
     ocBD.update(estado: "Pagada")
     return true
