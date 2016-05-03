@@ -24,7 +24,7 @@ scope '/api' do
     scope '/pagos' do
       scope '/recibir' do
         scope '/:id' do
-          post '/' => 'api#pagosRecibir'
+          post '/' => 'api#pagoRecibir'
         end
       end
     end

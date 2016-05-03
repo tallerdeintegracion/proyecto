@@ -1,7 +1,10 @@
 class ApiController < ApplicationController
 
   include	ApplicationHelper
-  include ReceiveOrdersController
+  include ReceiveOrdersHelper
+  include PagosHelper
+  include FacturarHelper
+  
   layout false
 
   def inventarioConsultar
@@ -16,19 +19,20 @@ class ApiController < ApplicationController
   end
 
   def facturarRecibir
-  
     id = params[:id]
-
+    result = analizarFactura(id)
+    render :json => {:validado => result, :factura => id}    
   end
 
   def pagoRecibir
     id = params[:id]
-
+    result = analizarPago(id)
+    render :json => {:validado => result, :trx => id}
   end
 
   def ocRecibir
     id = params[:id]
-    result = ReceiveOrdersController.analizarOC(id)  
-    render :json => {:aceptado => false, :idoc => id}  #el false debiera se result
+    result = analizarOC(id)  
+    render :json => {:aceptado => result, :idoc => id}  #el false debiera se result
   end
 end

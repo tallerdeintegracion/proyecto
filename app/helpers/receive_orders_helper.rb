@@ -1,6 +1,6 @@
 module ReceiveOrdersHelper
 
-	def self.analizarOC(id)
+	def analizarOC(id)
 		return true
 	end
 
