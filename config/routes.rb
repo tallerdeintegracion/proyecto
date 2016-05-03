@@ -18,21 +18,21 @@ scope '/api' do
     scope '/facturas' do
       scope '/recibir' do
         scope '/:id' do
-          post '/' => 'api#facturarRecibir'
+          get '/' => 'api#facturarRecibir'
         end
       end
     end
     scope '/oc' do
       scope '/recibir' do
         scope '/:id' do
-          post '/' => 'api#ocRecibir'
+          get '/' => 'api#ocRecibir'
         end
       end
     end
     scope '/pagos' do
       scope '/recibir' do
         scope '/:id' do
-          post '/' => 'api#pagoRecibir'
+          get '/' => 'api#pagoRecibir'
         end
       end
     end

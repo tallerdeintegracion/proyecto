@@ -7,6 +7,7 @@ class ApiController < ApplicationController
   
   layout false
 
+  ## Endpoint de /api/consultar/:id
   def inventarioConsultar
 
     inventario = JSON.parse(getSKUWithStock("571262aaa980ba030058a1f3"))
@@ -18,18 +19,23 @@ class ApiController < ApplicationController
     render :json => {:sku => params[:sku], :cantidad => cantidad }
   end
 
+  ## Endpoint de /api/facturas/recibir/:id
   def facturarRecibir
     id = params[:id]
     result = analizarFactura(id)
     render :json => {:validado => result, :factura => id}    
   end
 
+  ## Endpoint de /api/pagos/recibir/:id?idfactura=xxxxx
   def pagoRecibir
-    id = params[:id]
-    result = analizarPago(id)
+    idPago = params[:id]
+    idFactura = params[:idfactura]
+    #@output = params
+    result = analizarPago(idPago,idFactura)
     render :json => {:validado => result, :trx => id}
   end
 
+  ## Endpoint de /api/oc/recibir/:id Debe comprobar la oc antes de enviar al metodo compartido con los ftp
   def ocRecibir
     id = params[:id]
 
