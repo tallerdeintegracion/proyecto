@@ -7,6 +7,11 @@
     <tr>
       <th>Oc</th>
       <th>Estados</th>
+      <th>Canal</th>
+      <th>Factura</th>
+      <th>Pago</th>
+      <th>Sku</th>
+      <th>Cantidad</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -16,6 +21,11 @@
       <tr>
         <td><%= oc.oc %></td>
         <td><%= oc.estados %></td>
+        <td><%= oc.canal %></td>
+        <td><%= oc.factura %></td>
+        <td><%= oc.pago %></td>
+        <td><%= oc.sku %></td>
+        <td><%= oc.cantidad %></td>
         <td><%= link_to 'Show', oc %></td>
         <td><%= link_to 'Edit', edit_oc_path(oc) %></td>
         <td><%= link_to 'Destroy', oc, method: :delete, data: { confirm: 'Are you sure?' } %></td>

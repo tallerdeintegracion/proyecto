@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160502204605) do
+ActiveRecord::Schema.define(version: 20160503002332) do
 
   create_table "formulas", force: :cascade do |t|
     t.string   "sku",               limit: 255
@@ -30,6 +30,11 @@ ActiveRecord::Schema.define(version: 20160502204605) do
   create_table "ocs", force: :cascade do |t|
     t.string   "oc",         limit: 255
     t.string   "estados",    limit: 255
+    t.string   "canal",      limit: 255
+    t.string   "factura",    limit: 255
+    t.integer  "pago",       limit: 4
+    t.string   "sku",        limit: 255
+    t.integer  "cantidad",   limit: 4
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
@@ -46,6 +51,15 @@ ActiveRecord::Schema.define(version: 20160502204605) do
     t.string   "sku",        limit: 255
     t.integer  "cantidad",   limit: 4
     t.datetime "disponible"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "sent_orders", force: :cascade do |t|
+    t.string   "oc",         limit: 255
+    t.string   "sku",        limit: 255
+    t.integer  "cantidad",   limit: 4
+    t.string   "estado",     limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end

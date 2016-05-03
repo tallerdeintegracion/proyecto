@@ -27,6 +27,11 @@ Rails.application.routes.draw do
   get 'precios/show'
   get 'precios/edit'
   get 'precios/destroy'
+  get 'ocs/index'
+  get 'ocs/new'
+  get 'ocs/show'
+  get 'ocs/edit'
+  get 'ocs/destroy'
   root 'home#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
