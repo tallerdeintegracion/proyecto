@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
 
+  resources :grupos
   resources :precios
   resources :formulas
   resources :skus
@@ -61,6 +62,13 @@ end
   get 'precios/show'
   get 'precios/edit'
   get 'precios/destroy'
+  
+  get 'sent_orders/index'
+  get 'sent_orders/new'
+  get 'sent_orders/show'
+  get 'sent_orders/edit'
+  get 'sent_orders/destroy'
+  
   root 'home#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

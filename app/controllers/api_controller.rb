@@ -32,7 +32,17 @@ class ApiController < ApplicationController
 
   def ocRecibir
     id = params[:id]
+
+    oc = JSON.parse(obtenerOrdenDeCompra(id))
+    if oc[0] == nil
+      render :json => {:aceptado => false, :idoc => id} 
+      return
+    end
+    if oc[0]["param"] == "id"
+      render :json => {:aceptado => false, :idoc => id} 
+      return
+    end   
     result = analizarOC(id)  
-    render :json => {:aceptado => result, :idoc => id}  #el false debiera se result
+    render :json => {:aceptado => result, :idoc => id} 
   end
 end

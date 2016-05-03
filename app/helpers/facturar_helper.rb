@@ -1,6 +1,6 @@
 module FacturarHelper
 
-include ApplicationHelper
+include ApplicationHelper 
 
 def analizarFactura(id)
     error = false
@@ -19,11 +19,16 @@ def analizarFactura(id)
     #    return false
     #end
     
-    #pagarFactura(factura, oc)
-    ocBD = sentOrder.find_by(oc: idoc)
+    pagarFactura(factura, oc)
+    ocBD = SentOrder.find_by(oc: idoc)
     ocBD.update(estado: "Pagada")
     return true
 # idfactura = 5727e3efc1ff9b0300019b3d
 #idoc =57270b94ba0c0f0300c51bef
+  end
+  
+  def pagarFactura(factura, oc)
+    #origen = 
+    transferir(factura[0]["total"],origen,destion)
   end
 end
