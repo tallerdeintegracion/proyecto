@@ -22,8 +22,8 @@ def analizarOC(id)
   	return true
   end    
   #puts "RRRRR             " + oc_db.oc.to_s + "      " + oc_db.estados.to_s
-#=begin
 	  #continúa aquí solo si son nuevas
+=begin
 	  if sku != "6" && sku != "55" && sku != "49" && sku != "8" && sku != "14" && sku != "31" #&& sku != "52" && sku != "20" && sku != "2" && sku != "7"
 	    #si no son los sku que producimos (son 6). Los 4 faltantes los requerimos pero no producimos 
 	    rechazarOrdenDeCompra(id, "No producimos el sku requerido")
@@ -33,7 +33,11 @@ def analizarOC(id)
 	    #Oc.find_by(oc: id).update(estados: 'rechazada')
 	    puts "oc " + id.to_s + " rechazada por no producir sku "+sku.to_s+"\n"
 	    return false
-	  else 
+
+	  else
+	  end  #ESTE END LO PUSE PORQUE DEBERÍA ESTAR ABAJO AL TERMINAR EL ELSE
+=end
+		#SE ASUME QUE QUE SÍ SE PUEDEN TRABAJAR SKU QUE NO PRODUZCA, SIEMPRE QUE TENGA. 
 	    #se validará que se tenga stock por ahora para satisfacer el pedido, sino se tiene se rechaza:
 	    stock = checkStock(sku, "571262aaa980ba030058a1f3")#@bodegaPrincipal)
 	    puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s + " y piden "+cantidad.to_s+"\n"
@@ -48,52 +52,54 @@ def analizarOC(id)
 	      return false
 	    else
 	       
-	      espcioDisponible = ObtenerEspacioAlmacen("571262aaa980ba030058a23d")
-	      puts "Espacio disponible en almacén chico: " + espcioDisponible.to_s + "\n" #almacén chico
-	      
-	      if espcioDisponible < cantidad.to_i
-	      	  Oc.find_or_create_by(oc: id , estados: "rechazada", canal: canal, factura: "", pago: "", sku: sku, cantidad: cantidad)#los estados son: defectuosa, aceptada, rechazada
-	          puts "oc " + id.to_s + " rechazada por no haber espacio en la bodega chica "+"\n"	
-	          return false
-	      else
-	      	  #se continúa con la oc, aceptando y dando la factura
-		      oc_aceptada = JSON.parse(recepcionarOrdenDeCompra(id)) #este método acepta la orden de compra
-		      if oc_aceptada.nil?
-		          Oc.find_or_create_by(oc: id , estados: "rechazada", canal: canal, factura: "", pago: "", sku: sku, cantidad: cantidad)#los estados son: defectuosa, aceptada, rechazada
-		          puts "oc " + id.to_s + " rechazada por error al recepcionarOrdenDeCompra "+"\n"	
+		      espcioDisponible = ObtenerEspacioAlmacen("571262aaa980ba030058a23d")
+		      puts "Espacio disponible en almacén chico: " + espcioDisponible.to_s + "\n" #almacén chico
+		      
+		      if espcioDisponible < cantidad.to_i
+		      	  Oc.find_or_create_by(oc: id , estados: "rechazada", canal: canal, factura: "", pago: "", sku: sku, cantidad: cantidad)#los estados son: defectuosa, aceptada, rechazada
+		          puts "oc " + id.to_s + " rechazada por no haber espacio en la bodega chica "+"\n"	
 		          return false
-		      end 
+		      else
+		      	  #se continúa con la oc, aceptando y dando la factura
+			      oc_aceptada = JSON.parse(recepcionarOrdenDeCompra(id)) #este método acepta la orden de compra
+			      if oc_aceptada.nil?
+			          Oc.find_or_create_by(oc: id , estados: "rechazada", canal: canal, factura: "", pago: "", sku: sku, cantidad: cantidad)#los estados son: defectuosa, aceptada, rechazada
+			          puts "oc " + id.to_s + " rechazada por error al recepcionarOrdenDeCompra "+"\n"	
+			          return false
+			      end 
 
-		      Oc.find_or_create_by(oc: id , estados: "aceptada", canal: canal, factura: "", pago: "", sku: sku, cantidad: cantidad)#los estados son: defectuosa, aceptada, rechazada
-		      #Oc.find_by(oc: id).update(estados: 'aceptada')
-		      while (cantidad.to_i > 0) do
-		      	productos = JSON.parse(getStock('571262aaa980ba030058a1f3' , sku.to_s ) )
-		      	limite = 0
-			    if productos.nil?
-			    	break
-			    else
-			    	
-			    	if cantidad.to_i > productos.length
-			    		limite = productos.length
-					else
-						limite = cantidad.to_i
-					end	    
-			    	for counter in 0..(limite-1)#(cantidad.to_i-1) #se mueven los productos solicitados, que sabemos es menor que lo que hay en la bodega principal
-			    		#id_prod = productos[counter]['_id'].to_s
-			    		#puts "            SSSSSS  " + cantidad.to_s + "  " + productos.length.to_s + "\n" 
-			      		moverStock( productos[counter]['_id'].to_s, '571262aaa980ba030058a23d' )#la mueve a la principal
-			    	end
-			    end
-			    cantidad = (cantidad.to_i - limite)
-		      end 	      
-
-		      puts "oc " + id.to_s + " aceptada por sí tener stock del sku "+sku.to_s+ ". Se movieron " + cantidad.to_s + "de la bodega principal a la secundaria" +"\n"  
-		      #no se valida que devuelva error porque no debería, si la oc ya se comprobó que existe
-		      return true
-	      end	      
+			      Oc.find_or_create_by(oc: id , estados: "aceptada", canal: canal, factura: "", pago: "", sku: sku, cantidad: cantidad)#los estados son: defectuosa, aceptada, rechazada
+			      #Oc.find_by(oc: id).update(estados: 'aceptada')
+			      cantidad_fija = cantidad
+			      movidas = 0
+			      while (cantidad.to_i > 0) do
+			      	productos = JSON.parse(getStock('571262aaa980ba030058a1f3' , sku.to_s ) )
+			      	limite = 0
+				    if productos.nil?
+				    	break
+				    else
+				    	
+				    	if cantidad.to_i > productos.length
+				    		limite = productos.length
+						else
+							limite = cantidad.to_i
+						end	  
+						puts productos.length.to_s + " productos recidos. Cantidad a mover " + cantidad.to_s + "\n"
+						movidas = movidas + limite  
+				    	for counter in 0..(limite-1)#(cantidad.to_i-1) #se mueven los productos solicitados, que sabemos es menor que lo que hay en la bodega principal
+				    		#id_prod = productos[counter]['_id'].to_s
+				    		#puts "            SSSSSS  " + cantidad.to_s + "  " + productos.length.to_s + "\n" 
+				      		moverStock( productos[counter]['_id'].to_s, '571262aaa980ba030058a23d' )#la mueve a la principal
+				    	end
+				    end
+				    cantidad = (cantidad.to_i - limite)
+			      end 	    
+			      puts "oc " + id.to_s + " aceptada por sí tener stock del sku "+ sku.to_s + ". Se movieron " + movidas.to_s + " de " + cantidad_fija.to_s + " pedidas con stock " + stock.to_s + ", de la bodega principal a la secundaria" + "\n"  
+			      #no se valida que devuelva error porque no debería, si la oc ya se comprobó que existe
+			      return true
+		      end	      
 	    end
-	  end
-#=end
+	 
 	#nunca debería llegar a este punto
     return true
 end
