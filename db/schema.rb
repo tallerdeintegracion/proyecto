@@ -11,7 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20160502223708) do
+
 
   create_table "formulas", force: :cascade do |t|
     t.string   "sku",               limit: 255
