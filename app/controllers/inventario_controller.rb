@@ -21,6 +21,7 @@ class InventarioController < ApplicationController
   cleanProduccionesDespachadas()
   vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal)
   checkMateriasPrimas(@bodegaPrincipal)
+  checkCompraMaterial(@bodegaPrincipal)
   #checkProductos(@bodegaPrincipal)
 
   end
@@ -28,13 +29,13 @@ class InventarioController < ApplicationController
 	
   def self.definirVariables 
   		
-  	@returnPoint = 400
+  	@returnPoint = 1500
   	@returnPointProcesados = 400
   	@bodegaPrincipal = "571262aaa980ba030058a1f3"
   	@bodegaRecepcion = "571262aaa980ba030058a1f1"
   	@bodegaPulmon = "571262aaa980ba030058a23e"
   	@cuentaGrupo = "571262c3a980ba030058ab5d"
-  	@Grupoproyecto="3";
+  	@GrupoProyecto="3";
   	@cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
 
   end	
@@ -51,44 +52,117 @@ class InventarioController < ApplicationController
 
   end	
 
+  def self.checkCompraMaterial(bodega)
+
+  	puts "4) #{Time.now}  Revisando si son necesarios comprar material para productos procesados "
+
+  	prod = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
+  	prod.each do |row|
+
+  		
+  		sku = row.sku
+  		puts "Revisando materias primas de "+ sku
+
+  		materias = Formula.where("sku = ?"  , sku)
+
+ 			materias.each do |ing|
+
+				skuMaterial = ing.skuIngerdiente
+ 				stock = checkStock(skuMaterial, bodega)
+  				puts "######## Stock del sku " + skuMaterial + " es de " + stock.to_s 
+  				resp = Sku.find_by(sku:skuMaterial)
+  				grupo =  resp.grupoProyecto
+  				faltante = @returnPoint -(stock + pedidas(skuMaterial))
+  				puts "######## faltan " + faltante.to_s + " pidiendo al grupo " + grupo.to_s 
+  				stock = getStockOfGroup(skuMaterial , grupo)
+  				puts "######## El grupo tiene stock de  " + stock.to_s  
+
+  				if faltante <= 0
+  					puts "######## No es necesario comprar stock"  
+  				else
+  					puts "######## Genereando la oc"
+  					if faltante > stock
+  						orden = stock
+  					else
+  						orden = faltante
+  					end
+  					resp = Precio.find_by(sku:skuMaterial)
+  					precioOrden = resp.precioUnitario* orden
+
+
+
+  				end
+
+ 		end	
+  	end
+ 	
+  end	
+
+  def comprar(sku, faltante )
+
+
+  end 	
+
+  def self.getStockOfGroup(sku , group)
+  	url = "http://integra"+group+".ing.puc.cl/api/consultar/" +sku
+  	resp = httpGetRequest( url, nil)
+  	
+  	if valid_json?(resp) ==false
+  	return -1
+  	end
+
+  	json =JSON.parse(resp)
+  	stock = json["stock"]
+  
+  	return  stock
+  end
+
+  def self.pedidas(sku)
+  		sent = SentOrder.where(sku: sku)
+  		if sent.nil?
+  		return 0
+  		else
+  		return sent.sum("cantidad")
+  		end
+  end	
 
   def self.checkMateriasPrimas(bodega)
 
   ##TODO sacar info de bases de datos y replicas 
   puts "3) #{Time.now}  Revisando si son necesarias materias primas "
   
-  materias = Production.where("Grupoproyecto = ? AND Tipo = ?"  , @Grupoproyecto , "Materia Prima")
+  materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
+
+
   materias.each do |row|
-  	puts row.Sku
-  	puts row.Loteproduccion
-  	puts row.Costounitario
-  end
+  	
+  		sku = row.sku
+  		coste = row.loteProduccion
+  		tamañoLote = row.costoUnitario
+  		puts "### Mterial " + sku.to_s + " coste " + coste.to_s + "  "+tamañoLote.to_s
 
-  sku = "8"	
-  coste =1313
-  tamañoLote = 100
-
-  stock = checkStock(sku, bodega)
-  puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s 
+  		stock = checkStock(sku, bodega)
+  		puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s 
 	
-  produccion = enProduccion(sku)
-  puts "### Existen en produccion " + produccion.to_s
+ 		produccion = enProduccion(sku)
+ 		puts "### Existen en produccion " + produccion.to_s
 
-  lotes = calcularLotes(stock, produccion , tamañoLote, @returnPoint)
-  puts "### Lotes a producir " + lotes.to_s
+  		lotes = calcularLotes(stock, produccion , tamañoLote, @returnPoint)
+ 		puts "### Lotes a producir " + lotes.to_s
   
-  monto = lotes*coste*tamañoLote	
- 	if lotes <= 0
- 		puts "### No es necesario producir"
- 		return	
- 	end
-  trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
-  puts "### Transferencia exitosa " + trx
-  cantidad= lotes*tamañoLote
-  detallesProd = producir(sku, trx, cantidad)
-  p "### se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
-  actualizarRegistoProduccion(detallesProd , sku , cantidad)
- 	 
+  		monto = lotes*coste*tamañoLote	
+ 		if lotes <= 0
+ 			puts "### No es necesario producir"	
+ 		else
+
+  		trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
+  		puts "### Transferencia exitosa " + trx
+  		cantidad= lotes*tamañoLote
+  		detallesProd = producir(sku, trx, cantidad)
+  		p "### se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
+  		actualizarRegistoProduccion(detallesProd , sku , cantidad)
+  		end
+ 	end	 
 
   end	
 
@@ -181,11 +255,14 @@ class InventarioController < ApplicationController
   def self.vaciarAlmacenesRecepcion(bodegaRecepcion , bodegaPulmon, bodegaPrincipal)
 	
 	puts "2) #{Time.now} Reciviendo materias primas "
-  	sku = "8"
+  	
 
-  	recibirMateriasPrimas(sku, bodegaRecepcion, bodegaPrincipal)
-  	recibirMateriasPrimas(sku, bodegaPulmon, bodegaPrincipal)
-
+  	 materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
+  		materias.each do |row|
+  		sku = row.sku	
+  		recibirMateriasPrimas(sku, bodegaRecepcion, bodegaPrincipal)
+  		recibirMateriasPrimas(sku, bodegaPulmon, bodegaPrincipal)
+  	end
 
   end	
 
@@ -194,7 +271,7 @@ class InventarioController < ApplicationController
   		
   		
   		stock = checkStock(sku ,almacenRecepcion) 	
-  		puts "### Stock de " + stock.to_s + " disponibles en almacen de recepcion "	+ almacenRecepcion
+  		puts "### Stock de "+ sku +" cantiad: " +  stock.to_s + " disponibles en almacen de recepcion "	+ almacenRecepcion
 
   		if stock == 0
   			return

@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Sent Orders</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Oc</th>
+      <th>Sku</th>
+      <th>Cantidad</th>
+      <th>Estado</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sent_orders.each do |sent_order| %>
+      <tr>
+        <td><%= sent_order.oc %></td>
+        <td><%= sent_order.sku %></td>
+        <td><%= sent_order.cantidad %></td>
+        <td><%= sent_order.estado %></td>
+        <td><%= link_to 'Show', sent_order %></td>
+        <td><%= link_to 'Edit', edit_sent_order_path(sent_order) %></td>
+        <td><%= link_to 'Destroy', sent_order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sent order', new_sent_order_path %>

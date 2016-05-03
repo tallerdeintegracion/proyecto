@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   
 
+  resources :sent_orders
   resources :product_orders
   get 'inventario/run'
 
