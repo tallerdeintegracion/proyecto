@@ -18,7 +18,7 @@ class OcsControllerTest < ActionController::TestCase
 
   test "should create oc" do
     assert_difference('Oc.count') do
-      post :create, oc: { estados: @oc.estados, oc: @oc.oc }
+      post :create, oc: { canal: @oc.canal, cantidad: @oc.cantidad, estados: @oc.estados, factura: @oc.factura, oc: @oc.oc, pago: @oc.pago, sku: @oc.sku }
     end
 
     assert_redirected_to oc_path(assigns(:oc))
@@ -35,7 +35,7 @@ class OcsControllerTest < ActionController::TestCase
   end
 
   test "should update oc" do
-    patch :update, id: @oc, oc: { estados: @oc.estados, oc: @oc.oc }
+    patch :update, id: @oc, oc: { canal: @oc.canal, cantidad: @oc.cantidad, estados: @oc.estados, factura: @oc.factura, oc: @oc.oc, pago: @oc.pago, sku: @oc.sku }
     assert_redirected_to oc_path(assigns(:oc))
   end
 

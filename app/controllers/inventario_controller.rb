@@ -330,7 +330,11 @@ class InventarioController < ApplicationController
 
   def self.recibirMateriasPrimas( sku , almacenRecepcion , bodegaMateriasPrimas)
   		
-  		stock = checkStock(sku ,almacenRecepcion) 	
+
+  		
+  		stock = checkStock(sku ,almacenRecepcion) 
+		stockInicial = stock	
+
   		puts "### Stock de "+ sku +" cantiad: " +  stock.to_s + " disponibles en almacen de recepcion "	+ almacenRecepcion
 
   		if stock == 0
@@ -347,6 +351,7 @@ class InventarioController < ApplicationController
   			end
 			moveProducts(resp ,cantidadMover,  bodegaMateriasPrimas )	
   		end	
+		return stockInicial
   end 	
 
 

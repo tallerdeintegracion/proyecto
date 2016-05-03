@@ -36,6 +36,13 @@ scope '/api' do
         end
       end
     end
+    scope '/despachos' do
+      scope '/recibir' do
+        scope '/:id' do
+          get '/' => 'api#despachoRecibir'
+        end
+      end
+    end
 end   
 
 #  post 'api/facturas/recibir/:id' => 'api#facturarRecibir'
@@ -62,7 +69,11 @@ end
   get 'precios/show'
   get 'precios/edit'
   get 'precios/destroy'
-  
+  get 'ocs/index'
+  get 'ocs/new'
+  get 'ocs/show'
+  get 'ocs/edit'
+  get 'ocs/destroy'  
   get 'sent_orders/index'
   get 'sent_orders/new'
   get 'sent_orders/show'

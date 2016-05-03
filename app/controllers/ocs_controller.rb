@@ -69,6 +69,6 @@ class OcsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def oc_params
-      params.require(:oc).permit(:oc, :estados)
+      params.require(:oc).permit(:oc, :estados, :canal, :factura, :pago, :sku, :cantidad)
     end
 end

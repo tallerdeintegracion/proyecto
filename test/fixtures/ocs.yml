@@ -3,7 +3,17 @@
 one:
   oc: MyString
   estados: MyString
+  canal: MyString
+  factura: MyString
+  pago: 1
+  sku: MyString
+  cantidad: 1
 
 two:
   oc: MyString
   estados: MyString
+  canal: MyString
+  factura: MyString
+  pago: 1
+  sku: MyString
+  cantidad: 1

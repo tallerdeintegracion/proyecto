@@ -4,6 +4,7 @@ class ApiController < ApplicationController
   include ReceiveOrdersHelper
   include PagosHelper
   include FacturarHelper
+  include InventarioController
   
   layout false
 
@@ -30,11 +31,9 @@ class ApiController < ApplicationController
   def pagoRecibir
     idPago = params[:id]
     idFactura = params[:idfactura]
-    #@output = params
     result = analizarPago(idPago,idFactura)
-    result = false ## eliminar
-
-    render :json => {:validado => result, :idtrx => id}
+    ## Gatillamos el envio desde aqui si es posible?
+    render :json => {:validado => result, :idtrx => idPago}
   end
 
   ## Endpoint de /api/oc/recibir/:id Debe comprobar la oc antes de enviar al metodo compartido con los ftp
@@ -51,7 +50,26 @@ class ApiController < ApplicationController
       return
     end   
     result = analizarOC(id)  
-    result = false ## eliminar
+    ## Gatillamos el generar la factura desde aqui?
     render :json => {:aceptado => result, :idoc => id} 
+  end
+  def despachoRecibir(id)
+    idFactura = params[:id]
+    
+    ocBD = Oc.findBy(factura: idFactura)
+    
+    if ocBD == nil
+      render :json => {:validado => false} 
+      return
+    end
+    
+    ## Gatilla el recibir los productos
+    ans = recibirMateriasPrimas(ocBD.sku, bodegaRecepcion, bodegaPrincipal)
+
+    if ans > ocBD.cantidad
+      render :json => {:validado => true} 
+      return
+    end
+    render :json => {:validado => false} 
   end
 end

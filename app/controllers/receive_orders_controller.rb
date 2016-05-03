@@ -1,6 +1,7 @@
 class ReceiveOrdersController < ApplicationController
   
 extend  ApplicationHelper
+extend ReceiveOrdersHelper
 
 def self.run
  	
@@ -76,7 +77,7 @@ end
 
 def self.processOrder(id , sku , cantidad)
   require 'json'
-  puts "Trabajando en la orden id: "+ id+ "   sku: "+sku+"   cantidad: "+cantidad+"\n"
+  #puts "Trabajando en la orden id: "+ id+ "   sku: "+sku+"   cantidad: "+cantidad+"\n"
 
   #se validará que la oc del ayudante sea correcta, o sea, que el id sea el mismo para el sku  
   oc = JSON.parse(obtenerOrdenDeCompra(id))
@@ -90,56 +91,17 @@ def self.processOrder(id , sku , cantidad)
   cantidad_prueba = oc[0]['cantidad'].to_s
 
   if(id == id_prueba && @idGrupo == id_proveedor && sku == sku_prueba && cantidad == cantidad_prueba)
-    puts "oc existente en el sistema"+"\n"
+    #puts "oc existente en el sistema"+"\n"
   else
     rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
-    puts "oc NO EXISTE en el sistema o tiene errores"+"\n"        
+    Oc.find_or_create_by(oc: id , estados: "defectuosa", canal: oc[0]['canal'].to_s, factura: "", pago: "", sku: oc[0]['sku'].to_s, cantidad: oc[0]['cantidad'].to_s)#los estados son: defectuosa, aceptada, rechazada
+    puts "oc NO EXISTE en el sistema o tiene errores"+"\n"
+    return 0        
   end  
-  #analizarOC(id)
+  #vaciarStockBodegaChica() #método para resetear este dato y visualizar mejor los cambios
+  #vaciarOCdb()
+  analizarOC(id)
 
-end
-
-def self.analizarOC(id)
-  require 'json'
-    #puts "oc cantidad: "+ oc[0]['cantidad'].to_s+ " . oc sku: "+ oc[0]['sku'].to_s+"\n"
-  oc_db = Oc.where(oc: id)
-  if oc_db.nil?
-    Oc.find_or_create_by(oc: id , estados: "defectuosa")#los estados son: defectuosa, aceptada, rechazada
-  else
-    #oc_id_db = oc_db
-    puts "AAAAA             "+ oc_db.oc.to_s
-    Oc.where(oc: id).limit(1).update_all( "estados = 'aceptada'")
-  end    
-  
-
-
-  if sku != "6" && sku != "55" && sku != "49" && sku != "8" && sku != "14" && sku != "31" #&& sku != "52" && sku != "20" && sku != "2" && sku != "7"
-    #si no son los sku que producimos (son 6). Los 4 faltantes los requerimos pero no producimos 
-    rechazarOrdenDeCompra(id, "No producimos algunos de los requerimientos")
-    #Oc.find_or_create_by(oc: id , estados: "rechazada")#los estados son: defectuosa, aceptada, rechazada
-    puts "oc " + id.to_s + " rechazada por no producir sku "+sku.to_s+"\n"
-  else 
-    #se validará que se tenga stock por ahora para satisfacer el pedido, sino se tiene se rechaza:
-    stock = checkStock(sku, @bodegaPrincipal)
-    puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s + " y piden "+cantidad.to_s+"\n"
-    if cantidad.to_i > stock.to_i
-      #se anula la oc
-      rechazarOrdenDeCompra(id, "No tenemos aún los requerimientos en bodega")
-      puts "oc " + id.to_s + " rechazada por falta de stock "+"\n"
-    else
-       #se continúa con la oc, aceptando y dando la factura
-      oc_aceptada = JSON.parse(recepcionarOrdenDeCompra(id)) #este método acepta la orden de compra
-      if oc_aceptada.nil?
-          return 0
-      end   
-      #no se valida que devuelva error porque no debería, si la oc ya se comprobó que existe
-      factura = JSON.parse(emitirFactura(id))
-      #comprobar que el monto sea el correcto, por siaca:
-      
-    end
-  end
-
-    return true
 end
 
 
