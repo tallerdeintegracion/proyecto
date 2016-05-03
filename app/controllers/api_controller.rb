@@ -32,6 +32,8 @@ class ApiController < ApplicationController
     idFactura = params[:idfactura]
     #@output = params
     result = analizarPago(idPago,idFactura)
+    result = false ## eliminar
+
     render :json => {:validado => result, :trx => id}
   end
 
@@ -49,6 +51,7 @@ class ApiController < ApplicationController
       return
     end   
     result = analizarOC(id)  
+    result = false ## eliminar
     render :json => {:aceptado => result, :idoc => id} 
   end
 end
