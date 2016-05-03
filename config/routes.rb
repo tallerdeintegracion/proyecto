@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
 
 
+  resources :precios
+  resources :formulas
+  resources :skus
+  resources :sent_orders
+  resources :product_orders
+  resources :ocs
+
 scope '/api' do
     scope '/consultar' do
       scope '/:sku' do
@@ -34,15 +41,10 @@ end
 #  post 'api/pagos/recibir/:id' => 'api#pagosRecibir'
 #  post 'api/oc/recibir/:id' => 'api#ocRecibir'
 
-  resources :ocs
-  resources :product_orders
+ 
   get 'inventario/run'
 
   get 'receive_orders/receive'
-
-  resources :precios
-  resources :formulas
-  resources :skus
   get 'home/documentacion'
   get 'skus/index'
   get 'skus/new'

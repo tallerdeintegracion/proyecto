@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Oc:</strong>
+  <%= @sent_order.oc %>
+</p>
+
+<p>
+  <strong>Sku:</strong>
+  <%= @sent_order.sku %>
+</p>
+
+<p>
+  <strong>Cantidad:</strong>
+  <%= @sent_order.cantidad %>
+</p>
+
+<p>
+  <strong>Estado:</strong>
+  <%= @sent_order.estado %>
+</p>
+
+<%= link_to 'Edit', edit_sent_order_path(@sent_order) %> |
+<%= link_to 'Back', sent_orders_path %>

@@ -309,7 +309,14 @@ module ApplicationHelper
     	return data
 	end
 
-
+	def valid_json?(json)
+  		begin
+    	JSON.parse(json)
+    	return true
+  		rescue JSON::ParserError => e
+   		return false
+  		end
+	end
 
 	def httpDeleteRequest( url, authHeader ,params)
 		
