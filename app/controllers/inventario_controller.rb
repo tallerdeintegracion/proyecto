@@ -76,6 +76,7 @@ class InventarioController < ApplicationController
   		end		  	
   end	
 
+
   def self.checkCompraMaterial(bodega)
 
   	puts "4) #{Time.now}  Revisando si son necesarios comprar material para productos procesados "
@@ -83,70 +84,75 @@ class InventarioController < ApplicationController
   	prod = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
   	prod.each do |row|
 
-  		
   		sku = row.sku
   		puts "Revisando materias primas de "+ sku
 
   		materias = Formula.where("sku = ?"  , sku)
-
  			materias.each do |ing|
-
-				skuMaterial = ing.skuIngerdiente
- 				stock = checkStock(skuMaterial, bodega)
-  				puts "######## Stock del sku " + skuMaterial + " es de " + stock.to_s 
-  				resp = Sku.find_by(sku:skuMaterial)
-  				grupo =  resp.grupoProyecto 
-  				faltante = @returnPoint -(stock + pedidas(skuMaterial))
-  				
-
-  				puts "######## faltan " + faltante.to_s + " pidiendo al grupo " + grupo.to_s 
-  				stock = getStockOfGroup(skuMaterial , grupo)
-  				
-  				puts "######## El grupo tiene stock de  " + stock.to_s  
-
-  				if faltante <= 0
-  					puts "######## No es necesario comprar stock"  
-  				else
-  					
-  					orden = 0
-  				    if stock < 0 
-  						puts "######## No existe inventario "
-  					elsif faltante > stock
-  						puts "######## Genereando la oc"
-  						orden = stock
-  					else
-  						puts "######## Genereando la oc"
-  						orden = faltante
-  					end
-
-
-  					resp = Precio.find_by(sku:skuMaterial)
-  					precioOrden = resp.precioUnitario
-
-  					if orden > 0
-
-  						id = generarOrdenesDeCompra(skuMaterial , orden , precioOrden , grupo)
-  						puts "El id es " + id.to_s 
-
-  						if !id.nil?
-  							aceptado = sendOc(grupo , id)
-  							puts "Oc fue aceptada" + aceptado.to_s
-  						end	
-  					
-  						if aceptado == true 
-  							puts "Oc fue aceptada"
-  						else
-  							puts "Oc fue rechazada"
-
-  						end
-
-  					end
-  				end
+			revisarIngrediente(ing , bodega)			
 
  		end	
   	end
  	
+  end
+
+  def self.revisarIngrediente (ing , bodega)
+  	skuMaterial = ing.skuIngerdiente
+ 	stock = checkStock(skuMaterial, bodega)
+  	puts "######## Stock del sku " + skuMaterial + " es de " + stock.to_s 
+  	resp = Sku.find_by(sku:skuMaterial)
+  	grupo =  resp.grupoProyecto 
+  	
+  	cantidadOrden = tamañoOrden(stock , skuMaterial , grupo)
+  	if cantidadOrden <= 0
+  		return
+  	end	
+
+  	resp = Precio.find_by(sku:skuMaterial)
+  	precioOrden = resp.precioUnitario
+  	id = generarOrdenesDeCompra(skuMaterial , cantidadOrden , precioOrden , grupo)
+  	puts "El id es " + id.to_s 
+
+  	if id.nil?
+  		puts "Id de la orden es nulo "
+  		return
+  	end	
+  	
+  	aceptado = sendOc(grupo , id)				
+  	
+  	if  aceptado == true 
+  	    puts "Oc fue aceptada"
+  	else
+  		puts "Oc fue rechazada"
+  	end
+
+  		
   end	
+
+  def self.tamañoOrden(stock , skuMaterial , grupo)
+	faltante = @returnPoint -(stock + pedidas(skuMaterial))
+  	puts "######## faltan " + faltante.to_s + " pidiendo al grupo " + grupo.to_s 
+  	stock = getStockOfGroup(skuMaterial , grupo)
+  	puts "######## El grupo tiene stock de  " + stock.to_s  
+  	if faltante <= 0
+  		puts "######## No es necesario comprar stock" 
+  		return 0  
+  	else
+  	orden = 0
+  		if stock < 0 
+  			puts "######## No existe inventario "
+  			return 0
+  		elsif faltante > stock			
+	  		puts "######## Genereando la oc"
+  			return stock
+
+  		else
+  			puts "######## Genereando la oc"
+  			return faltante
+  		end	
+  	end	
+
+  end 	
 
   def self.getStockOfGroup(sku , group)
   	url = "http://integra"+group+".ing.puc.cl/api/consultar/" +sku
