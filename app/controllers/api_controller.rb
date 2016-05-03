@@ -16,7 +16,7 @@ class ApiController < ApplicationController
     if cantidadJSON != nil
       cantidad = cantidadJSON["total"]
     end
-    render :json => {:sku => params[:sku], :cantidad => cantidad }
+    render :json => { :stock => cantidad,:sku => params[:sku] }
   end
 
   ## Endpoint de /api/facturas/recibir/:id
