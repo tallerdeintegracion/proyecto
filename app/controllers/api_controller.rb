@@ -23,7 +23,7 @@ class ApiController < ApplicationController
   def facturarRecibir
     id = params[:id]
     result = analizarFactura(id)
-    render :json => {:validado => result, :factura => id}    
+    render :json => {:validado => result, :idfactura => id}    
   end
 
   ## Endpoint de /api/pagos/recibir/:id?idfactura=xxxxx
@@ -34,7 +34,7 @@ class ApiController < ApplicationController
     result = analizarPago(idPago,idFactura)
     result = false ## eliminar
 
-    render :json => {:validado => result, :trx => id}
+    render :json => {:validado => result, :idtrx => id}
   end
 
   ## Endpoint de /api/oc/recibir/:id Debe comprobar la oc antes de enviar al metodo compartido con los ftp
