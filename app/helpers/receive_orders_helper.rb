@@ -1,5 +1,6 @@
 module ReceiveOrdersHelper
 
+
 def analizarOC(id)
 	require 'json'
     #puts "oc cantidad: "+ oc[0]['cantidad'].to_s+ " . oc sku: "+ oc[0]['sku'].to_s+"\n"

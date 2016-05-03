@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160503002332) do
+ActiveRecord::Schema.define(version: 20160503012206) do
 
   create_table "formulas", force: :cascade do |t|
     t.string   "sku",               limit: 255
@@ -25,6 +25,15 @@ ActiveRecord::Schema.define(version: 20160503002332) do
     t.integer  "precioIngrediente", limit: 4
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+  end
+
+  create_table "grupos", force: :cascade do |t|
+    t.integer  "nGrupo",     limit: 4
+    t.string   "idGrupo",    limit: 255
+    t.string   "idBanco",    limit: 255
+    t.string   "idAlmacen",  limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "ocs", force: :cascade do |t|

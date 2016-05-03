@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  oc: MyString
+  sku: MyString
+  cantidad: 
+  estado: MyString
+
+two:
+  oc: MyString
+  sku: MyString
+  cantidad: 
+  estado: MyString
