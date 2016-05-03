@@ -1,0 +1,2 @@
+class FacturarController < ApplicationController
+end

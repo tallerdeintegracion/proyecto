@@ -52,6 +52,12 @@ class InventarioController < ApplicationController
 
   end	
 
+  def self.producirMaterialesProcesados(bodega)
+	puts "5) #{Time.now}  Revisando si es necesario producir productos procesados"
+		 materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
+  		materias.each do |row|
+  		end		  	
+  end	
   def self.checkCompraMaterial(bodega)
 
   	puts "4) #{Time.now}  Revisando si son necesarios comprar material para productos procesados "

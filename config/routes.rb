@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
 
+  resources :grupos
   resources :precios
   resources :formulas
   resources :skus
@@ -17,21 +18,21 @@ scope '/api' do
     scope '/facturas' do
       scope '/recibir' do
         scope '/:id' do
-          post '/' => 'api#facturarRecibir'
+          get '/' => 'api#facturarRecibir'
         end
       end
     end
     scope '/oc' do
       scope '/recibir' do
         scope '/:id' do
-          post '/' => 'api#ocRecibir'
+          get '/' => 'api#ocRecibir'
         end
       end
     end
     scope '/pagos' do
       scope '/recibir' do
         scope '/:id' do
-          post '/' => 'api#pagosRecibir'
+          get '/' => 'api#pagoRecibir'
         end
       end
     end
@@ -61,6 +62,13 @@ end
   get 'precios/show'
   get 'precios/edit'
   get 'precios/destroy'
+  
+  get 'sent_orders/index'
+  get 'sent_orders/new'
+  get 'sent_orders/show'
+  get 'sent_orders/edit'
+  get 'sent_orders/destroy'
+  
   root 'home#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

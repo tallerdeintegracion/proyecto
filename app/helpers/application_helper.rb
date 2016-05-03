@@ -6,8 +6,12 @@ module ApplicationHelper
 
 	
 
-
-
+	def idGrupo
+		return "571262b8a980ba030058ab51"
+	end
+	def idBanco
+		return "571262c3a980ba030058ab5d"
+	end
 	def bodegaBaseUrl
 		return 'http://integracion-2016-dev.herokuapp.com/bodega'
 	end
