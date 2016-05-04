@@ -45,7 +45,6 @@ class HomeController < ApplicationController
     #@show = obtenerFactura('571b745e79749603006e3eb2')  	
     #@show = emitirFactura('57270b94ba0c0f0300c51bef') 
 
->>>>>>> master
   end
 
   def bodegas

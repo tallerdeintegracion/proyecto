@@ -2,7 +2,6 @@ Rails.application.routes.draw do
 
 
 
-
   resources :grupos
   resources :precios
   resources :formulas
@@ -53,7 +52,7 @@ end
 
  
   get 'inventario/run'
-
+  get 'home/bodegas'
   get 'receive_orders/receive'
   get 'home/documentacion'
   get 'skus/index'
@@ -83,8 +82,7 @@ end
   get 'sent_orders/destroy'
   get 'api/documentacion'
   get 'home/bodegas'
-  
-
+  root 'home#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
