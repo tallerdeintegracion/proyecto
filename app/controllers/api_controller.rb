@@ -4,6 +4,7 @@ class ApiController < ApplicationController
   include ReceiveOrdersHelper
   include PagosHelper
   include FacturarHelper
+  include InventarioHelper
   
   layout false
 
@@ -31,7 +32,10 @@ class ApiController < ApplicationController
     idPago = params[:id]
     idFactura = params[:idfactura]
     result = analizarPago(idPago,idFactura)
-    ## Gatillamos el envio desde aqui si es posible?
+    Thread.new do
+      ## Gatillamos el envio desde aqui si es posible?
+      verSiEnviar(idFactura)
+    end
     render :json => {:validado => result, :idtrx => idPago}
   end
 
