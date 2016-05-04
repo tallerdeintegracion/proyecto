@@ -331,17 +331,35 @@ class InventarioController < ApplicationController
   def self.vaciarAlmacenesRecepcion(bodegaRecepcion , bodegaPulmon, bodegaPrincipal)
 	
 	puts "2) #{Time.now} Reciviendo materias primas "
-  	 materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
+
+  	materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
   		materias.each do |row|
   		sku = row.sku	
-  		recibirMateriasPrimas(sku, bodegaRecepcion, bodegaPrincipal)
-  		recibirMateriasPrimas(sku, bodegaPulmon, bodegaPrincipal)
+  		recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
+  		recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+  	end
+
+  	materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
+  		materias.each do |row|
+  		sku = row.sku	
+  		recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
+  		recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+
+  		ingrediente = Formula.where("sku = ?"  , sku)
+ 			ingrediente.each do |ing|
+			skuMaterial = ing.skuIngerdiente	
+			recibirMaterial(skuMaterial, bodegaRecepcion, bodegaPrincipal)
+  			recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal)
+		
+
+ 		end	
+
   	end
 
   end	
 
 
-  def self.recibirMateriasPrimas( sku , almacenRecepcion , bodegaMateriasPrimas)
+  def self.recibirMaterial( sku , almacenRecepcion , bodegaMateriasPrimas)
   		
 
   		

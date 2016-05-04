@@ -4,8 +4,8 @@ class CreateProductions < ActiveRecord::Migration
       t.string :sku
       t.integer :cantidad
       t.datetime :disponible
-
       t.timestamps null: false
+      
     end
   end
 end
