@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Skus</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sku</th>
+      <th>Descripcion</th>
+      <th>Tipo</th>
+      <th>Grupoproyecto</th>
+      <th>Unidades</th>
+      <th>Costounitario</th>
+      <th>Loteproduccion</th>
+      <th>Tiempoproduccion</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @skus.each do |sku| %>
+      <tr>
+        <td><%= sku.sku %></td>
+        <td><%= sku.descripcion %></td>
+        <td><%= sku.tipo %></td>
+        <td><%= sku.grupoProyecto %></td>
+        <td><%= sku.unidades %></td>
+        <td><%= sku.costoUnitario %></td>
+        <td><%= sku.loteProduccion %></td>
+        <td><%= sku.tiempoProduccion %></td>
+        <td><%= link_to 'Show', sku %></td>
+        <td><%= link_to 'Edit', edit_sku_path(sku) %></td>
+        <td><%= link_to 'Destroy', sku, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sku', new_sku_path %>

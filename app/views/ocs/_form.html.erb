@@ -1,0 +1,45 @@
+<%= form_for(@oc) do |f| %>
+  <% if @oc.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@oc.errors.count, "error") %> prohibited this oc from being saved:</h2>
+
+      <ul>
+      <% @oc.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :oc %><br>
+    <%= f.text_field :oc %>
+  </div>
+  <div class="field">
+    <%= f.label :estados %><br>
+    <%= f.text_field :estados %>
+  </div>
+  <div class="field">
+    <%= f.label :canal %><br>
+    <%= f.text_field :canal %>
+  </div>
+  <div class="field">
+    <%= f.label :factura %><br>
+    <%= f.text_field :factura %>
+  </div>
+  <div class="field">
+    <%= f.label :pago %><br>
+    <%= f.number_field :pago %>
+  </div>
+  <div class="field">
+    <%= f.label :sku %><br>
+    <%= f.text_field :sku %>
+  </div>
+  <div class="field">
+    <%= f.label :cantidad %><br>
+    <%= f.number_field :cantidad %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

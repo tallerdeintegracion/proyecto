@@ -16,13 +16,17 @@ set :ssh_options, { :forward_agent => true }
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-set :branch, "master"
+set :branch, "basesDatos"
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, '/var/www/my_app_name'
 set :deploy_to, '/home/administrator/Proyecto'
 # Default value for :scm is :git
 # set :scm, :git
 set :scm, :git
+
+
+
+set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
 # Default value for :format is :pretty
 # set :format, :pretty
 
@@ -58,3 +62,16 @@ namespace :deploy do
   end
 
 end
+namespace :final do
+  desc 'Arregla datos'
+  task :ejecutar do
+    on roles(:app) do
+    execute "rm #{ current_path }/config/database.yml"
+    execute "ln -s #{ deploy_to }/shared/config/database.yml #{ current_path }/config/database.yml"
+    execute "touch #{ File.join(current_path, 'tmp', 'restart.txt') }"
+    #execute "passenger-config restart-app"
+    end
+  end
+end
+
+after "deploy", "final:ejecutar"

@@ -11,6 +11,79 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20160503012206) do
+
+  create_table "formulas", force: :cascade do |t|
+    t.string   "sku",               limit: 255
+    t.string   "descripcion",       limit: 255
+    t.integer  "lote",              limit: 4
+    t.integer  "unidad",            limit: 4
+    t.string   "skuIngerdiente",    limit: 255
+    t.string   "ingrediente",       limit: 255
+    t.integer  "requerimiento",     limit: 4
+    t.integer  "unidadIngrediente", limit: 4
+    t.integer  "precioIngrediente", limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  create_table "grupos", force: :cascade do |t|
+    t.integer  "nGrupo",     limit: 4
+    t.string   "idGrupo",    limit: 255
+    t.string   "idBanco",    limit: 255
+    t.string   "idAlmacen",  limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "ocs", force: :cascade do |t|
+    t.string   "oc",         limit: 255
+    t.string   "estados",    limit: 255
+    t.string   "canal",      limit: 255
+    t.string   "factura",    limit: 255
+    t.integer  "pago",       limit: 4
+    t.string   "sku",        limit: 255
+    t.integer  "cantidad",   limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "precios", force: :cascade do |t|
+    t.string   "sku",            limit: 255
+    t.string   "descripcion",    limit: 255
+    t.integer  "precioUnitario", limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  create_table "productions", force: :cascade do |t|
+    t.string   "sku",        limit: 255
+    t.integer  "cantidad",   limit: 4
+    t.datetime "disponible"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "sent_orders", force: :cascade do |t|
+    t.string   "oc",         limit: 255
+    t.string   "sku",        limit: 255
+    t.integer  "cantidad",   limit: 4
+    t.string   "estado",     limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "skus", force: :cascade do |t|
+    t.string   "sku",              limit: 255
+    t.string   "descripcion",      limit: 255
+    t.string   "tipo",             limit: 255
+    t.string   "grupoProyecto",    limit: 255
+    t.string   "unidades",         limit: 255
+    t.integer  "costoUnitario",    limit: 4
+    t.integer  "loteProduccion",   limit: 4
+    t.float    "tiempoProduccion", limit: 24
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
 
 end

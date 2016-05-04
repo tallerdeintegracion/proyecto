@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sku: MyString
+  descripcion: MyString
+  lote: 1
+  unidad: 1
+  skuIngerdiente: MyString
+  ingrediente: MyString
+  requerimiento: 1
+  unidadIngrediente: 1
+  precioIngrediente: 1
+
+two:
+  sku: MyString
+  descripcion: MyString
+  lote: 1
+  unidad: 1
+  skuIngerdiente: MyString
+  ingrediente: MyString
+  requerimiento: 1
+  unidadIngrediente: 1
+  precioIngrediente: 1

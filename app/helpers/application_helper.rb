@@ -4,13 +4,38 @@ module ApplicationHelper
 
 	
 
-	def findKeys
-		key = 'GKTSVmI778e8Mjg'
-		return key
+	
+
+	def idGrupo
+		return "571262b8a980ba030058ab51"
+	end
+	def idBanco
+		return "571262c3a980ba030058ab5d"
 	end
 	def bodegaBaseUrl
 		return 'http://integracion-2016-dev.herokuapp.com/bodega'
 	end
+	def bancoBaseUrl
+		return 'http://mare.ing.puc.cl/banco'
+	end
+	def ocBaseUrl
+		return 'http://mare.ing.puc.cl/oc'
+	end
+	def facturaBaseUrl
+		return 'http://mare.ing.puc.cl/facturas'
+	end
+
+
+
+	## Metodos bodega###
+	# -getAlmacenes
+	# -getSKUWithStock
+	# -getStock
+	# -moverStock
+	# -moverStockBodega
+	# - producir(no implementado)
+	# - Despachar(no implementado) 
+	# -getCuentaFabrica
 
 	def getAlmacenes
 
@@ -18,11 +43,9 @@ module ApplicationHelper
 		String toEncode = "GET" 
 		url =bodegaBaseUrl+path
         authHeader = encodeHmac(toEncode)    
-        data =  httpRequest(url , authHeader, "GET")
+        data =  httpGetRequest(url , authHeader)
         return  data
 	end
-
-
 
 	def getSKUWithStock(almacenId)
 	
@@ -30,7 +53,7 @@ module ApplicationHelper
 		url =bodegaBaseUrl+path+"?"+"almacenId="+almacenId
 		String toEncode = "GET"+almacenId 
         authHeader = encodeHmac(toEncode)
-        data =  httpRequest(url, authHeader,"GET")
+        data =  httpGetRequest(url , authHeader)
         return  data
 
 	end
@@ -44,40 +67,47 @@ module ApplicationHelper
 		url =bodegaBaseUrl+path+"?"+"almacenId="+almacenId+'&'+"sku="+sku.to_s+"&limit="+limit.to_s
 		String toEncode = "GET"+almacenId+sku.to_s
         authHeader = encodeHmac(toEncode)
-        data =  httpRequest(url, authHeader,"GET")
+        data =  httpGetRequest(url , authHeader)
         return  data
 
 	end
 
-
-
-
 	def moverStock(productoId , almacenId)
 		path ='/moveStock'
-		url =bodegaBaseUrl+path+"?"+"productoId="+productoId+'&'+"almacenId="+almacenId
-		#render :text => url
+		url =bodegaBaseUrl+path
 		String toEncode = "POST"+productoId+almacenId
-		#render :text => toEncode
+
         authHeader = encodeHmac(toEncode)
-        render :text => authHeader
-        data =  httpRequest(url, authHeader,"POST")
+        params = {'productoId' => productoId, 'almacenId' => almacenId}
+        data =  httpPostRequest(url , authHeader, params)
+
         return  data
 	end	
 
 	def moverStockBodega(productoId , almacenId)
-
 		path ='/moveStockBodega'
-		url =bodegaBaseUrl+path+"?"+"productoId="+productoId+'&'+"almacenId="+almacenId
-		#render :text => url
+		url =bodegaBaseUrl+path
 		String toEncode = "POST"+productoId+almacenId
-		
         authHeader = encodeHmac(toEncode)
-        #render :text => authHeader
-        data =  httpRequest(url, authHeader,"POST")
+        params = {'productoId' => productoId, 'almacenId' => almacenId}
+        data =  httpPostRequest(url , authHeader, params)
         return  data
 	end	
 
-    #INTEGRACION grupo3:4duJdOkzEf2a6eycwDXgM5MzU9o=
+	def producirStock(sku , trxId , cantidad)
+		path ='/fabrica/fabricar'
+		url =bodegaBaseUrl+path
+		params = { 
+			"sku" => sku,
+			"trxId" => trxId,
+			"cantidad" => cantidad
+		}
+		String toEncode = "PUT"+sku+cantidad.to_s+trxId
+		authHeader = encodeHmac(toEncode)
+		data =  httpPutRequest(url , authHeader, params)
+		return  data
+	end	
+
 
 	def getCuentaFabrica()
 
@@ -85,26 +115,246 @@ module ApplicationHelper
 		String toEncode = "GET"
 		url =bodegaBaseUrl+path
         authHeader = encodeHmac(toEncode)
-        data =  httpRequest(url, authHeader,"GET" )
+        data =  httpGetRequest(url , authHeader)
         return  data
+
+	end
+
+	# Banco#
+	# => obtenertransaccion
+	# => obtener cartola
+	# => obtener cuenta
+	# => transferir
+
+	def transferir(monto , origen , destino  )
+
+		path ='/trx'
+		url =bancoBaseUrl+path
+		params = { 
+			"monto" => monto,
+			"origen" => origen,
+			"destino" => destino
+		}
+
+		data =  httpPutRequest(url , nil, params)
+		return  data
+
+	end
+
+	def obtenerTransaccion(id)
+		path ='/trx/'+id
+		url =bancoBaseUrl+path
+		data =  httpGetRequest(url ,nil)
+        return  data
+
+	end
+	def obtenerCartola(fechaInicio , fechaFin, id)
+
+		path ='/cartola'
+		url =bancoBaseUrl+path
+		params = {"fechaInicio"=> fechaInicio,"fechaFin"=> fechaFin,"id"=> id}
+		data =  httpPostRequest(url , nil, params)
+		return  data
+	end
+	def obtenerCuenta(id)
+		path ='/cuenta/'+id
+		url =bancoBaseUrl+path
+		data =  httpGetRequest(url ,nil)
+        return  data
+	
+	end
+
+	#orden de compra
+
+	
+	def crearOrdenDeCompra(canal , cantidad , sku , cliente, proveedor , precioUnitario , fechaEntrega , notas)
+		path ='/crear'
+		url =ocBaseUrl+path
+		params={ "canal" => canal , 
+				"cantidad" => cantidad,
+				"sku" => sku,
+				"cliente" => proveedor,
+				"proveedor" => proveedor,
+				"precioUnitario" =>  precioUnitario,
+				"fechaEntrega" => fechaEntrega,
+				"notas" => notas
+				}
+
+		data =  httpPutRequest(url , nil, params)
+		return  data
+
+	end
+
+	def recepcionarOrdenDeCompra(idOrdenDeCompra)
+		path ='/recepcionar/'+idOrdenDeCompra
+		url =ocBaseUrl+path
+		params={ "id" => idOrdenDeCompra }
+		data =  httpPostRequest(url , nil, params)
+		return  data
+	
+	end
+	def rechazarOrdenDeCompra(idOrdenDeCompra, motivo)
+		path ='/rechazar/'+idOrdenDeCompra
+		url =ocBaseUrl+path
+		params={ "id" => idOrdenDeCompra , "rechazo" => motivo}
+		data =  httpPostRequest(url , nil, params)
+		return  data
+	end
+
+	def anularOrdenDeCompra(idOrdenDeCompra , motivo)
+
+		path ='/anular/'+idOrdenDeCompra
+		url =ocBaseUrl+path
+		params={'id'=> idOrdenDeCompra ,'anulacion'=> motivo	}
+		data =  httpDeleteRequest(url , nil, params)
+		
+
+	end
+
+	def obtenerOrdenDeCompra(idOrdenDeCompra)
+		path ='/obtener/'+idOrdenDeCompra
+		url =ocBaseUrl+path
+        data =  httpGetRequest(url , nil )
+        return  data
+
+	end
+
+	#Sistema facturas
+	#
+	#
+	#
+	#
+	#
+	#
+	#
+	#
+	#
+	def emitirFactura (idOrdenDeCompra )
+		path ='/'
+		url =facturaBaseUrl+path
+		params={ "oc" => idOrdenDeCompra }
+		data =  httpPutRequest(url , nil, params)
+		return  data		
+
+	end
+	def obtenerFactura(idfactura)
+
+		path ='/'+idfactura
+		url =facturaBaseUrl+path
+        data =  httpGetRequest(url , nil )
+        return  data
+	end
+
+
+
+
+
+	def httpPostRequest( url, authHeader ,params)
+		require 'net/http'
+		require 'uri'
+		if authHeader.nil?
+			headers = {'Content-Type' => 'application/json'}
+		else
+			headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
+		end	
+
+        uri = URI.parse(url)
+        http = Net::HTTP.new(uri.host, uri.port)
+
+        if params.nil?
+		response = http.post(uri.path,'{}', headers)
+		else
+		response = http.post(uri.path, params.to_json, headers)	 
+		end	
+
+    	data = response.body
 
 	end
 
 
 
-	def httpRequest( url, authHeader, type )
+
+
+	def httpPutRequest( url, authHeader ,params)
 		require 'net/http'
 		require 'uri'
+		require 'httparty'
+		
+		if authHeader.nil?
+			headers = {"Content-Type" => "application/json"}
+		else
+			headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
+		end	
+        
+        uri = URI.parse(url)
+        http = Net::HTTP::new(uri.host, uri.port)
+        if params.nil?
+			#response = HTTParty.put(url, :headers => headers)
+		else
+			response = HTTParty.put(url ,
+				:headers =>  headers,
+				:body => params.to_json	
+				)
+		end	
+    	data =  response.body
+    	return data
+	end
+
+	def valid_json?(json)
+  		begin
+    	JSON.parse(json)
+    	return true
+  		rescue JSON::ParserError => e
+   		return false
+  		end
+	end
+
+	def httpDeleteRequest( url, authHeader ,params)
+		
+		require 'net/http'
+		require 'uri'
+		require 'httparty'
+
+		if authHeader.nil?
+		headers = {'Content-Type' => 'application/json'}
+		else
 		headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
-        uri = URI.parse(url)    
-        if type=="GET"
-        request = Net::HTTP::Get.new(uri, headers)
-        elsif type=="POST"
-        request = Net::HTTP::Post.new(uri, headers)
-        end	
-        response = Net::HTTP.new(uri.host, 80).start {|http| http.request(request) }
+		end	
+		uri = URI.parse(url)
+        http = Net::HTTP::new(uri.host, uri.port)
+        
+        if params.nil?
+		#response = http.delete(uri.path)
+		else
+		response = HTTParty.delete(url ,
+				:headers =>  headers,
+				:body => params.to_json	
+				)	  
+		end	
     	data = response.body
 
+	end
+
+	def httpGetRequest( url, authHeader)
+		require 'net/http'
+		require 'uri'
+		
+		if authHeader.nil?
+			headers = {'Content-Type' => 'application/json'}
+		else
+			headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
+		end	
+        uri = URI.parse(url)    
+        request = Net::HTTP::Get.new(uri, headers)
+        response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) }
+    	data = response.body
+	end
+
+
+
+	def findKeys
+		key = 'GKTSVmI778e8Mjg'
+		return key
 	end
 
 	def encodeHmac(data )
@@ -117,6 +367,12 @@ module ApplicationHelper
 
         return result
 	end
+
+
+	
+
+
+
 
 
 end
