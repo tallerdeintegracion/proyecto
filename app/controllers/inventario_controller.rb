@@ -74,10 +74,10 @@ class InventarioController < ApplicationController
 		materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
   		materias.each do |row|
   		
-  			revisarMaterialProcesado(row)
+  			revisarMaterialProcesado(row , bodega)
   		end		  	
   end	
-  def self.revisarMaterialProcesado(row)
+  def self.revisarMaterialProcesado(row , bodega)
 
   			sku = row.sku
   			coste = row.costoUnitario
@@ -188,7 +188,7 @@ class InventarioController < ApplicationController
   		return
   	end 
   	
-  	put "Oc fue aceptada"
+  	puts "Oc fue aceptada"
   	
   			
   end	
