@@ -4,7 +4,6 @@ class ApiController < ApplicationController
   include ReceiveOrdersHelper
   include PagosHelper
   include FacturarHelper
-  include InventarioController
   
   layout false
 
@@ -49,11 +48,20 @@ class ApiController < ApplicationController
       render :json => {:aceptado => false, :idoc => id} 
       return
     end   
-    result = analizarOC(id)  
-    ## Gatillamos el generar la factura desde aqui?
+    result = analizarOC(id)      
     render :json => {:aceptado => result, :idoc => id} 
+    
+    Thread.new do
+      fact = JSON.parse(emitirFactura(id))
+      nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
+      url = "http://localhost/api/facturas/recibir/" + fact["_id"]
+      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+
+      ans = httpGetRequest(url ,nil)
+    end
+    
   end
-  def despachoRecibir(id)
+  def despachoRecibir
     idFactura = params[:id]
     
     ocBD = Oc.findBy(factura: idFactura)
