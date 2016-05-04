@@ -3,6 +3,7 @@
 <html>
 <head>
 <style>
+
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
@@ -20,10 +21,25 @@ th, td {
 <% @almacenesInfo.each do |almacen| %>
   <h3>Almacen: <%= almacen["_id"]%>  </h3>
   <h3>Total Space  <%= almacen["totalSpace"]%> </h3>
-  <h3>Used Space <%= almacen["usedSpace"]%></h3>
-
+  <h3>Used Space <%= almacen["usedSpace"]%></h3>  
+  <%
+    despacho =almacen["despacho"]
+    recepcion =almacen["recepcion"]
+    pulmon =almacen["pulmon"]
+    tipo = "Normal"
+    if pulmon == true
+      tipo ="Pulmon"
+    end 
+    if recepcion == true
+      tipo ="Recepcion"
+    end
+    if despacho == true
+      tipo ="Despacho"
+    end  
+  %>
+  <h3>Tipo: <%= tipo%>  </h3>
   	<table style="width:100%">
-  	<tr>
+  	<tr bgcolor="#B3B5B5">
     	<th>SKU</th>
     	<th>Nombre</th>		
     	<th>Cantidad</th>
@@ -31,9 +47,9 @@ th, td {
   	<% @products = JSON.parse(getSKUWithStock(almacen["_id"]))%>
   	<% @products.each do |product| %>	
   	<tr>
-  		<th><%=product["_id"] %>	</th>
-    	<th>Nombre</th>		
-    	<th><%=product["total"] %></th>
+  		<th><%= product["_id"] %>	</th>
+    	<th><%= Sku.find_by(sku: product["_id"]).descripcion%></th>		
+    	<th><%= product["total"] %></th>
     </tr>
 
 	<% end %>
