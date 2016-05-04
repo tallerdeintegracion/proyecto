@@ -11,7 +11,7 @@ class HomeController < ApplicationController
     #@show= obtenerTransaccion('1234')
 
   	#@show = getAlmacenes()
-
+    @show = anularOrdenDeCompra("571c0c42d7edb6030071f243" , "prueba")
   	#@show = getSKUWithStock('571262aaa980ba030058a23d')
   	#@show= getCuentaFabrica()
     #@show= transferir(10 , "571262c3a980ba030058ab5d", "571262aea980ba030058a5d8")
@@ -20,7 +20,7 @@ class HomeController < ApplicationController
 
 
   	#@show = getSKUWithStock('571262aaa980ba030058a1f1')
-  	@show = getSKUWithStock('571262aaa980ba030058a1f3')
+  	#@show = getSKUWithStock('571262aaa980ba030058a1f3')
   	#@show= getCuentaFabrica()
     #@show= transferir(10 , "571262c3a980ba030058ab5d", "571262aea980ba030058a5d8")
     #@show = producirStock("8","572283e304c78e0300ce3ee2", 10 )

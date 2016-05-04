@@ -22,14 +22,15 @@ class InventarioController < ApplicationController
   vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal)
   checkMateriasPrimas(@bodegaPrincipal)
   checkCompraMaterial(@bodegaPrincipal)
-  #checkProductos(@bodegaPrincipal)
+  producirMaterialesProcesados(@bodegaPrincipal)
+ 
 
   end
 
 	
   def self.definirVariables 
   		
-  	@returnPoint = 200
+  	@returnPoint = 1000
   	@returnPointProcesados = 400
   	@bodegaPrincipal = "571262aaa980ba030058a1f3"
   	@bodegaRecepcion = "571262aaa980ba030058a1f1"
@@ -66,15 +67,76 @@ class InventarioController < ApplicationController
   	retorno = unHash["_id"]
   	return retorno
   
-
   end	
-
+  
   def self.producirMaterialesProcesados(bodega)
 	puts "5) #{Time.now}  Revisando si es necesario producir productos procesados"
-		 materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
+		materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
   		materias.each do |row|
+  		
+  			revisarMaterialProcesado(row)
   		end		  	
   end	
+  def self.revisarMaterialProcesado(row)
+
+  			sku = row.sku
+  			coste = row.costoUnitario
+  			tamañoLote = row.loteProduccion
+
+  			puts "### Mterial " + sku.to_s + " coste " + coste.to_s + "  "+tamañoLote.to_s
+
+  			stock = checkStock(sku, bodega)
+  			puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s 
+	
+ 			produccion = enProduccion(sku)
+ 			puts "### Existen en produccion " + produccion.to_s
+
+  			lotes = calcularLotes(stock, produccion , tamañoLote, @returnPoint)
+ 			puts "### Lotes faltantes " + lotes.to_s
+
+ 			maxLotes =  numeroLotesPosible(sku , bodega )
+ 			puts "Maximo de lotes aproducir "+ maxLotes.to_s
+
+ 			produccion = 0
+ 			if maxLotes > lotes
+ 				produccion = lotes
+ 			else
+ 				produccion = maxLotes
+ 			end	  
+ 			if produccion == 0
+ 				return
+ 			end
+ 			producirMaterialProcesado(sku , produccion, tamañoLote)
+
+  end	
+  def self.llevarADespacho(sku , cantidad , destino)
+  
+  	
+
+  end	
+  def self.numeroLotesPosible(sku , bodega )
+  		materias = Formula.where("sku = ?"  , sku)
+ 		maxLotes = 100
+ 		materias.each do |ing|
+
+			skuMaterial = ing.skuIngerdiente
+			nececidad = ing.requerimiento	
+			stockMaterial = checkStock(skuMaterial , bodega)
+			lotes = (stockMaterial/nececidad).to_i
+			if maxLotes > lotes
+				maxLotes=lotes
+			end	
+
+ 		end	
+ 		return maxLotes
+  end 
+  def self.producirMaterialProcesado(sku , lotes , tamañoLote)
+  		materias = Formula.where("sku = ?"  , sku)
+ 		materias.each do |ing|
+
+ 		
+ 		end
+  end
 
 
   def self.checkCompraMaterial(bodega)
@@ -121,21 +183,17 @@ class InventarioController < ApplicationController
   	aceptado = sendOc(grupo , id)				
   	puts "##### Aceptada : " + aceptado.to_s
   	if aceptado == false
-  		## TODO elimnar OC
+  		data = anularOrdenDeCompra(id , "Fue rechazada")
+  		puts "orden anulada " + data 
   		return
   	end 
   	
-  	ocAceptada
+  	put "Oc fue aceptada"
   	
-  	
-  	
-
-  		
+  			
   end	
 
-  def self.ocAceptada
-
-  end	
+ 
 
   def self.tamañoOrden(stock , skuMaterial , grupo)
 	faltante = @returnPoint -(stock + pedidas(skuMaterial))
@@ -360,9 +418,7 @@ class InventarioController < ApplicationController
 
 
   def self.recibirMaterial( sku , almacenRecepcion , bodegaMateriasPrimas)
-  		
-
-  		
+  		  		
   		stock = checkStock(sku ,almacenRecepcion) 
 		stockInicial = stock	
 

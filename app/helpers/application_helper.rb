@@ -203,7 +203,7 @@ module ApplicationHelper
 
 		path ='/anular/'+idOrdenDeCompra
 		url =ocBaseUrl+path
-		params={'id'=> "571262c3a980ba030058ab5d",'motivo'=> "abc"	}
+		params={'id'=> idOrdenDeCompra ,'anulacion'=> motivo	}
 		data =  httpDeleteRequest(url , nil, params)
 		
 
@@ -286,8 +286,6 @@ module ApplicationHelper
         
         uri = URI.parse(url)
         http = Net::HTTP::new(uri.host, uri.port)
-
-		
         if params.nil?
 			#response = HTTParty.put(url, :headers => headers)
 		else
@@ -313,18 +311,23 @@ module ApplicationHelper
 		
 		require 'net/http'
 		require 'uri'
+		require 'httparty'
+
 		if authHeader.nil?
 		headers = {'Content-Type' => 'application/json'}
 		else
 		headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
 		end	
-        uri = URI.parse(url)
-        http = Net::HTTP::Delete.new(uri.host)
-        http.set_form_data(params)
+		uri = URI.parse(url)
+        http = Net::HTTP::new(uri.host, uri.port)
+        
         if params.nil?
-		response = http.delete(uri.path)
+		#response = http.delete(uri.path)
 		else
-		response = http.delete(uri.path)	  
+		response = HTTParty.delete(url ,
+				:headers =>  headers,
+				:body => params.to_json	
+				)	  
 		end	
     	data = response.body
 
