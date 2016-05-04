@@ -4,11 +4,14 @@ class ApiController < ApplicationController
   include ReceiveOrdersHelper
   include PagosHelper
   include FacturarHelper
-  include InventarioController
+  #include InventarioController
   
   layout false
 
   ## Endpoint de /api/consultar/:id
+  def documentacion
+
+  end  
   def inventarioConsultar
 
     inventario = JSON.parse(getSKUWithStock("571262aaa980ba030058a1f3"))
@@ -64,7 +67,7 @@ class ApiController < ApplicationController
     end
     
     ## Gatilla el recibir los productos
-    ans = recibirMateriasPrimas(ocBD.sku, bodegaRecepcion, bodegaPrincipal)
+    #ans = recibirMateriasPrimas(ocBD.sku, bodegaRecepcion, bodegaPrincipal)
 
     if ans > ocBD.cantidad
       render :json => {:validado => true} 

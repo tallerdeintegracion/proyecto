@@ -1,0 +1,103 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><META http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>
+
+
+
+
+
+<div>
+<center>
+<h1>Documentacion API</h1>
+</center>
+<a href="#0.1_1">1. Descripción de la API</a>
+<br>
+<a href="#0.1_2">2. Arquitectura subyacente</a>
+<br>
+<a href="#0.1_3">3. Descripción de Sistemas</a>
+<br>
+<a href="#0.1_4">4. Flujos</a>
+<br>
+<a href="#0.1_5">5. Creadores</a>
+
+<h3>1. Descripción de la API</h3>
+<p>Esta API cumple la funcion de permitir interactuar entre empresas de producción para la elaboración de productos manufacturados.</p>
+<p>Su principal objetivo es administrar el proceso de producción desde el momento de recibir una orden de compra, hasta haber entregado el producto, pasando por la producción, manejos de inventario y facturación.</p>
+<a href="#0.1_top">Volver</a>
+
+<br>
+
+<h3>2. Arquitectura subyacente</h3>
+<p>Este software fue creado basándonos en el modelo vista controlador (MVC) con el objetivo de separar bien las funciones y permitirnos administrar eficientemente los distintos recursos en cada nivel según fuera necesario.</p>
+<p>El framework utilizado fue Ruby on Rails (RoR), el cual permite trabajar eficientemente con este patrón, separando en:</p>
+<p>El Modelo:</p>
+<p> -Las tablas de las Bases de Datos</p>
+<p> -Las migraciones</p>
+<p> -Las observaciones</p>
+<p> -Las emigraciones</p>
+<p>La Vista:</p>
+<p> -La interfaz presentada al Usuario para interactuar con el controlador</p>
+<p>El Controlador:</p>
+<p> -La lógica detrás de la aplicación</p>
+<p> -La lógica detrás de las interacciones con Usuarios</p>
+<a href="#0.1_top">Volver</a>
+<br>
+
+<h3>3. Descripción de Sistemas</h3>
+<span style="text-decoration:underline"><p><a href="http://integra3.ing.puc.cl/api/consultar/:id" target="_blank">integra3.ing.puc.cl/api/<wbr>consultar/:id</a> (GET)</p></span>
+<p>Retorna un JSON con el stock del sku</p>
+<p>Parámetros: Ninguno</p>
+<p>Retorna:{&quot;stock&quot;: int, &quot;sku&quot;: int} </p>
+
+<br>
+
+<span style="text-decoration:underline"><p><a href="http://integra3.ing.puc.cl/api/facturas/recibir/:id" target="_blank">integra3.ing.puc.cl/api/<wbr>facturas/recibir/:id</a> (GET)</p></span>
+<p>Retorna un JSON informando si se validó la factura</p>
+<p>Parámetros: Ninguno</p>
+<p>Retorna:{&quot;validado&quot;: boolean, &quot;idfactura&quot;: string} </p>
+
+<br>
+
+
+<span style="text-decoration:underline"><p><a href="http://integra3.ing.puc.cl/api/pagos/recibir/:id?idfactura=xxxxx" target="_blank">integra3.ing.puc.cl/api/pagos/<wbr>recibir/:id?idfactura=xxxxx</a> (GET)</p></span>
+<p>Retorna un JSON informando si se validó el pago</p>
+<p>Parámetros: idfactura</p>
+<p>Retorna:{&quot;validado&quot;: boolean, &quot;idtrx&quot;: string} </p>
+
+<br>
+
+
+<span style="text-decoration:underline"><p><a href="http://integra3.ing.puc.cl/api/oc/recibir/:id" target="_blank">integra3.ing.puc.cl/api/oc/<wbr>recibir/:id</a> (GET)</p></span>
+<p>Retorna un JSON informando si se aceptó la Orden de Compra</p>
+<p>Parámetros: Ninguno</p>
+<p>Retorna:{&quot;aceptado&quot;: boolean, &quot;idoc&quot;: string}</p>
+
+<br>
+
+
+<span style="text-decoration:underline"><p><a href="http://integra3.ing.puc.cl/api/despachos/recibir/:id" target="_blank">integra3.ing.puc.cl/api/<wbr>despachos/recibir/:id</a> (GET)</p></span>
+<p>Retorna un JSON informando si se recibió el despacho</p>
+<p>Parámetros: Ninguno</p>
+<p>Retorna:{&quot;aceptado&quot;: boolean}</p>
+
+<br>
+<a href="#0.1_top">Volver</a>
+<br>
+
+<br>
+<h3>4. Flujos</h3>
+<a href="#0.1_top">Volver</a>
+<br>
+<br>
+
+<h3>5. Creadores</h3>
+<p>Jefe de Grupo: Benjamín Gimenez</p>
+<br>
+<p>Información de contacto:</p>
+<p>Benjamín Gimenez (<a href="mailto:bagimene@uc.cl" target="_blank">bagimene@uc.cl</a>)</p>
+<p>Juan Pablo Silva (<a href="mailto:jpsilva6@uc.cl" target="_blank">jpsilva6@uc.cl</a>)</p>
+<p>Cristóbal Richards (<a href="mailto:crichard1@uc.cl" target="_blank">crichard1@uc.cl</a>)</p>
+<p>Víctor Vidaurre (<a href="mailto:vmvidaurre@uc.cl" target="_blank">vmvidaurre@uc.cl</a>)</p>
+<a href="#0.1_top">Volver</a>
+</div>
+
+</body></html>
