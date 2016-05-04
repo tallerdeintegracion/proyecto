@@ -79,7 +79,7 @@ end
   get 'sent_orders/show'
   get 'sent_orders/edit'
   get 'sent_orders/destroy'
-  get 'api/documentacion'
+  get 'api/documentacion' => 'home#documentacion'
   
   root 'home#index'
   # The priority is based upon order of creation: first created -> highest priority.
