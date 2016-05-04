@@ -119,14 +119,22 @@ class InventarioController < ApplicationController
   	end	
   	
   	aceptado = sendOc(grupo , id)				
+  	puts "##### Aceptada : " + aceptado.to_s
+  	if aceptado == false
+  		## TODO elimnar OC
+  		return
+  	end 
   	
-  	if  aceptado == true 
-  	    puts "Oc fue aceptada"
-  	else
-  		puts "Oc fue rechazada"
-  	end
+  	ocAceptada
+  	
+  	
+  	
 
   		
+  end	
+
+  def self.ocAceptada
+
   end	
 
   def self.tamañoOrden(stock , skuMaterial , grupo)
@@ -169,16 +177,15 @@ class InventarioController < ApplicationController
   end
 
   def self.sendOc(group , oc)
-  	url = "http://integra"+ group.to_s + ".ing.puc.cl/oc/recibir/" +oc
+  	url = "http://integra"+ group.to_s + ".ing.puc.cl/api/oc/recibir/" +oc
   	puts "sending " + url  
   	resp = httpGetRequest( url, nil)
-  	puts  "el json devuelto"
+  
   	if valid_json?(resp) ==false
-  		return -1
+  		return false
   	end
   	json =JSON.parse(resp)
-  	puts  "el json devuelto" + json
-
+  	puts  "El grupo respondio " + json.to_s
   	aceptado = json["aceptado"]
   	
   	return  aceptado
