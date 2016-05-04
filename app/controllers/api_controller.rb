@@ -8,10 +8,10 @@ class ApiController < ApplicationController
   
   layout false
 
-  ## Endpoint de /api/consultar/:id
   def documentacion
 
   end  
+  ## Endpoint de /api/consultar/:id
   def inventarioConsultar
 
     inventario = JSON.parse(getSKUWithStock("571262aaa980ba030058a1f3"))
