@@ -18,7 +18,7 @@ class SentOrdersControllerTest < ActionController::TestCase
 
   test "should create sent_order" do
     assert_difference('SentOrder.count') do
-      post :create, sent_order: { cantidad: @sent_order.cantidad, estado: @sent_order.estado, oc: @sent_order.oc, sku: @sent_order.sku }
+      post :create, sent_order: { cantidad: @sent_order.cantidad, estado: @sent_order.estado, fechaEntrega: @sent_order.fechaEntrega, oc: @sent_order.oc, sku: @sent_order.sku }
     end
 
     assert_redirected_to sent_order_path(assigns(:sent_order))
@@ -35,7 +35,7 @@ class SentOrdersControllerTest < ActionController::TestCase
   end
 
   test "should update sent_order" do
-    patch :update, id: @sent_order, sent_order: { cantidad: @sent_order.cantidad, estado: @sent_order.estado, oc: @sent_order.oc, sku: @sent_order.sku }
+    patch :update, id: @sent_order, sent_order: { cantidad: @sent_order.cantidad, estado: @sent_order.estado, fechaEntrega: @sent_order.fechaEntrega, oc: @sent_order.oc, sku: @sent_order.sku }
     assert_redirected_to sent_order_path(assigns(:sent_order))
   end
 

@@ -50,7 +50,6 @@ class HomeController < ApplicationController
   def bodegas
     require 'json'
     @almacenesInfo = JSON.parse(getAlmacenes())
-
     totalspace = @almacenesInfo[0]["totalSpace"]
     totalspace = @almacenesInfo[0]["usedSpace"]
    

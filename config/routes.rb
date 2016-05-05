@@ -2,11 +2,11 @@ Rails.application.routes.draw do
 
 
 
+  resources :sent_orders
   resources :grupos
   resources :precios
   resources :formulas
   resources :skus
-  resources :sent_orders
   resources :product_orders
   resources :ocs
 

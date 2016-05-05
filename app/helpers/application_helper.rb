@@ -346,8 +346,20 @@ module ApplicationHelper
 		end	
         uri = URI.parse(url)    
         request = Net::HTTP::Get.new(uri, headers)
-        response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) }
-    	data = response.body
+       	
+       	begin 
+       	 	response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) } 
+       	
+       	rescue Errno::ETIMEDOUT  
+       	 	puts "--- Time out de la conexion" 
+        	
+    	end  
+    	if response.nil?
+    		return nil
+    	end	
+  
+    	return data = response.body
+
 	end
 
 
