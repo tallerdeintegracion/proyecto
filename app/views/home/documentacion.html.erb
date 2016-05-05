@@ -44,42 +44,47 @@
 <br>
 
 <h3 id="3">3. Descripción de Sistemas</h3>
-<span style="text-decoration: underline;"><p>integra3.ing.puc.cl/api/consultar/:id (GET)</p></span>
-<p>Retorna un JSON con el stock del sku</p>
-<p>Parámetros: Ninguno</p>
-<p>Retorna:{"stock": int, "sku": int} </p>
-
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/consultar/:id (GET)</span></p>
+<p>&emsp;Retorna un JSON con el stock del sku</p>
+<p>&emsp;Parámetros: Ninguno</p>
+<p>&emsp;Retorna:{"stock": int, "sku": int} </p>
+</div>
 <br>
 
-<span style="text-decoration: underline;"><p>integra3.ing.puc.cl/api/facturas/recibir/:id (GET)</p></span>
-<p>Retorna un JSON informando si se validó la factura</p>
-<p>Parámetros: Ninguno</p>
-<p>Retorna:{"validado": boolean, "idfactura": string} </p>
-
-<br>
-
-
-<span style="text-decoration: underline;"><p>integra3.ing.puc.cl/api/pagos/recibir/:id?idfactura=xxxxx (GET)</p></span>
-<p>Retorna un JSON informando si se validó el pago</p>
-<p>Parámetros: idfactura</p>
-<p>Retorna:{"validado": boolean, "idtrx": string} </p>
-
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/facturas/recibir/:id (GET)</span></p>
+<p>&emsp;Retorna un JSON informando si se validó la factura</p>
+<p>&emsp;Parámetros: Ninguno</p>
+<p>&emsp;Retorna:{"validado": boolean, "idfactura": string} </p>
+</div>
 <br>
 
 
-<span style="text-decoration: underline;"><p>integra3.ing.puc.cl/api/oc/recibir/:id (GET)</p></span>
-<p>Retorna un JSON informando si se aceptó la Orden de Compra</p>
-<p>Parámetros: Ninguno</p>
-<p>Retorna:{"aceptado": boolean, "idoc": string}</p>
-
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/pagos/recibir/:id?idfactura=xxxxx (GET)</span></p>
+<p>&emsp;Retorna un JSON informando si se validó el pago</p>
+<p>&emsp;Parámetros: idfactura</p>
+<p>&emsp;Retorna:{"validado": boolean, "idtrx": string} </p>
+</div>
 <br>
 
 
-<span style="text-decoration: underline;"><p>integra3.ing.puc.cl/api/despachos/recibir/:id (GET)</p></span>
-<p>Retorna un JSON informando si se recibió el despacho</p>
-<p>Parámetros: Ninguno</p>
-<p>Retorna:{"aceptado": boolean}</p>
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/oc/recibir/:id (GET)</span></p>
+<p>&emsp;Retorna un JSON informando si se aceptó la Orden de Compra</p>
+<p>&emsp;Parámetros: Ninguno</p>
+<p>&emsp;Retorna:{"aceptado": boolean, "idoc": string}</p>
+</div>
+<br>
 
+
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/despachos/recibir/:id (GET)</span></p>
+<p>&emsp;Retorna un JSON informando si se recibió el despacho</p>
+<p>&emsp;Parámetros: Ninguno</p>
+<p>&emsp;Retorna:{"aceptado": boolean}</p>
+</div>
 <br>
 <a href="#top">Volver</a>
 <br>
@@ -101,3 +106,15 @@
 <a href="#top">Volver</a>
 </body>
 </html>
+
+<style>
+body{
+
+background-color: 	#E0E0E0;
+}
+.boxed {
+	background-color: white; 
+	width: 700px;
+  	border: 1px solid black ;
+}
+</style>
