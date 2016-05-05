@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160503012206) do
+ActiveRecord::Schema.define(version: 20160504201142) do
 
   create_table "formulas", force: :cascade do |t|
     t.string   "sku",               limit: 255
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 20160503012206) do
     t.string   "sku",        limit: 255
     t.integer  "cantidad",   limit: 4
     t.string   "estado",     limit: 255
+    t.integer  "entrega",    limit: 4
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
