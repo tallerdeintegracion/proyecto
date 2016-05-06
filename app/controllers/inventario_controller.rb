@@ -31,11 +31,13 @@ class InventarioController < ApplicationController
 	
   def self.definirVariables 
   		
-  	@returnPoint = 1000
+  	@returnPoint = 2000
   	@returnPointProcesados = 400
   	@bodegaPrincipal = "571262aaa980ba030058a1f3"
   	@bodegaRecepcion = "571262aaa980ba030058a1f1"
   	@bodegaPulmon = "571262aaa980ba030058a23e"
+  	@bodegaDespacho = "571262aaa980ba030058a1f2"
+
   	@cuentaGrupo = "571262c3a980ba030058ab5d"
   	@GrupoProyecto="3";
   	@cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
@@ -99,7 +101,7 @@ class InventarioController < ApplicationController
  			puts "--- Lotes faltantes " + lotes.to_s
 
  			maxLotes =  numeroLotesPosible(sku , bodega )
- 			puts "--- Maximo de lotes aproducir con materias disponibles"+ maxLotes.to_s
+ 			puts "--- Maximo de lotes a producir con materias disponibles: "+ maxLotes.to_s
 
  			produccion = 0
  			if maxLotes > lotes
@@ -108,18 +110,34 @@ class InventarioController < ApplicationController
  				produccion = maxLotes
  			end	  
  			if produccion == 0
- 				return
+ 				return 
  			end
- 			puts "--- Se mandaran a producir " + produccion.to_s  + " lotes"
- 			producirMaterialProcesado(sku , produccion, tamañoLote)
+ 			
+ 			cantidad = produccion *tamañoLote
+ 			puts "--- Se mandaran a producir " + cantidad.to_s  + " lotes"
+ 			
+ 			exito =  false #llevarMateriaPrimasADespacho(sku , produccion)
+ 			
+ 			if exito == false
+ 				puts "--- Hubo un fallo en el movimiento de materias primas a despacho "
+ 				return 
+ 			end 
+ 				
+ 			monto = produccion * tamañoLote * coste
+
+ 			trx = pagar(monto , @cuentaGrupo , @cuentaFabrica  );
+	  		puts "--- Transferencia exitosa " + trx
+
+	  		detallesProd = producir(sku, trx, cantidad)
+  			puts "--- Se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
+  			
+  			actualizarRegistoProduccion(detallesProd , sku , cantidad)
+  			puts "--- Registro produccion actualizado "  
+ 			
 
   end	
 
-  def self.llevarADespacho(sku , cantidad , destino)
-  	
-  	
-
-  end	
+  
 
   def self.numeroLotesPosible(sku , bodega )
   		materias = Formula.where("sku = ?"  , sku)
@@ -137,12 +155,23 @@ class InventarioController < ApplicationController
  		end	
  		return maxLotes
   end 
-  def self.producirMaterialProcesado(sku , lotes , tamañoLote)
+
+  def self.llevarMateriaPrimasADespacho(sku , lotes )
+  		
   		materias = Formula.where("sku = ?"  , sku)
  		materias.each do |ing|
+ 			
+ 			skuIngrediente = ing.skuIngerdiente
+ 			cantidadPorLote = ing.requerimiento
+ 			cantidadTotal = cantidadPorLote*lotes
+ 			origen = @bodegaPrincipal
+ 			destino = @bodegaDespacho
 
- 		
+ 			## mover(sku , cantidad , origen , destino)
+
+
  		end
+
   end
 
 
@@ -323,10 +352,13 @@ class InventarioController < ApplicationController
  		else
 
   			trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
+	  		
 	  		puts "--- Transferencia exitosa " + trx
   			cantidad= lotes*tamañoLote
+  			
   			detallesProd = producir(sku, trx, cantidad)
   			puts "--- Se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
+  			
   			actualizarRegistoProduccion(detallesProd , sku , cantidad)
   			puts "--- Registro produccion actualizado "  
   		end
