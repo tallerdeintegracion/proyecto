@@ -60,6 +60,7 @@ def analizarFactura(id)
     nOtroGrupo = Grupo.find_by(idGrupo: factura[0]["proveedor"])["nGrupo"]
     url = "http://localhost/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
     #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+    Rails.logger.debug("debug:: se avisa la transferencia")
 
     ans = httpGetRequest(url ,nil)
   

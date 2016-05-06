@@ -3,6 +3,7 @@ class ReceiveOrdersController < ApplicationController
 extend  ApplicationHelper
 extend ReceiveOrdersHelper
 extend InventarioHelper
+include ApplicationHelper
 
 def self.run
  	

@@ -28,13 +28,15 @@ class ApiController < ApplicationController
 
   ## Endpoint de /api/pagos/recibir/:id?idfactura=xxxxx
   def pagoRecibir
+      Rails.logger.debug("debug:: transferencia recibida")
     idPago = params[:id]
     idFactura = params[:idfactura]
     result = analizarPago(idPago,idFactura)
-    Thread.new do
+    #Thread.new do
+      Rails.logger.debug("debug:: intentamos despachar")
       ## Gatillamos el envio desde aqui si es posible?
       verSiEnviar(idFactura)
-    end
+    #end
     render :json => {:validado => result, :idtrx => idPago}
   end
 
@@ -56,6 +58,8 @@ class ApiController < ApplicationController
     
     Thread.new do
       fact = JSON.parse(emitirFactura(id))
+      ocBD = Oc.find_by(oc: id)
+      ocBD.update(factura: fact["_id"])
       nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
       url = "http://localhost/api/facturas/recibir/" + fact["_id"]
       #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]

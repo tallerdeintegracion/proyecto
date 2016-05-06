@@ -39,7 +39,7 @@ def analizarOC(id)
 =end
 		#SE ASUME QUE QUE SÍ SE PUEDEN TRABAJAR SKU QUE NO PRODUZCA, SIEMPRE QUE TENGA. 
 	    #se validará que se tenga stock por ahora para satisfacer el pedido, sino se tiene se rechaza:
-	    stock = checkStock(sku, "571262aaa980ba030058a1f3")#@bodegaPrincipal)
+	    stock = getStockSKUDisponible(sku)#@bodegaPrincipal)
 	    puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s + " y piden "+cantidad.to_s+"\n"
 	    if cantidad.to_i > stock.to_i
 	      #se anula la oc
@@ -73,7 +73,7 @@ def analizarOC(id)
 			      cantidad_fija = cantidad
 			      movidas = 0
 			      while (cantidad.to_i > 0) do
-			      	productos = JSON.parse(getStock('571262aaa980ba030058a1f3' , sku.to_s ) )
+			      	productos = JSON.parse(getStock('571262aaa980ba030058a1f3' , sku.to_s,100 ) )
 			      	limite = 0
 				    if productos.nil?
 				    	break
