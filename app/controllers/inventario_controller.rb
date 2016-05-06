@@ -1,8 +1,10 @@
 class InventarioController < ApplicationController
  	
  	
- 	include	ApplicationHelper
-	include  InventarioHelper
+ 	extend	ApplicationHelper
+ 	extend  InventarioHelper
+ 	include ApplicationHelper
+ 	include InventarioHelper
  	#include	ProductOrdersController
  	
 
@@ -260,7 +262,7 @@ class InventarioController < ApplicationController
   	puts  "--- El stock reportado por el grupo es de " + stockGrupo.to_s
   	
   
-  
+  	#getStockSKUDisponible()
 
   	
   	orden = 0
@@ -498,23 +500,8 @@ class InventarioController < ApplicationController
   		  		
   		stock = checkStock(sku ,almacenRecepcion) 
 		stockInicial = stock	
-  		
-  		if stock == 0	
-  			return 0
-  		end
-
-  		while stock > 0
-  			stock = checkStock(sku ,almacenRecepcion)
-			resp = JSON.parse(getStock(almacenRecepcion , sku , 200 ))
-			cantidadMover = resp.length
-			
-			if resp.nil? | cantidadMover.nil? 
-  			return
-  			end
-			moveProducts(resp ,cantidadMover,  bodegaMateriasPrimas )	
-  		end	
-
-		return stockInicial
+  		moverInventario(sku, stock, almacenRecepcion, bodegaMateriasPrimas)
+  		return stockInicial
   end 	
 
 
@@ -528,14 +515,6 @@ class InventarioController < ApplicationController
   		moverStock(id , destino)
   	end
   end	
-  
-  def moverMiStock
-  	almacenOrigen = params[:or]
-    almacenDestino = params[:de]
-	cantidad = params[:ca]
-	sku = params[:sku]
-	moverInventario(sku, cantidad.to_i, almacenOrigen, almacenDestino)
-  end
 
   
 

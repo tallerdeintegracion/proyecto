@@ -127,7 +127,7 @@ def dejarStockEnDespacho(sku_a_mover)
   end
 
 
-  def moverInventario(sku, cantidad, almacenOrigen, almacenDestino)
+  def self.moverInventario(sku, cantidad, almacenOrigen, almacenDestino)
     
     ## Falta confirmar que exista el stock necesario
     
