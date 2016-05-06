@@ -76,7 +76,7 @@ module InventarioHelper
     puts "grupo destino es el " + grupoDestino + " y el almacén tiene id " + almacenId.to_s + "\n" 
     puts "Se despacha al cliente"
 
-    variable = despacharCliente(sku,cantidad,almacenId)
+    variable = despacharCliente(sku,cantidad,almacenId,precio,idOC)
       Rails.logger.debug("debug::"+variable)
 
 =begin
@@ -213,7 +213,7 @@ def dejarStockEnDespacho(sku_a_mover)
       counter = counter+1
     end
     return total+counter
-<<<<<<< HEAD
+
   end
  def despacharFTP(sku, cantidad, direccion, precio, idOC)
     ## Falta confirmar que exista el stock necesario
@@ -247,7 +247,7 @@ def dejarStockEnDespacho(sku_a_mover)
     return total+counter
   end
   
-   def despacharCliente(sku, cantidad, direccion)
+   def despacharCliente(sku, cantidad, direccion,precio,idOC)
     almacenOrigen = "571262aaa980ba030058a1f2"
     ## Falta confirmar que exista el stock necesario
     
@@ -255,7 +255,7 @@ def dejarStockEnDespacho(sku_a_mover)
     Rails.logger.debug("debug:: le empezamos a despachar al cliente")
     total = 0
     if cantidad > 100
-      total = despacharCliente(sku,cantidad-100, direccion)
+      total = despacharCliente(sku,cantidad-100, direccion,precio,idOC)
       cantidad = 100
     end
     Rails.logger.debug("debug:: cantidad es menor a 100")
@@ -267,7 +267,7 @@ def dejarStockEnDespacho(sku_a_mover)
     while counter < cantidad
       begin
         
-        movStock = moverStockBodega(ids[counter]["_id"],direccion)
+        movStock = despacharStock(ids[counter]["_id"],direccion,precio,idOC)
         Rails.logger.debug("debug::"+movStock)
         result = JSON.parse(movStock)
             
@@ -287,7 +287,3 @@ def dejarStockEnDespacho(sku_a_mover)
     return total+counter
   end
 end
-=======
-#    moverStock(ProductId, almacenDestino)
-  end
->>>>>>> 94be6133db3518c6bfae8498ec5093b822fb772d
