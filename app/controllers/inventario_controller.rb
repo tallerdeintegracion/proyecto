@@ -537,6 +537,4 @@ class InventarioController < ApplicationController
 	moverInventario(sku, cantidad.to_i, almacenOrigen, almacenDestino)
   end
 
-  
-
 end
