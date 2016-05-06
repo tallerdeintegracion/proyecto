@@ -1,1 +1,1 @@
-json.extract! @sku, :id, :sku, :descripcion, :tipo, :grupoProyecto, :unidades, :costoUnitario, :loteProduccion, :tiempoProduccion, :created_at, :updated_at
+json.extract! @sku, :id, :sku, :descripcion, :tipo, :grupoProyecto, :costoUnitario, :loteProduccion, :tiempoProduccion, :reservado, :created_at, :updated_at

@@ -9,10 +9,10 @@
       <th>Descripcion</th>
       <th>Tipo</th>
       <th>Grupoproyecto</th>
-      <th>Unidades</th>
       <th>Costounitario</th>
       <th>Loteproduccion</th>
       <th>Tiempoproduccion</th>
+      <th>Reservado</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -24,10 +24,10 @@
         <td><%= sku.descripcion %></td>
         <td><%= sku.tipo %></td>
         <td><%= sku.grupoProyecto %></td>
-        <td><%= sku.unidades %></td>
         <td><%= sku.costoUnitario %></td>
         <td><%= sku.loteProduccion %></td>
         <td><%= sku.tiempoProduccion %></td>
+        <td><%= sku.reservado %></td>
         <td><%= link_to 'Show', sku %></td>
         <td><%= link_to 'Edit', edit_sku_path(sku) %></td>
         <td><%= link_to 'Destroy', sku, method: :delete, data: { confirm: 'Are you sure?' } %></td>

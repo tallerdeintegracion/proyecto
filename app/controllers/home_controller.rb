@@ -27,7 +27,7 @@ class HomeController < ApplicationController
 
 
   	#@show = getSKUWithStock('571262aaa980ba030058a1f1')
-  	@show = getSKUWithStock('571262aaa980ba030058a1f3')
+  	@show = getSKUWithStock('571262aaa980ba030058a23d')
     #@show = getSKUWithStock('571262aaa980ba030058a1f2')
   	#@show= getCuentaFabrica()
     #@show= transferir(10 , "571262c3a980ba030058ab5d", "571262aea980ba030058a5d8")
