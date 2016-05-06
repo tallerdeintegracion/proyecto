@@ -5,10 +5,10 @@ class CreateSkus < ActiveRecord::Migration
       t.string :descripcion
       t.string :tipo
       t.string :grupoProyecto
-      t.string :unidades
       t.integer :costoUnitario
       t.integer :loteProduccion
       t.float :tiempoProduccion
+      t.integer :reservado
 
       t.timestamps null: false
     end

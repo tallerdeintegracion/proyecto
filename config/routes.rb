@@ -1,13 +1,14 @@
 Rails.application.routes.draw do
 
 
+
+  resources :ocs
+  resources :skus
+  resources :sent_orders
   resources :grupos
   resources :precios
   resources :formulas
-  resources :skus
-  resources :sent_orders
   resources :product_orders
-  resources :ocs
 
 scope '/api' do
     scope '/consultar' do
@@ -51,7 +52,7 @@ end
 
  
   get 'inventario/run'
-
+  get 'home/bodegas'
   get 'receive_orders/receive'
   get 'home/documentacion'
   get 'skus/index'
@@ -80,7 +81,9 @@ end
   get 'sent_orders/edit'
   get 'sent_orders/destroy'
   get 'api/documentacion' => 'home#documentacion'
-  
+  get 'api/documentacion'
+  get 'home/bodegas'
+  get 'inventario/mover' => 'inventario#moverMiStock'
   root 'home#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

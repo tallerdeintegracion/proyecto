@@ -5,9 +5,11 @@ one:
   sku: MyString
   cantidad: 
   estado: MyString
+  fechaEntrega: 2016-05-05 20:13:07
 
 two:
   oc: MyString
   sku: MyString
   cantidad: 
   estado: MyString
+  fechaEntrega: 2016-05-05 20:13:07

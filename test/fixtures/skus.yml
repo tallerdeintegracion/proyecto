@@ -5,17 +5,17 @@ one:
   descripcion: MyString
   tipo: MyString
   grupoProyecto: MyString
-  unidades: MyString
   costoUnitario: 1
   loteProduccion: 1
   tiempoProduccion: 1.5
+  reservado: 1
 
 two:
   sku: MyString
   descripcion: MyString
   tipo: MyString
   grupoProyecto: MyString
-  unidades: MyString
   costoUnitario: 1
   loteProduccion: 1
   tiempoProduccion: 1.5
+  reservado: 1

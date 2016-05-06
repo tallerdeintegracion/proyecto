@@ -69,6 +69,6 @@ class SentOrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def sent_order_params
-      params.require(:sent_order).permit(:oc, :sku, :cantidad, :estado)
+      params.require(:sent_order).permit(:oc, :sku, :cantidad, :estado, :fechaEntrega)
     end
 end

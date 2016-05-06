@@ -4,7 +4,8 @@ class ApiController < ApplicationController
   include ReceiveOrdersHelper
   include PagosHelper
   include FacturarHelper
-  #include InventarioController
+  include InventarioHelper
+
   
   layout false
 
@@ -14,12 +15,7 @@ class ApiController < ApplicationController
   ## Endpoint de /api/consultar/:id
   def inventarioConsultar
 
-    inventario = JSON.parse(getSKUWithStock("571262aaa980ba030058a1f3"))
-    cantidadJSON = inventario.find { |h1| h1["_id"] == params["sku"] }
-    cantidad = 0
-    if cantidadJSON != nil
-      cantidad = cantidadJSON["total"]
-    end
+    cantidad = getStockSKUDisponible(params[:sku])
     render :json => { :stock => cantidad,:sku => params[:sku] }
   end
 
@@ -35,7 +31,10 @@ class ApiController < ApplicationController
     idPago = params[:id]
     idFactura = params[:idfactura]
     result = analizarPago(idPago,idFactura)
-    ## Gatillamos el envio desde aqui si es posible?
+    Thread.new do
+      ## Gatillamos el envio desde aqui si es posible?
+      verSiEnviar(idFactura)
+    end
     render :json => {:validado => result, :idtrx => idPago}
   end
 
@@ -52,11 +51,20 @@ class ApiController < ApplicationController
       render :json => {:aceptado => false, :idoc => id} 
       return
     end   
-    result = analizarOC(id)  
-    ## Gatillamos el generar la factura desde aqui?
+    result = analizarOC(id)      
     render :json => {:aceptado => result, :idoc => id} 
+    
+    Thread.new do
+      fact = JSON.parse(emitirFactura(id))
+      nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
+      url = "http://localhost/api/facturas/recibir/" + fact["_id"]
+      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+
+      ans = httpGetRequest(url ,nil)
+    end
+    
   end
-  def despachoRecibir(id)
+  def despachoRecibir
     idFactura = params[:id]
     
     ocBD = Oc.findBy(factura: idFactura)
@@ -67,8 +75,8 @@ class ApiController < ApplicationController
     end
     
     ## Gatilla el recibir los productos
-    #ans = recibirMateriasPrimas(ocBD.sku, bodegaRecepcion, bodegaPrincipal)
-
+    ####################################
+    
     if ans > ocBD.cantidad
       render :json => {:validado => true} 
       return

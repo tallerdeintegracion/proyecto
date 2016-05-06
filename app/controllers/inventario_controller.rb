@@ -2,6 +2,9 @@ class InventarioController < ApplicationController
  	
  	
  	extend	ApplicationHelper
+ 	extend  InventarioHelper
+ 	include ApplicationHelper
+ 	include InventarioHelper
  	#include	ProductOrdersController
  	
 
@@ -16,8 +19,9 @@ class InventarioController < ApplicationController
   def self.run
   
   definirVariables 
-  puts "\n \n #{Time.now}  Inicia revicion de inventario "
-  
+  puts "\n \n \n \n "
+  puts "#{Time.now}  Inicia revicion de inventario "
+
   cleanProduccionesDespachadas()
   vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal)
   checkMateriasPrimas(@bodegaPrincipal)
@@ -30,11 +34,13 @@ class InventarioController < ApplicationController
 	
   def self.definirVariables 
   		
-  	@returnPoint = 1000
+  	@returnPoint = 2000
   	@returnPointProcesados = 400
   	@bodegaPrincipal = "571262aaa980ba030058a1f3"
   	@bodegaRecepcion = "571262aaa980ba030058a1f1"
   	@bodegaPulmon = "571262aaa980ba030058a23e"
+  	@bodegaDespacho = "571262aaa980ba030058a1f2"
+
   	@cuentaGrupo = "571262c3a980ba030058ab5d"
   	@GrupoProyecto="3";
   	@cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
@@ -53,7 +59,7 @@ class InventarioController < ApplicationController
   	proveedor = resp.idGrupo 	
   	resp = Grupo.find_by(nGrupo: @GrupoProyecto) 
   	cliente = resp.idGrupo 	
-  	puts "Generando orden canal: " + canal + " proveedor: " + proveedor + " cliente: " + cliente + " cantidad: " + cantidad.to_s
+  	puts "--- Generando  proveedor: " + proveedor + " cliente: " + cliente + " cantidad: " + cantidad.to_s
   	fechaHoy = Time.now.to_i*1000
   	fechaEntrega= fechaHoy + 4*3600*1000
   	if cliente.empty? or proveedor.empty?
@@ -62,40 +68,43 @@ class InventarioController < ApplicationController
   	String orden = eval(crearOrdenDeCompra(canal , cantidad , sku , cliente , proveedor , precioUnitario ,   fechaEntrega , nota ))
   
   	json = orden.to_json
-  	puts json  + "SDFsdfasdfasdfasdfsadf"
   	unHash = JSON.parse(json)
   	retorno = unHash["_id"]
   	return retorno
   
   end	
   
+  
   def self.producirMaterialesProcesados(bodega)
-	puts "5) #{Time.now}  Revisando si es necesario producir productos procesados"
+  	puts "\n"
+	puts "5) #{Time.now}  Revisando si es necesario producir productos procesados "
+	puts "\n"	
 		materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
   		materias.each do |row|
   		
-  			revisarMaterialProcesado(row)
+  			revisarMaterialProcesado(row , bodega)
   		end		  	
   end	
-  def self.revisarMaterialProcesado(row)
+
+  def self.revisarMaterialProcesado(row , bodega)
 
   			sku = row.sku
   			coste = row.costoUnitario
   			tamañoLote = row.loteProduccion
 
-  			puts "### Mterial " + sku.to_s + " coste " + coste.to_s + "  "+tamañoLote.to_s
+  			puts "--- Revisando material " + sku.to_s + " coste " + coste.to_s + " tamaño lote "+tamañoLote.to_s
 
   			stock = checkStock(sku, bodega)
-  			puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s 
+  			puts "--- Stock del sku " + sku.to_s + " es de " + stock.to_s 
 	
  			produccion = enProduccion(sku)
- 			puts "### Existen en produccion " + produccion.to_s
+ 			puts "--- Existen en produccion " + produccion.to_s
 
   			lotes = calcularLotes(stock, produccion , tamañoLote, @returnPoint)
- 			puts "### Lotes faltantes " + lotes.to_s
+ 			puts "--- Lotes faltantes " + lotes.to_s
 
  			maxLotes =  numeroLotesPosible(sku , bodega )
- 			puts "Maximo de lotes aproducir "+ maxLotes.to_s
+ 			puts "--- Maximo de lotes a producir con materias disponibles: "+ maxLotes.to_s
 
  			produccion = 0
  			if maxLotes > lotes
@@ -104,16 +113,35 @@ class InventarioController < ApplicationController
  				produccion = maxLotes
  			end	  
  			if produccion == 0
- 				return
+ 				return 
  			end
- 			producirMaterialProcesado(sku , produccion, tamañoLote)
+ 			
+ 			cantidad = produccion *tamañoLote
+ 			puts "--- Se mandaran a producir " + cantidad.to_s  + " lotes"
+ 			
+ 			exito =  llevarMateriaPrimasADespacho(sku , produccion)
+ 			
+ 			if exito == false
+ 				puts "--- Hubo un fallo en el movimiento de materias primas a despacho "
+ 				return 
+ 			end 
+ 				
+ 			monto = produccion * tamañoLote * coste
+
+ 			trx = pagar(monto , @cuentaGrupo , @cuentaFabrica  );
+	  		puts "--- Transferencia exitosa " + trx
+
+	  		detallesProd = producir(sku, trx, cantidad)
+  			puts "--- Se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
+  			
+  			actualizarRegistoProduccion(detallesProd , sku , cantidad)
+  			puts "--- Registro produccion actualizado "  
+ 			
 
   end	
-  def self.llevarADespacho(sku , cantidad , destino)
+
   
-  	
 
-  end	
   def self.numeroLotesPosible(sku , bodega )
   		materias = Formula.where("sku = ?"  , sku)
  		maxLotes = 100
@@ -130,24 +158,40 @@ class InventarioController < ApplicationController
  		end	
  		return maxLotes
   end 
-  def self.producirMaterialProcesado(sku , lotes , tamañoLote)
-  		materias = Formula.where("sku = ?"  , sku)
- 		materias.each do |ing|
 
- 		
+  def self.llevarMateriaPrimasADespacho(sku , lotes )
+  		
+  		materias = Formula.where("sku = ?"  , sku)
+  		correcto ==true
+ 		materias.each do |ing|
+ 			
+ 			skuIngrediente = ing.skuIngerdiente
+ 			cantidadPorLote = ing.requerimiento
+ 			cantidadTotal = cantidadPorLote*lotes
+ 			origen = @bodegaPrincipal
+ 			destino = @bodegaDespacho
+
+ 			movidos = moverInventario(skuIngerdiente , cantidadTotal , @bodegaPrincipal , @bodegaDespacho)
+ 			if movidos != cantidadTotal
+ 				correcto =false
+ 			end	
+ 	
  		end
+ 		return correcto
+
   end
 
 
   def self.checkCompraMaterial(bodega)
-
-  	puts "4) #{Time.now}  Revisando si son necesarios comprar material para productos procesados "
+	puts "\n"
+  	puts "4) #{Time.now}  Revisando si son necesarios comprar material para productos procesados  "
+  	puts "\n"
 
   	prod = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
   	prod.each do |row|
 
   		sku = row.sku
-  		puts "Revisando materias primas de "+ sku
+  		puts "--- Revisando materiales para producir  "+ sku
 
   		materias = Formula.where("sku = ?"  , sku)
  			materias.each do |ing|
@@ -160,12 +204,13 @@ class InventarioController < ApplicationController
 
   def self.revisarIngrediente (ing , bodega)
   	skuMaterial = ing.skuIngerdiente
+  	puts "--- Revisando ingrediente   " + skuMaterial
  	stock = checkStock(skuMaterial, bodega)
-  	puts "######## Stock del sku " + skuMaterial + " es de " + stock.to_s 
+  	puts "--- Stock del sku " + skuMaterial + " es de " + stock.to_s 
   	resp = Sku.find_by(sku:skuMaterial)
   	grupo =  resp.grupoProyecto 
-  	
   	cantidadOrden = tamañoOrden(stock , skuMaterial , grupo)
+  	
   	if cantidadOrden <= 0
   		return
   	end	
@@ -173,57 +218,84 @@ class InventarioController < ApplicationController
   	resp = Precio.find_by(sku:skuMaterial)
   	precioOrden = resp.precioUnitario
   	id = generarOrdenesDeCompra(skuMaterial , cantidadOrden , precioOrden , grupo)
-  	puts "El id es " + id.to_s 
-
+  	
   	if id.nil?
-  		puts "Id de la orden es nulo "
+  		puts "--- No fue posible  ingresar orden de compra "
   		return
   	end	
   	
   	aceptado = sendOc(grupo , id)				
-  	puts "##### Aceptada : " + aceptado.to_s
+  	
   	if aceptado == false
   		data = anularOrdenDeCompra(id , "Fue rechazada")
-  		puts "orden anulada " + data 
+  		puts "--- La orden fue rechazada y anulada del sistema " 
   		return
   	end 
   	
-  	put "Oc fue aceptada"
+  	puts "--- La orden de compra fue aceptada "
+  	actualizarRegistoOc(id )
+  	
   	
   			
   end	
+  def self.actualizarRegistoOc(id )
 
+  	resp = JSON.parse(obtenerOrdenDeCompra(id)).first
+  	#puts resp
+  	sku = resp['sku']
+  	estado = resp["estado"]
+  	cantidad= resp["cantidad"]
+  	fechaEntrega = resp["fechaEntrega"]
+  	SentOrder.find_or_create_by(oc:id , sku: sku , estado: estado, cantidad: cantidad , fechaEntrega: fechaEntrega)
+ 	puts "--- Se registro el envio de la oc " + id
+  end	
  
 
   def self.tamañoOrden(stock , skuMaterial , grupo)
-	faltante = @returnPoint -(stock + pedidas(skuMaterial))
-  	puts "######## faltan " + faltante.to_s + " pidiendo al grupo " + grupo.to_s 
-  	stock = getStockOfGroup(skuMaterial , grupo)
-  	puts "######## El grupo tiene stock de  " + stock.to_s  
+  	pedidas = pedidas(skuMaterial)
+	faltante = @returnPoint -(stock + pedidas)
+  	
+  	puts "--- Ya se han pedido " + pedidas.to_s
+
   	if faltante <= 0
-  		puts "######## No es necesario comprar stock" 
+  		puts "--- No es necesario comprar stock" 
   		return 0  
   	else
+
+  	stockGrupo = getStockOfGroup(skuMaterial , grupo)
+  	puts  "--- El stock reportado por el grupo es de " + stockGrupo.to_s
+  	
+  
+  	#getStockSKUDisponible()
+
+  	
   	orden = 0
-  		if stock < 0 
-  			puts "######## No existe inventario "
+
+  		if stockGrupo <= 0 
+  			puts "--- El grupo no tiene stock  "
   			return 0
-  		elsif faltante > stock			
-	  		puts "######## Genereando la oc"
-  			return stock
+  		elsif faltante > stockGrupo			
+	  		puts "--- Generando orden de compra por la totalidad del stock " +  stockGrupo.to_s	
+  			return stockGrupo
 
   		else
-  			puts "######## Genereando la oc"
+  			puts "--- Generando orden de compra por el faltante " + faltante.to_s
   			return faltante
   		end	
+  		#puts "--- pidiendo al grupo " + grupo.to_s + "  " + faltante.to_s + " unidades"
   	end	
 
   end 	
 
   def self.getStockOfGroup(sku , group)
   	url = "http://integra"+group+".ing.puc.cl/api/consultar/" +sku
+  	puts "--- Consultando el stock de " + url
+
   	resp = httpGetRequest( url, nil)
-  	
+
+  	if resp.nil?
+  		return -1
+  	end	
   	if valid_json?(resp) ==false
   		return -1
   	end
@@ -236,16 +308,14 @@ class InventarioController < ApplicationController
 
   def self.sendOc(group , oc)
   	url = "http://integra"+ group.to_s + ".ing.puc.cl/api/oc/recibir/" +oc
-  	puts "sending " + url  
+  	puts "--- Enviando orden de compra a: " + url  
   	resp = httpGetRequest( url, nil)
   
   	if valid_json?(resp) ==false
   		return false
   	end
   	json =JSON.parse(resp)
-  	puts  "El grupo respondio " + json.to_s
   	aceptado = json["aceptado"]
-  	
   	return  aceptado
   end
 
@@ -260,9 +330,9 @@ class InventarioController < ApplicationController
 
 
   def self.checkMateriasPrimas(bodega)
-
-  ##TODO sacar info de bases de datos y replicas 
-  puts "3) #{Time.now}  Revisando si son necesarias materias primas "  
+  puts "\n"
+  puts " 3) #{Time.now}  Revisando si es necesario producir materias primas"  
+  puts "\n"
   materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
 
   materias.each do |row|
@@ -271,30 +341,33 @@ class InventarioController < ApplicationController
   		coste = row.costoUnitario
   		tamañoLote = row.loteProduccion
 
-  		puts "### Mterial " + sku.to_s + " coste " + coste.to_s + "  "+tamañoLote.to_s
+  		puts "--- Material " + sku.to_s + " coste: " + coste.to_s + " tamaño lote: "+tamañoLote.to_s
 
   		stock = checkStock(sku, bodega)
-  		puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s 
+  		puts "--- Stock del sku es de: " + stock.to_s 
 	
  		produccion = enProduccion(sku)
- 		puts "### Existen en produccion " + produccion.to_s
+ 		puts "--- Existen en produccion: " + produccion.to_s
 
   		lotes = calcularLotes(stock, produccion , tamañoLote, @returnPoint)
- 		puts "### Lotes a producir " + lotes.to_s
+ 		puts "--- Lotes a producir: " + lotes.to_s
   
   		monto = lotes*coste*tamañoLote	
+ 		
  		if lotes <= 0
- 			puts "### No es necesario producir"	
+ 			puts "--- No es necesario producir"	
  		else
 
-  		trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
-  		puts "### Transferencia exitosa " + trx
-
-  		cantidad= lotes*tamañoLote
-  		detallesProd = producir(sku, trx, cantidad)
-  		puts detallesProd
-  		p "### se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
-  		actualizarRegistoProduccion(detallesProd , sku , cantidad)
+  			trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
+	  		
+	  		puts "--- Transferencia exitosa " + trx
+  			cantidad= lotes*tamañoLote
+  			
+  			detallesProd = producir(sku, trx, cantidad)
+  			puts "--- Se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
+  			
+  			actualizarRegistoProduccion(detallesProd , sku , cantidad)
+  			puts "--- Registro produccion actualizado "  
   		end
  	end	 
 
@@ -305,7 +378,7 @@ class InventarioController < ApplicationController
 
   jsonDetalles = JSON.parse(detallesProd)
   disponible= jsonDetalles["disponible"]
-  puts "Producioendo , disponible en " + disponible.to_s  
+  puts "--- Produciendo material , disponible en " + disponible.to_s  
   Production.find_or_create_by(sku: sku , cantidad: cantidad , disponible: disponible)
 
   end
@@ -315,7 +388,7 @@ class InventarioController < ApplicationController
 
   	trx = JSON.parse(transferir(monto , origen, destino))['_id']
   	if trx.nil?
-  		p "#### Hubo un error en la transferencia !!" 
+  		p "--- Hubo un error en la transferencia" 
   		return	
   	end
   	return trx
@@ -333,6 +406,7 @@ class InventarioController < ApplicationController
   def self.checkStock(sku , bodega)
   	require 'json'
   	result = JSON.parse(getSKUWithStock(bodega))
+
   	if result.nil?
   		return 0
   	end	
@@ -379,36 +453,45 @@ class InventarioController < ApplicationController
   end
 
   def self.cleanProduccionesDespachadas()
-  	puts "1) #{Time.now}  Limpiando producciones despachadas del registro "
+  	puts "\n"
+  	puts "1) #{Time.now}  Limpiando producciones despachadas del registro"
+  	puts "\n"
   	time = Time.now
   	produccion = Production.where( 'disponible <= ?', time )
-	puts "### Fueron despachadas " + produccion.count.to_s
-	produccion.destroy_all
+	puts "--- Fueron removidas  " + produccion.count.to_s + " entregas de la tabla de produccion "
+	produccion.destroy_all	
+	ocs = SentOrder.where( 'fechaEntrega <= ?', time )
+	puts "--- Fueron removidas  " + ocs.count.to_s + " entregas de la tabla de ocs enviadas "
+	ocs.destroy_all
   end	
 
+
   def self.vaciarAlmacenesRecepcion(bodegaRecepcion , bodegaPulmon, bodegaPrincipal)
-	
-	puts "2) #{Time.now} Reciviendo materias primas "
+	puts "\n"
+	puts "2) #{Time.now} Reciviendo material de almacen de recepcion "
+	puts "\n"
 
   	materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
   		materias.each do |row|
   		sku = row.sku	
-  		recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
-  		recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+  		inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
+  		inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+  		puts "--- Reciviendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
   	end
 
   	materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
   		materias.each do |row|
   		sku = row.sku	
-  		recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
-  		recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+  		inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
+  		inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+  		puts "--- Reciviendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
 
   		ingrediente = Formula.where("sku = ?"  , sku)
  			ingrediente.each do |ing|
 			skuMaterial = ing.skuIngerdiente	
-			recibirMaterial(skuMaterial, bodegaRecepcion, bodegaPrincipal)
-  			recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal)
-		
+			inicialRececpcion = recibirMaterial(skuMaterial, bodegaRecepcion, bodegaPrincipal)
+  			inicialPulmon =recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal)
+		puts "--- Reciviendo sku " + skuMaterial + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
 
  		end	
 
@@ -421,41 +504,20 @@ class InventarioController < ApplicationController
   		  		
   		stock = checkStock(sku ,almacenRecepcion) 
 		stockInicial = stock	
-
-  		puts "### Stock de "+ sku +" cantiad: " +  stock.to_s + " disponibles en almacen de recepcion "	+ almacenRecepcion
-
-  		if stock == 0
-  			return
-  		end
-
-  		while stock > 0
-  			stock = checkStock(sku ,almacenRecepcion)
-			resp = JSON.parse(getStock(almacenRecepcion , sku , 200 ))
-			cantidadMover = resp.length
-			
-			if resp.nil? | cantidadMover.nil? 
-  			return
-  			end
-			moveProducts(resp ,cantidadMover,  bodegaMateriasPrimas )	
-  		end	
-		return stockInicial
+  		moverInventario(sku, stock, almacenRecepcion, bodegaMateriasPrimas)
+  		return stockInicial
   end 	
 
 
   def self.moveProducts(products , cantidad , destino)
-
-  	puts "### Moviendo  " + cantidad.to_s + " a bodega principal"
-  	
+	
   	if cantidad.nil? | products.nil? | cantidad==0
   		return
   	end	
-
   	for counter in 0..cantidad-1
   		id = products[counter]["_id"]
   		moverStock(id , destino)
   	end
   end	
-
-  
 
 end

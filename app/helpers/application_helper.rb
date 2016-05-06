@@ -37,6 +37,26 @@ module ApplicationHelper
 	# - Despachar(no implementado) 
 	# -getCuentaFabrica
 
+	def despacharStock (productId , direccion , precio , idOrdenDeCompra)
+	
+		path ='/stock'
+		url =bodegaBaseUrl+path
+		String toEncode = "DELETE"  + idOrdenDeCompra
+		authHeader = encodeHmac(toEncode)  
+
+		params={
+				'productId'=> productId ,
+				'direccion'=> direccion,
+				'precio' =>	precio,
+				'ordenDeCompraId' => idOrdenDeCompra
+				}
+
+		data =  httpDeleteRequest(url , nil, params)
+        return  data
+		
+
+
+	end 	
 	def getAlmacenes
 
 		path ='/almacenes'
@@ -58,7 +78,7 @@ module ApplicationHelper
 
 	end
 
-	def getStock(almacenId , sku , limit = 100)
+	def getStock(almacenId , sku , limit )
 	
 		if limit > 200
 			return
@@ -76,18 +96,20 @@ module ApplicationHelper
 		path ='/moveStock'
 		url =bodegaBaseUrl+path
 		String toEncode = "POST"+productoId+almacenId
+
         authHeader = encodeHmac(toEncode)
         params = {'productoId' => productoId, 'almacenId' => almacenId}
         data =  httpPostRequest(url , authHeader, params)
+
         return  data
 	end	
 
-	def moverStockBodega(productoId , almacenId)
+	def moverStockBodega(productoId , almacenId, id, precio)
 		path ='/moveStockBodega'
 		url =bodegaBaseUrl+path
 		String toEncode = "POST"+productoId+almacenId
         authHeader = encodeHmac(toEncode)
-        params = {'productoId' => productoId, 'almacenId' => almacenId}
+        params = {'productoId' => productoId, 'almacenId' => almacenId , 'oc' => id, 'precio' => precio}
         data =  httpPostRequest(url , authHeader, params)
         return  data
 	end	
@@ -217,15 +239,6 @@ module ApplicationHelper
 
 	end
 
-	#Sistema facturas
-	#
-	#
-	#
-	#
-	#
-	#
-	#
-	#
 	#
 	def emitirFactura (idOrdenDeCompra )
 		path ='/'
@@ -242,8 +255,6 @@ module ApplicationHelper
         data =  httpGetRequest(url , nil )
         return  data
 	end
-
-
 
 
 
@@ -268,8 +279,6 @@ module ApplicationHelper
     	data = response.body
 
 	end
-
-
 
 
 
@@ -344,8 +353,20 @@ module ApplicationHelper
 		end	
         uri = URI.parse(url)    
         request = Net::HTTP::Get.new(uri, headers)
-        response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) }
-    	data = response.body
+       	
+       	begin 
+       	 	response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) } 
+       	
+       	rescue Errno::ETIMEDOUT  
+       	 	puts "--- Time out de la conexion" 
+        	
+    	end  
+    	if response.nil?
+    		return nil
+    	end	
+  
+    	return data = response.body
+
 	end
 
 
@@ -365,7 +386,33 @@ module ApplicationHelper
 
         return result
 	end
-
+	
+	## Retorna la cantidad de stock de un SKU que se puede vender
+	def getStockSKUDisponible(sku)
+	
+		## Revisamos la bodega grande
+		inventario = JSON.parse(getSKUWithStock("571262aaa980ba030058a1f3"))
+    	cantidadJSON = inventario.find { |h1| h1["_id"] == sku }
+    	cantidad = 0
+		## Sumamos la cantidad que corresponde
+    	if cantidadJSON != nil
+    	  cantidad = cantidad + cantidadJSON["total"]
+    	end
+		
+		## Revisamos la bodega chica
+    	inventario1 = JSON.parse(getSKUWithStock("571262aaa980ba030058a23d"))
+    	cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
+    	
+		## Sumamos la cantidad que corresponde
+		if cantidadJSON1 != nil
+   	 	  cantidad = cantidad + cantidadJSON1["total"]
+    	end
+    	
+		## Restamos lo ya reservado
+		skuDB = Sku.find_by(sku: sku)
+		cantidad = cantidad - skuDB["reservado"]
+		return cantidad
+	end
 
 	
 

@@ -20,5 +20,10 @@
   <%= @sent_order.estado %>
 </p>
 
+<p>
+  <strong>Fechaentrega:</strong>
+  <%= @sent_order.fechaEntrega %>
+</p>
+
 <%= link_to 'Edit', edit_sent_order_path(@sent_order) %> |
 <%= link_to 'Back', sent_orders_path %>

@@ -18,7 +18,7 @@ def analizarOC(id)
   if oc_db.nil? #si es nula se crea más abajo          
   elsif oc_db.estados == "rechazada" || oc_db.estados == "defectuosa"
   	return false #no se sigue con esta oc porque está rechazada o defectuosa
-  elsif oc_db.estados == "aceptada"
+  elsif oc_db.estados == "aceptada" || oc_db.estados == "Pagada"#si es que preguntan de nuevo, ya no se procesa
   	return true
   end    
   #puts "RRRRR             " + oc_db.oc.to_s + "      " + oc_db.estados.to_s
@@ -188,5 +188,39 @@ def checkStock(sku , bodega)
   return stock
       
 end
+
+#método sacado de inventario_controller.rb
+def checkStock(sku , bodega)
+    require 'json'
+    result = JSON.parse(getSKUWithStock(bodega))
+  
+    if result.nil?
+      return 0
+    end 
+
+    stock =0
+    #productos = result.length.to_s
+    #puts "###   " + productos +"\n"
+    #result.each do |player| 
+    #  current_position = player.to_s#['_id'].to_s
+    #  puts "     " + current_position +"\n"
+    #end
+  for counter in 0..(result.length-1)
+    actualSku =result[counter]['_id'].to_s
+    if(sku == actualSku)
+      actualTotal =result[counter]['total'].to_i
+      stock = actualTotal
+      return stock 
+    end
+  end
+
+  if stock.nil?
+    # Error 
+    return 9000000 
+  end
+  return stock
+      
+end
+
 
 end

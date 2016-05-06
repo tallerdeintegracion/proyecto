@@ -2,6 +2,7 @@ class ReceiveOrdersController < ApplicationController
   
 extend  ApplicationHelper
 extend ReceiveOrdersHelper
+extend InventarioHelper
 
 def self.run
  	
@@ -13,6 +14,9 @@ def self.run
     require 'nokogiri'	
 
   definirVariables
+
+  #dejarStockEnDespacho(8)
+  #despacharOC("572938439fda6e0300480f45")
 
  	puts "#{Time.now} - iniciar descarga de pedidos"
 	sftp =connect()

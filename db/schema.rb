@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160503012206) do
+ActiveRecord::Schema.define(version: 20160506200544) do
 
   create_table "formulas", force: :cascade do |t|
     t.string   "sku",               limit: 255
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 20160503012206) do
     t.string   "estados",    limit: 255
     t.string   "canal",      limit: 255
     t.string   "factura",    limit: 255
-    t.integer  "pago",       limit: 4
+    t.string   "pago",       limit: 255
     t.string   "sku",        limit: 255
     t.integer  "cantidad",   limit: 4
     t.datetime "created_at",             null: false
@@ -65,12 +65,13 @@ ActiveRecord::Schema.define(version: 20160503012206) do
   end
 
   create_table "sent_orders", force: :cascade do |t|
-    t.string   "oc",         limit: 255
-    t.string   "sku",        limit: 255
-    t.integer  "cantidad",   limit: 4
-    t.string   "estado",     limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "oc",           limit: 255
+    t.string   "sku",          limit: 255
+    t.integer  "cantidad",     limit: 4
+    t.string   "estado",       limit: 255
+    t.datetime "fechaEntrega"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "skus", force: :cascade do |t|
@@ -78,10 +79,10 @@ ActiveRecord::Schema.define(version: 20160503012206) do
     t.string   "descripcion",      limit: 255
     t.string   "tipo",             limit: 255
     t.string   "grupoProyecto",    limit: 255
-    t.string   "unidades",         limit: 255
     t.integer  "costoUnitario",    limit: 4
     t.integer  "loteProduccion",   limit: 4
     t.float    "tiempoProduccion", limit: 24
+    t.integer  "reservado",        limit: 4
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end

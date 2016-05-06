@@ -18,7 +18,7 @@ class SkusControllerTest < ActionController::TestCase
 
   test "should create sku" do
     assert_difference('Sku.count') do
-      post :create, sku: { costoUnitario: @sku.costoUnitario, descripcion: @sku.descripcion, grupoProyecto: @sku.grupoProyecto, loteProduccion: @sku.loteProduccion, sku: @sku.sku, tiempoProduccion: @sku.tiempoProduccion, tipo: @sku.tipo, unidades: @sku.unidades }
+      post :create, sku: { costoUnitario: @sku.costoUnitario, descripcion: @sku.descripcion, grupoProyecto: @sku.grupoProyecto, loteProduccion: @sku.loteProduccion, reservado: @sku.reservado, sku: @sku.sku, tiempoProduccion: @sku.tiempoProduccion, tipo: @sku.tipo }
     end
 
     assert_redirected_to sku_path(assigns(:sku))
@@ -35,7 +35,7 @@ class SkusControllerTest < ActionController::TestCase
   end
 
   test "should update sku" do
-    patch :update, id: @sku, sku: { costoUnitario: @sku.costoUnitario, descripcion: @sku.descripcion, grupoProyecto: @sku.grupoProyecto, loteProduccion: @sku.loteProduccion, sku: @sku.sku, tiempoProduccion: @sku.tiempoProduccion, tipo: @sku.tipo, unidades: @sku.unidades }
+    patch :update, id: @sku, sku: { costoUnitario: @sku.costoUnitario, descripcion: @sku.descripcion, grupoProyecto: @sku.grupoProyecto, loteProduccion: @sku.loteProduccion, reservado: @sku.reservado, sku: @sku.sku, tiempoProduccion: @sku.tiempoProduccion, tipo: @sku.tipo }
     assert_redirected_to sku_path(assigns(:sku))
   end
 
