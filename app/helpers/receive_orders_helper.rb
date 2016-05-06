@@ -51,7 +51,7 @@ def analizarOC(id)
 	      puts "oc " + id.to_s + " rechazada por falta de stock "+"\n"
 	      return false
 	    else
-	       
+=begin	       
 		      espcioDisponible = ObtenerEspacioAlmacen("571262aaa980ba030058a23d")
 		      puts "Espacio disponible en almacén chico: " + espcioDisponible.to_s + "\n" #almacén chico
 		      
@@ -60,6 +60,7 @@ def analizarOC(id)
 		          puts "oc " + id.to_s + " rechazada por no haber espacio en la bodega chica "+"\n"	
 		          return false
 		      else
+=end
 		      	  #se continúa con la oc, aceptando y dando la factura
 			      oc_aceptada = JSON.parse(recepcionarOrdenDeCompra(id)) #este método acepta la orden de compra
 			      if oc_aceptada.nil?
@@ -70,6 +71,15 @@ def analizarOC(id)
 
 			      Oc.find_or_create_by(oc: id , estados: "aceptada", canal: canal, factura: "", pago: "", sku: sku, cantidad: cantidad)#los estados son: defectuosa, aceptada, rechazada
 			      #Oc.find_by(oc: id).update(estados: 'aceptada')
+			      
+
+			      #YA NO MUEVE STOCK, SINO QUE ACTUALIZA LA TABLA SKUS
+			      fila_sku = Sku.find_by(sku: sku.to_s)
+			      reservado = fila_sku["reservado"]
+			      nuevo_reservado = reservado.to_i + cantidad.to_i
+			      fila_sku.update(reservado: nuevo_reservado)
+			      puts "antiguo reservado " + reservado + " nuevo reservado " + nuevo_reservado + " sku " + sku.to_s + "\n"  
+=begin
 			      cantidad_fija = cantidad
 			      movidas = 0
 			      while (cantidad.to_i > 0) do
@@ -95,9 +105,10 @@ def analizarOC(id)
 				    cantidad = (cantidad.to_i - limite)
 			      end 	    
 			      puts "oc " + id.to_s + " aceptada por sí tener stock del sku "+ sku.to_s + ". Se movieron " + movidas.to_s + " de " + cantidad_fija.to_s + " pedidas con stock " + stock.to_s + ", de la bodega principal a la secundaria" + "\n"  
+=end			      
 			      #no se valida que devuelva error porque no debería, si la oc ya se comprobó que existe
 			      return true
-		      end	      
+		      #end	      
 	    end
 	 
 	#nunca debería llegar a este punto
