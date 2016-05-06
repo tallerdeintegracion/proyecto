@@ -18,7 +18,7 @@ def analizarOC(id)
   if oc_db.nil? #si es nula se crea más abajo          
   elsif oc_db.estados == "rechazada" || oc_db.estados == "defectuosa"
   	return false #no se sigue con esta oc porque está rechazada o defectuosa
-  elsif oc_db.estados == "aceptada"
+  elsif oc_db.estados == "aceptada" || oc_db.estados == "Pagada"#si es que preguntan de nuevo, ya no se procesa
   	return true
   end    
   #puts "RRRRR             " + oc_db.oc.to_s + "      " + oc_db.estados.to_s

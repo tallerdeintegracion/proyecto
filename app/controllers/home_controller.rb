@@ -18,7 +18,7 @@ class HomeController < ApplicationController
     #@show = moverStock( '571262aaa980ba030058a23c', '571262aaa980ba030058a1f1' )
   	
 
-    @show = anularOrdenDeCompra("571c0c42d7edb6030071f243" , "prueba")
+    #@show = anularOrdenDeCompra("571c0c42d7edb6030071f243" , "prueba")
   	#@show = getSKUWithStock('571262aaa980ba030058a23d')
   	#@show= getCuentaFabrica()
     #@show= transferir(10 , "571262c3a980ba030058ab5d", "571262aea980ba030058a5d8")
@@ -27,14 +27,18 @@ class HomeController < ApplicationController
 
 
   	#@show = getSKUWithStock('571262aaa980ba030058a1f1')
-  	#@show = getSKUWithStock('571262aaa980ba030058a1f3')
+  	@show = getSKUWithStock('571262aaa980ba030058a1f3')
+    #@show = getSKUWithStock('571262aaa980ba030058a1f2')
   	#@show= getCuentaFabrica()
     #@show= transferir(10 , "571262c3a980ba030058ab5d", "571262aea980ba030058a5d8")
     #@show = producirStock("8","572283e304c78e0300ce3ee2", 10 )
-    #@show = getStock('571262aaa980ba030058a23d' , 49 )  
+    #@show = getStock('571262aaa980ba030058a1f3' , 8 )  
+    #@show = getStock('571262aaa980ba030058a1f2' , 49 )  
 
     #@show = moverStock( '571262b6a980ba030058a7db', '571262aaa980ba030058a1f3' )
+    #@show = moverStock( '57251793de2f4b0300559bbb', '571262aaa980ba030058a1f2' )#mover al despacho
     #@moverStock = moverStockBodega( '571262aaa980ba030058a23c', '571262aaa980ba030058a1f3' )
+    #@show = moverStockBodega( '571262b6a980ba030058a7db', '571262aaa980ba030058a14e' , '572938439fda6e0300480f45', 6627)
     #@show = obtenerCartola(1429832246 , 1461454686, '571262c3a980ba030058ab5d')
     #@show = obtenerTransaccion('1234')
     #@show = obtenerCuenta('571262c3a980ba030058ab5d')

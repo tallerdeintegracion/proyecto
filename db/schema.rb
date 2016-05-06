@@ -13,6 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20160505231307) do
 
+
   create_table "formulas", force: :cascade do |t|
     t.string   "sku",               limit: 255
     t.string   "descripcion",       limit: 255
@@ -65,6 +66,7 @@ ActiveRecord::Schema.define(version: 20160505231307) do
   end
 
   create_table "sent_orders", force: :cascade do |t|
+<<<<<<< HEAD
     t.string   "oc",           limit: 255
     t.string   "sku",          limit: 255
     t.integer  "cantidad",     limit: 4
@@ -72,6 +74,15 @@ ActiveRecord::Schema.define(version: 20160505231307) do
     t.datetime "fechaEntrega"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+=======
+    t.string   "oc",         limit: 255
+    t.string   "sku",        limit: 255
+    t.integer  "cantidad",   limit: 4
+    t.string   "estado",     limit: 255
+    t.integer  "entrega",    limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+>>>>>>> c6b975afb7abd85b3d71826a8e001b5feb76d942
   end
 
   create_table "skus", force: :cascade do |t|
