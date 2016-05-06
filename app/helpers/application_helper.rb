@@ -48,7 +48,7 @@ module ApplicationHelper
 				'productId'=> productId , 
 				'direccion'=> direccion, 
 				'precio' =>	precio, 
-				'ordenDeCompraId' => idOrdenDeCompra 
+				'oc' => idOrdenDeCompra 
 				}
 
 		data =  httpDeleteRequest(url , nil, params)
