@@ -58,7 +58,7 @@ module ApplicationHelper
 
 	end
 
-	def getStock(almacenId , sku , limit = 100)
+	def getStock(almacenId , sku , limit)
 	
 		if limit > 200
 			return
@@ -379,7 +379,24 @@ module ApplicationHelper
 
         return result
 	end
-
+	
+	def getStockSKUDisponible(sku)
+		inventario = JSON.parse(getSKUWithStock("571262aaa980ba030058a1f3"))
+    	cantidadJSON = inventario.find { |h1| h1["_id"] == sku }
+    	cantidad = 0
+    	if cantidadJSON != nil
+    	  cantidad = cantidad + cantidadJSON["total"]
+    	end
+    	inventario1 = JSON.parse(getSKUWithStock("571262aaa980ba030058a23d"))
+    	cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
+    	if cantidadJSON1 != nil
+   	 	  cantidad = cantidad + cantidadJSON1["total"]
+    	end
+    	
+		skuDB = Sku.find_by(sku: sku)
+    	cantidad = cantidad - skuDB["reservado"]
+		return cantidad
+	end
 
 	
 

@@ -15,12 +15,7 @@ class ApiController < ApplicationController
   end  
   def inventarioConsultar
 
-    inventario = JSON.parse(getSKUWithStock("571262aaa980ba030058a1f3"))
-    cantidadJSON = inventario.find { |h1| h1["_id"] == params["sku"] }
-    cantidad = 0
-    if cantidadJSON != nil
-      cantidad = cantidadJSON["total"]
-    end
+    cantidad = getStockSKUDisponible(params[:sku])
     render :json => { :stock => cantidad,:sku => params[:sku] }
   end
 
@@ -80,8 +75,8 @@ class ApiController < ApplicationController
     end
     
     ## Gatilla el recibir los productos
-    #ans = recibirMateriasPrimas(ocBD.sku, bodegaRecepcion, bodegaPrincipal)
-
+    ####################################
+    
     if ans > ocBD.cantidad
       render :json => {:validado => true} 
       return

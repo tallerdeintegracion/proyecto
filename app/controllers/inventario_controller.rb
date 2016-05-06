@@ -1,7 +1,8 @@
 class InventarioController < ApplicationController
  	
  	
- 	extend	ApplicationHelper
+ 	include	ApplicationHelper
+	include  InventarioHelper
  	#include	ProductOrdersController
  	
 
@@ -495,6 +496,14 @@ class InventarioController < ApplicationController
   		moverStock(id , destino)
   	end
   end	
+  
+  def moverMiStock
+  	almacenOrigen = params[:or]
+    almacenDestino = params[:de]
+	cantidad = params[:ca]
+	sku = params[:sku]
+	moverInventario(sku, cantidad.to_i, almacenOrigen, almacenDestino)
+  end
 
   
 

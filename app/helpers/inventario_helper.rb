@@ -2,15 +2,12 @@ module InventarioHelper
   
   #extend  'ApplicationHelper'  #la clase que lo llama debería tener acceso a esto, no desde aquí
 
+
   def verSiEnviar(idFactura)
     sku = OC.find_by(factura: idFactura)["sku"]
     idOC = OC.find_by(factura: idFactura)["oc"]
-    return false
-    ### Pipo lo hace
-    #
-    #
-    #
-    #
+#   return false
+
     despacharOC(idOC) 
   end
   
@@ -127,6 +124,36 @@ def dejarStockEnDespacho(sku_a_mover)
     end
   end
   return true
-end
+  end
 
+
+  def moverInventario(sku, cantidad, almacenOrigen, almacenDestino)
+    
+    ## Falta confirmar que exista el stock necesario
+    
+    ## Ejecutamos el código para mover la cantidad necesaria de 200 en 200
+    if cantidad > 100
+      moverInventario(sku,cantidad-100,almacenOrigen,almacenDestino)
+      cantidad = 100
+    end
+    
+      
+    ids = JSON.parse(getStock(almacenOrigen , sku , cantidad))
+    counter = 0
+    while counter < cantidad
+      begin
+        result = moverStock(ids[counter]["_id"], almacenDestino)    
+        puts result
+      rescue => ex
+        puts "No se movio, intentando nuevamente"
+        counter = counter-1
+      end
+      puts "Movido correctamente, N= "+ counter.to_s
+      counter = counter+1
+    end
+    
+#    moverStock(ProductId, almacenDestino)
+  
+    return false
+  end
 end
