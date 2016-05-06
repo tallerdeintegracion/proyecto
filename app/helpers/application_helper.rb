@@ -37,6 +37,26 @@ module ApplicationHelper
 	# - Despachar(no implementado) 
 	# -getCuentaFabrica
 
+	def despacharStock (productId , direccion , precio , idOrdenDeCompra)
+	
+		path ='/stock'
+		url =bodegaBaseUrl+path
+		String toEncode = "DELETE"  + idOrdenDeCompra
+		authHeader = encodeHmac(toEncode)  
+
+		params={
+				'productId'=> productId ,
+				'direccion'=> direccion,
+				'precio' =>	precio,
+				'ordenDeCompraId' => idOrdenDeCompra
+				}
+
+		data =  httpDeleteRequest(url , nil, params)
+        return  data
+		
+
+
+	end 	
 	def getAlmacenes
 
 		path ='/almacenes'
@@ -219,15 +239,6 @@ module ApplicationHelper
 
 	end
 
-	#Sistema facturas
-	#
-	#
-	#
-	#
-	#
-	#
-	#
-	#
 	#
 	def emitirFactura (idOrdenDeCompra )
 		path ='/'
@@ -244,8 +255,6 @@ module ApplicationHelper
         data =  httpGetRequest(url , nil )
         return  data
 	end
-
-
 
 
 
@@ -270,8 +279,6 @@ module ApplicationHelper
     	data = response.body
 
 	end
-
-
 
 
 

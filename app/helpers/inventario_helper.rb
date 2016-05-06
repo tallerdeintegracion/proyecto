@@ -1,6 +1,6 @@
 module InventarioHelper
   
-  #extend  'ApplicationHelper'  #la clase que lo llama debería tener acceso a esto, no desde aquí
+  #include  'ApplicationHelper'  #la clase que lo llama debería tener acceso a esto, no desde aquí
 
 
   def verSiEnviar(idFactura)
@@ -127,7 +127,7 @@ def dejarStockEnDespacho(sku_a_mover)
   end
 
 
-  def self.moverInventario(sku, cantidad, almacenOrigen, almacenDestino)
+  def moverInventario(sku, cantidad, almacenOrigen, almacenDestino)
     
     ## Falta confirmar que exista el stock necesario
     

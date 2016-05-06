@@ -119,7 +119,7 @@ class InventarioController < ApplicationController
  			cantidad = produccion *tamañoLote
  			puts "--- Se mandaran a producir " + cantidad.to_s  + " lotes"
  			
- 			exito =  false #llevarMateriaPrimasADespacho(sku , produccion)
+ 			exito =  llevarMateriaPrimasADespacho(sku , produccion)
  			
  			if exito == false
  				puts "--- Hubo un fallo en el movimiento de materias primas a despacho "
@@ -162,6 +162,7 @@ class InventarioController < ApplicationController
   def self.llevarMateriaPrimasADespacho(sku , lotes )
   		
   		materias = Formula.where("sku = ?"  , sku)
+  		correcto ==true
  		materias.each do |ing|
  			
  			skuIngrediente = ing.skuIngerdiente
@@ -170,10 +171,13 @@ class InventarioController < ApplicationController
  			origen = @bodegaPrincipal
  			destino = @bodegaDespacho
 
- 			## mover(sku , cantidad , origen , destino)
-
-
+ 			movidos = moverInventario(skuIngerdiente , cantidadTotal , @bodegaPrincipal , @bodegaDespacho)
+ 			if movidos != cantidadTotal
+ 				correcto =false
+ 			end	
+ 	
  		end
+ 		return correcto
 
   end
 

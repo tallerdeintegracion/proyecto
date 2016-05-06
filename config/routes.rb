@@ -2,13 +2,13 @@ Rails.application.routes.draw do
 
 
 
+  resources :ocs
   resources :skus
   resources :sent_orders
   resources :grupos
   resources :precios
   resources :formulas
   resources :product_orders
-  resources :ocs
 
 scope '/api' do
     scope '/consultar' do
