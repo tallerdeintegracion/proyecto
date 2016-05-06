@@ -37,18 +37,18 @@ module ApplicationHelper
 	# - Despachar(no implementado) 
 	# -getCuentaFabrica
 
-	def despacharStock (productId , direccion , precio , idOrdenDeCompra)
+	def despacharStock (productId , direccion , precio , idOrdenDeCompra) 
 	
 		path ='/stock'
 		url =bodegaBaseUrl+path
-		String toEncode = "DELETE"  + idOrdenDeCompra
+		String toEncode = "DELETE"  + idOrdenDeCompra 
 		authHeader = encodeHmac(toEncode)  
 
 		params={
-				'productId'=> productId ,
-				'direccion'=> direccion,
-				'precio' =>	precio,
-				'ordenDeCompraId' => idOrdenDeCompra
+				'productId'=> productId , 
+				'direccion'=> direccion, 
+				'precio' =>	precio, 
+				'ordenDeCompraId' => idOrdenDeCompra 
 				}
 
 		data =  httpDeleteRequest(url , nil, params)
