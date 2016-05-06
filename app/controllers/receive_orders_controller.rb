@@ -4,6 +4,8 @@ extend  ApplicationHelper
 extend ReceiveOrdersHelper
 extend InventarioHelper
 include ApplicationHelper
+include InventarioHelper
+
 
 def self.run
  	
@@ -105,8 +107,18 @@ def self.processOrder(id , sku , cantidad)
   end  
   #vaciarStockBodegaChica() #método para resetear este dato y visualizar mejor los cambios
   #vaciarOCdb()
-  analizarOC(id)
+  ret = analizarOC(id)
 
+  if ret == true
+     Thread.new do
+      fact = JSON.parse(emitirFactura(id))
+      ocBD = Oc.find_by(oc: id)
+      ocBD.update(factura: fact["_id"])
+      puts "La factura del ftp fue generada" 
+      verSiEnviar(fact["_id"])
+      puts "La oc del ftp fue despachada" 
+     end
+  end
 end
 
 

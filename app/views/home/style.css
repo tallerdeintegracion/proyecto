@@ -10,7 +10,7 @@ body {
 	font-size: 13px;
 	color: #061C37;
 	background: #CCCCCC;
-	background-image:url(../../../public/images/background.png);
+	background-image:url(/images/background.png);
 	background-repeat:repeat-x;
 }
 *
@@ -57,7 +57,7 @@ width:400px;
 
 #mainpic
 {
-background-image:url(../../../public/images/main.jpg);
+background-image:url(/images/main.jpg);
 background-repeat:no-repeat;
 width:900px;
 height:354px;	
@@ -101,7 +101,7 @@ padding-bottom:5px;
 
 #content_top
 {
-	background-image:url(../../../public/images/main_top.png);
+	background-image:url(/images/main_top.png);
 	background-repeat:no-repeat;
 	width:689px;
 	height:23px;
@@ -109,7 +109,7 @@ padding-bottom:5px;
 
 #content_main
 {
-background-image:url(../../../public/images/main_back.png);
+background-image:url(/images/main_back.png);
 background-repeat:repeat-y;
 width:659px;
 padding-left:15px;
@@ -118,7 +118,7 @@ padding-right:15px;
 
 #content_bottom
 {
-background-image:url(../../../public/images/main_bottom.png);
+background-image:url(/images/main_bottom.png);
 background-repeat:no-repeat;
 width:689px;
 height:23px;
@@ -177,7 +177,7 @@ color:#FFF;
 }
 
 #menu a:hover{
-	background-image:url(../../../public/images/link_background.png);
+	background-image:url(/images/link_background.png);
 	background-repeat:repeat-x;
 }
 
