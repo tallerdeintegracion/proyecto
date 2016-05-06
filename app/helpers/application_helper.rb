@@ -41,17 +41,17 @@ module ApplicationHelper
 	
 		path ='/stock'
 		url =bodegaBaseUrl+path
-		String toEncode = "DELETE"  + idOrdenDeCompra 
+		String toEncode = "DELETE"  + productId + direccion + precio.to_s + idOrdenDeCompra
 		authHeader = encodeHmac(toEncode)  
 
 		params={
-				'productId'=> productId , 
+				'productoId'=> productId , 
 				'direccion'=> direccion, 
 				'precio' =>	precio, 
 				'oc' => idOrdenDeCompra 
 				}
 
-		data =  httpDeleteRequest(url , nil, params)
+		data =  httpDeleteRequest(url , authHeader, params)
         return  data
 		
 

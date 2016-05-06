@@ -19,7 +19,7 @@ end
 
 every 1.minute do
 
-   runner "InventarioController.run", :output => 'log/inventario_logs.log'
+ runner "InventarioController.run", :output => 'log/inventario_logs.log'
    
 
 end
