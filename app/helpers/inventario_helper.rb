@@ -77,7 +77,7 @@ module InventarioHelper
     puts "Se despacha al cliente"
 
     variable = despacharCliente(sku,cantidad,almacenId,precio,idOC)
-      Rails.logger.debug("debug::"+variable)
+      Rails.logger.debug("debug::"+variable.to_s)
 
 =begin
     cantidad_fija = cantidad
@@ -267,7 +267,7 @@ def dejarStockEnDespacho(sku_a_mover)
     while counter < cantidad
       begin
         
-        movStock = despacharStock(ids[counter]["_id"],direccion,precio,idOC)
+        movStock = moverStockBodega(ids[counter]["_id"],direccion,idOC,precio)
         Rails.logger.debug("debug::"+movStock)
         result = JSON.parse(movStock)
             

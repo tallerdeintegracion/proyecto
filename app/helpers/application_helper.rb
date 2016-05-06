@@ -104,12 +104,12 @@ module ApplicationHelper
         return  data
 	end	
 
-	def moverStockBodega(productoId , almacenId)
+	def moverStockBodega(productoId , almacenId, idOC, precio)
 		path ='/moveStockBodega'
 		url =bodegaBaseUrl+path
 		String toEncode = "POST"+productoId+almacenId
         authHeader = encodeHmac(toEncode)
-        params = {'productoId' => productoId, 'almacenId' => almacenId}
+        params = {'productoId' => productoId, 'almacenId' => almacenId, 'oc' => idOC, 'precio' => precio}
         data =  httpPostRequest(url , authHeader, params)
         return  data
 	end	

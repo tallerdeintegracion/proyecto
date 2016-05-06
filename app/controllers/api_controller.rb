@@ -32,11 +32,11 @@ class ApiController < ApplicationController
     idPago = params[:id]
     idFactura = params[:idfactura]
     result = analizarPago(idPago,idFactura)
-    #Thread.new do
+    Thread.new do
       Rails.logger.debug("debug:: intentamos despachar")
       ## Gatillamos el envio desde aqui si es posible?
       verSiEnviar(idFactura)
-    #end
+    end
     render :json => {:validado => result, :idtrx => idPago}
   end
 
