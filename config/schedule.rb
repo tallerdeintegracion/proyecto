@@ -13,13 +13,13 @@ set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log
 
 every 1.minute do
 
-# runner "ReceiveOrdersController.run", :output => 'log/shedule_logs.log' 
+ runner "ReceiveOrdersController.run", :output => 'log/shedule_logs.log' 
 
 end
 
 every 1.minute do
 
- #runner "InventarioController.run", :output => 'log/inventario_logs.log'
+ runner "InventarioController.run", :output => 'log/inventario_logs.log'
    
 
 end
