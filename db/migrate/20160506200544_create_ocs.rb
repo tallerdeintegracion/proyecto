@@ -5,7 +5,7 @@ class CreateOcs < ActiveRecord::Migration
       t.string :estados
       t.string :canal
       t.string :factura
-      t.integer :pago
+      t.string :pago
       t.string :sku
       t.integer :cantidad
 

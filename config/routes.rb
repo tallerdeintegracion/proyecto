@@ -2,13 +2,13 @@ Rails.application.routes.draw do
 
 
 
+  resources :ocs
   resources :skus
   resources :sent_orders
   resources :grupos
   resources :precios
   resources :formulas
   resources :product_orders
-  resources :ocs
 
 scope '/api' do
     scope '/consultar' do
@@ -80,6 +80,7 @@ end
   get 'sent_orders/show'
   get 'sent_orders/edit'
   get 'sent_orders/destroy'
+  get 'api/documentacion' => 'home#documentacion'
   get 'api/documentacion'
   get 'home/bodegas'
   get 'inventario/mover' => 'inventario#moverMiStock'

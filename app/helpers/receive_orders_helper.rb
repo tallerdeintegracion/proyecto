@@ -156,6 +156,38 @@ def ObtenerEspacioAlmacen(idAlmacen)
     end
     return 0
 end
+#método sacado de inventario_controller.rb
+def checkStock(sku , bodega)
+    require 'json'
+    result = JSON.parse(getSKUWithStock(bodega))
+  
+    if result.nil?
+      return 0
+    end 
+
+    stock =0
+    #productos = result.length.to_s
+    #puts "###   " + productos +"\n"
+    #result.each do |player| 
+    #  current_position = player.to_s#['_id'].to_s
+    #  puts "     " + current_position +"\n"
+    #end
+  for counter in 0..(result.length-1)
+    actualSku =result[counter]['_id'].to_s
+    if(sku == actualSku)
+      actualTotal =result[counter]['total'].to_i
+      stock = actualTotal
+      return stock 
+    end
+  end
+
+  if stock.nil?
+    # Error 
+    return 9000000 
+  end
+  return stock
+      
+end
 
 #método sacado de inventario_controller.rb
 def checkStock(sku , bodega)

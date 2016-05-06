@@ -1,6 +1,6 @@
 module InventarioHelper
   
-  #extend  'ApplicationHelper'  #la clase que lo llama debería tener acceso a esto, no desde aquí
+  #include  'ApplicationHelper'  #la clase que lo llama debería tener acceso a esto, no desde aquí
 
 
   def verSiEnviar(idFactura)
@@ -213,6 +213,7 @@ def dejarStockEnDespacho(sku_a_mover)
       counter = counter+1
     end
     return total+counter
+<<<<<<< HEAD
   end
  def despacharFTP(sku, cantidad, direccion, precio, idOC)
     ## Falta confirmar que exista el stock necesario
@@ -286,3 +287,7 @@ def dejarStockEnDespacho(sku_a_mover)
     return total+counter
   end
 end
+=======
+#    moverStock(ProductId, almacenDestino)
+  end
+>>>>>>> 94be6133db3518c6bfae8498ec5093b822fb772d

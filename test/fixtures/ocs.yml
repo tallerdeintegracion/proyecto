@@ -5,7 +5,7 @@ one:
   estados: MyString
   canal: MyString
   factura: MyString
-  pago: 1
+  pago: MyString
   sku: MyString
   cantidad: 1
 
@@ -14,6 +14,6 @@ two:
   estados: MyString
   canal: MyString
   factura: MyString
-  pago: 1
+  pago: MyString
   sku: MyString
   cantidad: 1

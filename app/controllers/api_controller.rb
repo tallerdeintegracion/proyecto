@@ -9,10 +9,10 @@ class ApiController < ApplicationController
   
   layout false
 
-  ## Endpoint de /api/consultar/:id
   def documentacion
 
   end  
+  ## Endpoint de /api/consultar/:id
   def inventarioConsultar
 
     cantidad = getStockSKUDisponible(params[:sku])
