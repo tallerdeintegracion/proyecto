@@ -516,6 +516,4 @@ class InventarioController < ApplicationController
   	end
   end	
 
-  
-
 end

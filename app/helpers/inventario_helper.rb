@@ -132,8 +132,9 @@ def dejarStockEnDespacho(sku_a_mover)
     ## Falta confirmar que exista el stock necesario
     
     ## Ejecutamos el código para mover la cantidad necesaria de 200 en 200
+    total = 0
     if cantidad > 100
-      moverInventario(sku,cantidad-100,almacenOrigen,almacenDestino)
+      total = moverInventario(sku,cantidad-100,almacenOrigen,almacenDestino)
       cantidad = 100
     end
     
@@ -142,18 +143,21 @@ def dejarStockEnDespacho(sku_a_mover)
     counter = 0
     while counter < cantidad
       begin
-        result = moverStock(ids[counter]["_id"], almacenDestino)    
-        puts result
+        result = JSON.parse(moverStock(ids[counter]["_id"], almacenDestino))    
+        if result["message"]
+          puts "No se movio, intentando nuevamente"
+          ids = JSON.parse(getStock(almacenOrigen , sku , cantidad-counter))
+          counter = counter-1
+        end
       rescue => ex
         puts "No se movio, intentando nuevamente"
+        ids = JSON.parse(getStock(almacenOrigen , sku , cantidad-counter))
         counter = counter-1
       end
       puts "Movido correctamente, N= "+ counter.to_s
       counter = counter+1
     end
-    
+    return total+counter
 #    moverStock(ProductId, almacenDestino)
-  
-    return false
   end
 end
