@@ -58,7 +58,7 @@ module ApplicationHelper
 
 	end
 
-	def getStock(almacenId , sku , limit)
+	def getStock(almacenId , sku , limit )
 	
 		if limit > 200
 			return

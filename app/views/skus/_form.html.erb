@@ -28,10 +28,6 @@
     <%= f.text_field :grupoProyecto %>
   </div>
   <div class="field">
-    <%= f.label :unidades %><br>
-    <%= f.text_field :unidades %>
-  </div>
-  <div class="field">
     <%= f.label :costoUnitario %><br>
     <%= f.number_field :costoUnitario %>
   </div>
@@ -42,6 +38,10 @@
   <div class="field">
     <%= f.label :tiempoProduccion %><br>
     <%= f.text_field :tiempoProduccion %>
+  </div>
+  <div class="field">
+    <%= f.label :reservado %><br>
+    <%= f.number_field :reservado %>
   </div>
   <div class="actions">
     <%= f.submit %>

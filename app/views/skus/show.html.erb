@@ -21,11 +21,6 @@
 </p>
 
 <p>
-  <strong>Unidades:</strong>
-  <%= @sku.unidades %>
-</p>
-
-<p>
   <strong>Costounitario:</strong>
   <%= @sku.costoUnitario %>
 </p>
@@ -38,6 +33,11 @@
 <p>
   <strong>Tiempoproduccion:</strong>
   <%= @sku.tiempoProduccion %>
+</p>
+
+<p>
+  <strong>Reservado:</strong>
+  <%= @sku.reservado %>
 </p>
 
 <%= link_to 'Edit', edit_sku_path(@sku) %> |

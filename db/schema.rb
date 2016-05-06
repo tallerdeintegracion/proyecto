@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160505231307) do
-
+ActiveRecord::Schema.define(version: 20160506173236) do
 
   create_table "formulas", force: :cascade do |t|
     t.string   "sku",               limit: 255
@@ -66,7 +65,6 @@ ActiveRecord::Schema.define(version: 20160505231307) do
   end
 
   create_table "sent_orders", force: :cascade do |t|
-<<<<<<< HEAD
     t.string   "oc",           limit: 255
     t.string   "sku",          limit: 255
     t.integer  "cantidad",     limit: 4
@@ -74,15 +72,6 @@ ActiveRecord::Schema.define(version: 20160505231307) do
     t.datetime "fechaEntrega"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
-=======
-    t.string   "oc",         limit: 255
-    t.string   "sku",        limit: 255
-    t.integer  "cantidad",   limit: 4
-    t.string   "estado",     limit: 255
-    t.integer  "entrega",    limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
->>>>>>> c6b975afb7abd85b3d71826a8e001b5feb76d942
   end
 
   create_table "skus", force: :cascade do |t|
@@ -90,10 +79,10 @@ ActiveRecord::Schema.define(version: 20160505231307) do
     t.string   "descripcion",      limit: 255
     t.string   "tipo",             limit: 255
     t.string   "grupoProyecto",    limit: 255
-    t.string   "unidades",         limit: 255
     t.integer  "costoUnitario",    limit: 4
     t.integer  "loteProduccion",   limit: 4
     t.float    "tiempoProduccion", limit: 24
+    t.integer  "reservado",        limit: 4
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
