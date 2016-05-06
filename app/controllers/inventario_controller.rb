@@ -224,8 +224,9 @@ class InventarioController < ApplicationController
   		return
   	end	
   	
-  	aceptado = sendOc(grupo , id)				
-  	
+  	aceptado = sendOc(grupo , id)
+
+ 
   	if aceptado == false
   		data = anularOrdenDeCompra(id , "Fue rechazada")
   		puts "--- La orden fue rechazada y anulada del sistema " 
@@ -314,9 +315,15 @@ class InventarioController < ApplicationController
   	if valid_json?(resp) ==false
   		return false
   	end
+
   	json =JSON.parse(resp)
+  	puts "--- Respuesta " + resp
   	aceptado = json["aceptado"]
-  	return  aceptado
+  	
+  	if aceptado.nil?
+  		return false
+  	end	
+  	return  aceptado 
   end
 
   def self.pedidas(sku)
@@ -505,8 +512,12 @@ class InventarioController < ApplicationController
   		stock = checkStock(sku ,almacenRecepcion) 
 		stockInicial = stock	
   		moverInventario(sku, stock, almacenRecepcion, bodegaMateriasPrimas)
+
   		return stockInicial
   end 	
+
+
+
 
 
   def self.moveProducts(products , cantidad , destino)
