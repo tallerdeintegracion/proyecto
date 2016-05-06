@@ -80,6 +80,7 @@ end
   get 'sent_orders/show'
   get 'sent_orders/edit'
   get 'sent_orders/destroy'
+  get 'api/documentacion' => 'home#documentacion'
   get 'api/documentacion'
   get 'home/bodegas'
   get 'inventario/mover' => 'inventario#moverMiStock'

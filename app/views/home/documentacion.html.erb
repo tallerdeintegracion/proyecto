@@ -1,0 +1,120 @@
+<!--h1>Home#documentacion</h1>
+<p>Find me in app/views/home/documentacion.html.erb</p-->
+<meta charset="UTF-8">
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentacion</title>
+</head>
+<body>
+<center>
+<h1 id="top">Documentacion API</h1>
+</center>
+<a href="#1">1. Descripción de la API</a>
+<br>
+<a href="#2">2. Arquitectura subyacente</a>
+<br>
+<a href="#3">3. Descripción de Sistemas</a>
+<br>
+<a href="#4">4. Flujos</a>
+<br>
+<a href="#5">5. Creadores</a>
+
+<h3 id="1">1. Descripción de la API</h3>
+<p>Esta API cumple la funcion de permitir interactuar entre empresas de producción para la elaboración de productos manufacturados.</p>
+<p>Su principal objetivo es administrar el proceso de producción desde el momento de recibir una orden de compra, hasta haber entregado el producto, pasando por la producción, manejos de inventario y facturación.</p>
+<a href="#top">Volver</a>
+
+<br>
+
+<h3 id="2">2. Arquitectura subyacente</h3>
+<p>Este software fue creado basándonos en el modelo vista controlador (MVC) con el objetivo de separar bien las funciones y permitirnos administrar eficientemente los distintos recursos en cada nivel según fuera necesario.</p>
+<p>El framework utilizado fue Ruby on Rails (RoR), el cual permite trabajar eficientemente con este patrón, separando en:</p>
+<p>El Modelo:</p>
+<p>&emsp;-Las tablas de las Bases de Datos</p>
+<p>&emsp;-Las migraciones</p>
+<p>&emsp;-Las observaciones</p>
+<p>&emsp;-Las emigraciones</p>
+<p>La Vista:</p>
+<p>&emsp;-La interfaz presentada al Usuario para interactuar con el controlador</p>
+<p>El Controlador:</p>
+<p>&emsp;-La lógica detrás de la aplicación</p>
+<p>&emsp;-La lógica detrás de las interacciones con Usuarios</p>
+<a href="#top">Volver</a>
+<br>
+
+<h3 id="3">3. Descripción de Sistemas</h3>
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/consultar/:id (GET)</span></p>
+<p>&emsp;Retorna un JSON con el stock del sku</p>
+<p>&emsp;Parámetros: Ninguno</p>
+<p>&emsp;Retorna:{"stock": int, "sku": int} </p>
+</div>
+<br>
+
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/facturas/recibir/:id (GET)</span></p>
+<p>&emsp;Retorna un JSON informando si se validó la factura</p>
+<p>&emsp;Parámetros: Ninguno</p>
+<p>&emsp;Retorna:{"validado": boolean, "idfactura": string} </p>
+</div>
+<br>
+
+
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/pagos/recibir/:id?idfactura=xxxxx (GET)</span></p>
+<p>&emsp;Retorna un JSON informando si se validó el pago</p>
+<p>&emsp;Parámetros: idfactura</p>
+<p>&emsp;Retorna:{"validado": boolean, "idtrx": string} </p>
+</div>
+<br>
+
+
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/oc/recibir/:id (GET)</span></p>
+<p>&emsp;Retorna un JSON informando si se aceptó la Orden de Compra</p>
+<p>&emsp;Parámetros: Ninguno</p>
+<p>&emsp;Retorna:{"aceptado": boolean, "idoc": string}</p>
+</div>
+<br>
+
+
+<div class="boxed">
+<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/despachos/recibir/:id (GET)</span></p>
+<p>&emsp;Retorna un JSON informando si se recibió el despacho</p>
+<p>&emsp;Parámetros: Ninguno</p>
+<p>&emsp;Retorna:{"aceptado": boolean}</p>
+</div>
+<br>
+<a href="#top">Volver</a>
+<br>
+
+<br>
+<h3 id="4">4. Flujos</h3>
+<a href="#top">Volver</a>
+<br>
+<br>
+
+<h3 id="5">5. Creadores</h3>
+<p>Jefe de Grupo: Benjamín Gimenez</p>
+<br>
+<p>Información de contacto:</p>
+<p>Benjamín Gimenez (<a href="mailto:bagimene@uc.cl">bagimene@uc.cl</a>)</p>
+<p>Juan Pablo Silva (<a href="mailto:jpsilva6@uc.cl">jpsilva6@uc.cl</a>)</p>
+<p>Cristóbal Richards (<a href="mailto:crichard1@uc.cl">crichard1@uc.cl</a>)</p>
+<p>Víctor Vidaurre (<a href="mailto:vmvidaurre@uc.cl">vmvidaurre@uc.cl</a>)</p>
+<a href="#top">Volver</a>
+</body>
+</html>
+
+<style>
+body{
+
+background-color: 	#E0E0E0;
+}
+.boxed {
+	background-color: white; 
+	width: 700px;
+  	border: 1px solid black ;
+}
+</style>

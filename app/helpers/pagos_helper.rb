@@ -62,6 +62,7 @@ module PagosHelper
     return true
     
   end
+
 end
 
 #idOC = 5713613ea0aada03009160c6

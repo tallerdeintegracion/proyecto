@@ -39,7 +39,7 @@ def analizarOC(id)
 =end
 		#SE ASUME QUE QUE SÍ SE PUEDEN TRABAJAR SKU QUE NO PRODUZCA, SIEMPRE QUE TENGA. 
 	    #se validará que se tenga stock por ahora para satisfacer el pedido, sino se tiene se rechaza:
-	    stock = checkStock(sku, "571262aaa980ba030058a1f3")#@bodegaPrincipal)
+	    stock = getStockSKUDisponible(sku)#@bodegaPrincipal)
 	    puts "### Stock del sku " + sku.to_s + " es de " + stock.to_s + " y piden "+cantidad.to_s+"\n"
 	    if cantidad.to_i > stock.to_i
 	      #se anula la oc
@@ -73,7 +73,7 @@ def analizarOC(id)
 			      cantidad_fija = cantidad
 			      movidas = 0
 			      while (cantidad.to_i > 0) do
-			      	productos = JSON.parse(getStock('571262aaa980ba030058a1f3' , sku.to_s ) )
+			      	productos = JSON.parse(getStock('571262aaa980ba030058a1f3' , sku.to_s,100 ) )
 			      	limite = 0
 				    if productos.nil?
 				    	break
@@ -155,6 +155,38 @@ def ObtenerEspacioAlmacen(idAlmacen)
     	end
     end
     return 0
+end
+#método sacado de inventario_controller.rb
+def checkStock(sku , bodega)
+    require 'json'
+    result = JSON.parse(getSKUWithStock(bodega))
+  
+    if result.nil?
+      return 0
+    end 
+
+    stock =0
+    #productos = result.length.to_s
+    #puts "###   " + productos +"\n"
+    #result.each do |player| 
+    #  current_position = player.to_s#['_id'].to_s
+    #  puts "     " + current_position +"\n"
+    #end
+  for counter in 0..(result.length-1)
+    actualSku =result[counter]['_id'].to_s
+    if(sku == actualSku)
+      actualTotal =result[counter]['total'].to_i
+      stock = actualTotal
+      return stock 
+    end
+  end
+
+  if stock.nil?
+    # Error 
+    return 9000000 
+  end
+  return stock
+      
 end
 
 #método sacado de inventario_controller.rb
