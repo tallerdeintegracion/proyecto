@@ -287,3 +287,4 @@ def dejarStockEnDespacho(sku_a_mover)
     return total+counter
   end
 end
+
