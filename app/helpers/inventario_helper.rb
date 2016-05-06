@@ -162,17 +162,28 @@ def dejarStockEnDespacho(sku_a_mover)
       
     ids = JSON.parse(getStock(almacenOrigen , sku , cantidad))
     counter = 0
+    if ids.count < cantidad
+      return 0
+    end
     while counter < cantidad
       begin
         result = JSON.parse(moverStock(ids[counter]["_id"], almacenDestino))    
         if result["message"] == nil
           puts "No se movio, intentando nuevamente"
           ids = JSON.parse(getStock(almacenOrigen , sku , cantidad-counter))
+          if ids.count < cantidad
+            return 0
+          end
+
           counter = counter-1
         end
       rescue => ex
         puts "No se movio, intentando nuevamente"
         ids = JSON.parse(getStock(almacenOrigen , sku , cantidad-counter))
+        if ids.count < cantidad
+          return 0
+        end
+
         counter = counter-1
       end
       puts "Movido correctamente, N= "+ counter.to_s
