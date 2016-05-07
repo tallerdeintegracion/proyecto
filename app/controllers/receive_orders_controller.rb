@@ -114,10 +114,6 @@ def self.processOrder(id , sku , cantidad)
 
   if ret == true
 
-    puts "A ingresado una nueva orden de compra"
-
-      puts "La factura del ftp fue generada" 
-
      Thread.new do
       fact = JSON.parse(emitirFactura(id))
       ocBD = Oc.find_by(oc: id)

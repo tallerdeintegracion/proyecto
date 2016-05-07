@@ -511,14 +511,7 @@ class InventarioController < ApplicationController
 
   end	
 
-  def vaciar  
-      sku = 31
-      bodega1 = "571262aaa980ba030058a23d"
-      bodega2 = "571262aaa980ba030058a1f3"
-      stock = checkStock(sku ,bodega1) 
-      moverInventario(sku, stock, bodega1, bodega2)
 
-  end   
   def self.recibirMaterial( sku , almacenRecepcion , bodegaMateriasPrimas)
   		  		
   		stock = checkStock(sku ,almacenRecepcion) 

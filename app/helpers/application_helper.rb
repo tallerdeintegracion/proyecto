@@ -402,12 +402,13 @@ module ApplicationHelper
 
 		## Sumamos la cantidad que corresponde
     	if cantidadJSON != nil
-    		puts " cantidad almacen grande " + cantidadJSON["total"]
+    	  #puts " cantidad almacen grande " + cantidadJSON["total"]
     	  cantidad = cantidad + cantidadJSON["total"]
     	end
 
 		## Revisamos la bodega chica
 		#almacenChico = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
+
 
 
 
@@ -417,7 +418,9 @@ module ApplicationHelper
     	#inventario1 = JSON.parse(getSKUWithStock(almacenChico))
     	#cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
 
-    	
+    	#inventario1 = JSON.parse(getSKUWithStock(almacenChico))
+    	#cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
+
 		## Sumamos la cantidad que corresponde
 		#if cantidadJSON1 != nil
    	 	#  cantidad = cantidad + cantidadJSON1["total"]
