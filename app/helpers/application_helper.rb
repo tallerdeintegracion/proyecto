@@ -401,7 +401,7 @@ module ApplicationHelper
 
 		## Sumamos la cantidad que corresponde
     	if cantidadJSON != nil
-    		puts " cantidad almacen grande " + cantidadJSON["total"]
+    	  #puts " cantidad almacen grande " + cantidadJSON["total"]
     	  cantidad = cantidad + cantidadJSON["total"]
     	end
 
