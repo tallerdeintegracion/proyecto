@@ -76,7 +76,7 @@ module InventarioHelper
   return true
 
   end
- def moverInventarioDespacho(sku, cantidad, almacenOrigen,almacenDestino)
+ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     puts "Almacen de destino " + almacenDestino
     ## Falta confirmar que exista el stock necesario
     
