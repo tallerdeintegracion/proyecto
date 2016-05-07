@@ -55,8 +55,8 @@ def analizarFactura(id)
   ## Este metodo avisa al otro grupo que se realizó la transferencia, si en la bd no esta grupos.idGrupo se cae
   def avisarTransferencia(factura,response)
     nOtroGrupo = Grupo.find_by(idGrupo: factura[0]["proveedor"])["nGrupo"]
-    url = "http://localhost/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
-    #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+    #url = "http://localhost/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+    url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
     Rails.logger.debug("debug:: se avisa la transferencia")
 
     ans = httpGetRequest(url ,nil)

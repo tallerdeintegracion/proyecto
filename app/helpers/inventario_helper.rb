@@ -59,6 +59,9 @@ module InventarioHelper
     puts "Se despacha al cliente"
 
     variable = despacharCliente(sku,cantidad,almacenId,precio,idOC)
+    ocDB = Oc.find_by(oc: idOC)
+    ocDB.update(estados: "Despachada")
+
       Rails.logger.debug("debug::"+variable.to_s)
       
   elsif canal == "ftp"
@@ -66,6 +69,8 @@ module InventarioHelper
     puts "Se despacha al ftp"
 
     despacharFTP(cantidad,direccion,precio,idOC)
+    ocDB = Oc.find_by(oc: idOC)
+    ocDB.update(estados: "Despachada")
   end
   return true
 

@@ -39,8 +39,8 @@ class ApiController < ApplicationController
         res = verSiEnviar(idFactura)
       end
       nOtroGrupo = Grupo.find_by(factura: idFactura)["nGrupo"]
-      url = "http://localhost/api/despacho/recibir/" + fact["_id"]
-      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
+      #url = "http://localhost/api/despacho/recibir/" + fact["_id"]
+      url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
       ans = httpGetRequest(url ,nil)
       Rails.logger.debug("debug:: le avisamos al otro grupo")
 
@@ -61,7 +61,13 @@ class ApiController < ApplicationController
     if oc[0]["param"] == "id"
       render :json => {:aceptado => false, :idoc => id} 
       return
-    end   
+    end
+    ocDB = Oc.find_by(oc: id)   
+    if ocDB != nil
+      render :json => {:aceptado => false, :idoc => id} 
+      return
+
+    end
     result = analizarOC(id)      
     render :json => {:aceptado => result, :idoc => id} 
     
@@ -70,8 +76,8 @@ class ApiController < ApplicationController
       ocBD = Oc.find_by(oc: id)
       ocBD.update(factura: fact["_id"])
       nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
-      url = "http://localhost/api/facturas/recibir/" + fact["_id"]
-      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/facturas/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+      #url = "http://localhost/api/facturas/recibir/" + fact["_id"]
+      url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/facturas/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
 
       ans = httpGetRequest(url ,nil)
     end
