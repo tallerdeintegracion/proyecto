@@ -404,15 +404,15 @@ module ApplicationHelper
     	end
 
 		## Revisamos la bodega chica
-		almacenChico = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
+		#almacenChico = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
 
-    	inventario1 = JSON.parse(getSKUWithStock(almacenChico))
-    	cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
+    	#inventario1 = JSON.parse(getSKUWithStock(almacenChico))
+    	#cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
     	
 		## Sumamos la cantidad que corresponde
-		if cantidadJSON1 != nil
-   	 	  cantidad = cantidad + cantidadJSON1["total"]
-    	end
+		#if cantidadJSON1 != nil
+   	 	#  cantidad = cantidad + cantidadJSON1["total"]
+    	#end
 
 		## Restamos lo ya reservado
 		skuDB = Sku.find_by(sku: sku)
