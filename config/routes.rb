@@ -83,9 +83,16 @@ end
   get 'api/documentacion' => 'home#documentacion'
   get 'api/documentacion'
   get 'home/bodegas'
+  
   get 'inventario/vaciar'
   get 'inventario/mover' => 'inventario#moverMiStock'
+  
   root 'home#index'
+  
+  get 'home/listaOrdenesCompra'
+  get 'home/productos'
+  get 'home/credenciales'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
