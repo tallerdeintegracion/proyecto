@@ -36,12 +36,13 @@ class InventarioController < ApplicationController
   		
   	@returnPoint = 2000
   	@returnPointProcesados = 400
-  	@bodegaPrincipal = "571262aaa980ba030058a1f3"
-  	@bodegaRecepcion = "571262aaa980ba030058a1f1"
-  	@bodegaPulmon = "571262aaa980ba030058a23e"
-  	@bodegaDespacho = "571262aaa980ba030058a1f2"
+  	
+    @bodegaPrincipal = "572aad41bdb6d403005fb1c1"
+  	@bodegaRecepcion = "572aad41bdb6d403005fb1bf"
+  	@bodegaPulmon = "572aad41bdb6d403005fb207"
+  	@bodegaDespacho = "572aad41bdb6d403005fb1c0"
 
-  	@cuentaGrupo = "571262c3a980ba030058ab5d"
+  	@cuentaGrupo = "572aac69bdb6d403005fb050"
   	@GrupoProyecto="3";
   	@cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
   	@horasEntrega = 4
