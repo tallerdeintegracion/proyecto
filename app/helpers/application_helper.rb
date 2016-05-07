@@ -398,16 +398,24 @@ module ApplicationHelper
 		inventario = JSON.parse(getSKUWithStock(almacenGrande))
     	cantidadJSON = inventario.find { |h1| h1["_id"] == sku }
     	cantidad = 0
+
 		## Sumamos la cantidad que corresponde
     	if cantidadJSON != nil
+    		puts " cantidad almacen grande " + cantidadJSON["total"]
     	  cantidad = cantidad + cantidadJSON["total"]
     	end
 
 		## Revisamos la bodega chica
 		#almacenChico = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
 
+<<<<<<< HEAD
+
+    	inventario1 = JSON.parse(getSKUWithStock(almacenChico))
+    	cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
+=======
     	#inventario1 = JSON.parse(getSKUWithStock(almacenChico))
     	#cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
+>>>>>>> 9b8d8ce3f549b8c76c3bc9c1834f2c1dee78b545
     	
 		## Sumamos la cantidad que corresponde
 		#if cantidadJSON1 != nil
@@ -417,6 +425,8 @@ module ApplicationHelper
 		## Restamos lo ya reservado
 		skuDB = Sku.find_by(sku: sku)
 		cantidad = cantidad - skuDB["reservado"]
+
+		puts " cantidad disponible: " + cantidad.to_s
 		return cantidad
 	end
 

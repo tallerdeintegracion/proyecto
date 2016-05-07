@@ -65,6 +65,7 @@ class InventarioController < ApplicationController
   	if cliente.empty? or proveedor.empty?
   		return nil
   	end	
+    
   	String orden = eval(crearOrdenDeCompra(canal , cantidad , sku , cliente , proveedor , precioUnitario ,   fechaEntrega , nota ))
   
   	json = orden.to_json
@@ -90,9 +91,9 @@ class InventarioController < ApplicationController
 
   			sku = row.sku
   			coste = row.costoUnitario
-  			tamañoLote = row.loteProduccion
+  			tamanoLote = row.loteProduccion
 
-  			puts "--- Revisando material " + sku.to_s + " coste " + coste.to_s + " tamaño lote "+tamañoLote.to_s
+  			puts "--- Revisando material " + sku.to_s + " coste " + coste.to_s + " tamano lote "+tamanoLote.to_s
 
   			stock = checkStock(sku, bodega)
   			puts "--- Stock del sku " + sku.to_s + " es de " + stock.to_s 
@@ -100,7 +101,7 @@ class InventarioController < ApplicationController
  			produccion = enProduccion(sku)
  			puts "--- Existen en produccion " + produccion.to_s
 
-  			lotes = calcularLotes(stock, produccion , tamañoLote, @returnPoint)
+  			lotes = calcularLotes(stock, produccion , tamanoLote, @returnPoint)
  			puts "--- Lotes faltantes " + lotes.to_s
 
  			maxLotes =  numeroLotesPosible(sku , bodega )
@@ -116,7 +117,7 @@ class InventarioController < ApplicationController
  				return 
  			end
  			
- 			cantidad = produccion *tamañoLote
+ 			cantidad = produccion *tamanoLote
  			puts "--- Se mandaran a producir " + cantidad.to_s  + " lotes"
  			
  			exito =  llevarMateriaPrimasADespacho(sku , produccion)
@@ -126,7 +127,7 @@ class InventarioController < ApplicationController
  				return 
  			end 
  				
- 			monto = produccion * tamañoLote * coste
+ 			monto = produccion * tamanoLote * coste
 
  			trx = pagar(monto , @cuentaGrupo , @cuentaFabrica  );
 	  		puts "--- Transferencia exitosa " + trx
@@ -209,7 +210,7 @@ class InventarioController < ApplicationController
   	puts "--- Stock del sku " + skuMaterial + " es de " + stock.to_s 
   	resp = Sku.find_by(sku:skuMaterial)
   	grupo =  resp.grupoProyecto 
-  	cantidadOrden = tamañoOrden(stock , skuMaterial , grupo)
+  	cantidadOrden = tamanoOrden(stock , skuMaterial , grupo)
   	
   	if cantidadOrden <= 0
   		return
@@ -247,12 +248,19 @@ class InventarioController < ApplicationController
   	estado = resp["estado"]
   	cantidad= resp["cantidad"]
   	fechaEntrega = resp["fechaEntrega"]
+<<<<<<< HEAD
+    puts "--- Registrando oc sku: " + sku + " estado: " + estado + " cantidad " + estado + " entrega: " + fechaEntrega
+  	res = SentOrder.find_or_create_by(oc:id , sku: sku , estado: estado, cantidad: cantidad , fechaEntrega: fechaEntrega)
+ 	  puts "--- Resultado oc: " + res.to_s
+    puts "--- Se registro el envio de la oc " + id
+=======
   	variable = SentOrder.find_or_create_by(oc:id , sku: sku , estado: estado, cantidad: cantidad , fechaEntrega: fechaEntrega)
  	puts "--- Se registro el envio de la oc " + id + variable.to_s
+>>>>>>> 9b8d8ce3f549b8c76c3bc9c1834f2c1dee78b545
   end	
  
 
-  def self.tamañoOrden(stock , skuMaterial , grupo)
+  def self.tamanoOrden(stock , skuMaterial , grupo)
   	pedidas = pedidas(skuMaterial)
 	faltante = @returnPoint -(stock + pedidas)
   	
@@ -346,9 +354,9 @@ class InventarioController < ApplicationController
   	
   		sku = row.sku
   		coste = row.costoUnitario
-  		tamañoLote = row.loteProduccion
+  		tamanoLote = row.loteProduccion
 
-  		puts "--- Material " + sku.to_s + " coste: " + coste.to_s + " tamaño lote: "+tamañoLote.to_s
+  		puts "--- Material " + sku.to_s + " coste: " + coste.to_s + " tamano lote: "+tamanoLote.to_s
 
   		stock = checkStock(sku, bodega)
   		puts "--- Stock del sku es de: " + stock.to_s 
@@ -356,10 +364,10 @@ class InventarioController < ApplicationController
  		produccion = enProduccion(sku)
  		puts "--- Existen en produccion: " + produccion.to_s
 
-  		lotes = calcularLotes(stock, produccion , tamañoLote, @returnPoint)
+  		lotes = calcularLotes(stock, produccion , tamanoLote, @returnPoint)
  		puts "--- Lotes a producir: " + lotes.to_s
   
-  		monto = lotes*coste*tamañoLote	
+  		monto = lotes*coste*tamanoLote	
  		
  		if lotes <= 0
  			puts "--- No es necesario producir"	
@@ -368,7 +376,7 @@ class InventarioController < ApplicationController
   			trx =pagar(monto , @cuentaGrupo , @cuentaFabrica  );
 	  		
 	  		puts "--- Transferencia exitosa " + trx
-  			cantidad= lotes*tamañoLote
+  			cantidad= lotes*tamanoLote
   			
   			detallesProd = producir(sku, trx, cantidad)
   			puts "--- Se enviaro a producir " + cantidad.to_s + " de la transaccion " +trx 
@@ -447,11 +455,11 @@ class InventarioController < ApplicationController
   end
 
 
-  def self.calcularLotes(stock , enproduccion , tamañoLote ,returnPoint )
+  def self.calcularLotes(stock , enproduccion , tamanoLote ,returnPoint )
 
   	total= stock + enproduccion
   	faltante = returnPoint - total
-  	lotes = (faltante/tamañoLote).to_i
+  	lotes = (faltante/tamanoLote).to_i
   	if lotes < 0
   		return 0
   	end	

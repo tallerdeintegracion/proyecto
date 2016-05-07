@@ -100,7 +100,7 @@ def self.processOrder(id , sku , cantidad)
 
 
   if(id == id_prueba && @idGrupo == id_proveedor && sku == sku_prueba && cantidad == cantidad_prueba)
-    puts "--- La oredn de compra existe en el sistema"+"\n"
+    #puts "--- La oreden de compra existe en el sistema"+"\n"
   else
     rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
     Oc.find_or_create_by(oc: id , estados: "defectuosa", canal: oc[0]['canal'].to_s, factura: "", pago: "", sku: oc[0]['sku'].to_s, cantidad: oc[0]['cantidad'].to_s)#los estados son: defectuosa, aceptada, rechazada
@@ -110,9 +110,14 @@ def self.processOrder(id , sku , cantidad)
   #vaciarStockBodegaChica() #método para resetear este dato y visualizar mejor los cambios
   #vaciarOCdb()
   ret = analizarOC(id)
-  puts "--- La oc ya ha sido procesada "
+ # puts "--- La oc ya ha sido procesada "
+
   if ret == true
+<<<<<<< HEAD
+    puts "A ingresado una nueva orden de compra"
+=======
       puts "La factura del ftp fue generada" 
+>>>>>>> 9b8d8ce3f549b8c76c3bc9c1834f2c1dee78b545
      Thread.new do
       fact = JSON.parse(emitirFactura(id))
       ocBD = Oc.find_by(oc: id)
