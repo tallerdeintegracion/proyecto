@@ -409,12 +409,6 @@ module ApplicationHelper
 		## Revisamos la bodega chica
 		#almacenChico = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
 
-
-
-
-    	inventario1 = JSON.parse(getSKUWithStock(almacenChico))
-    	cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
-
     	#inventario1 = JSON.parse(getSKUWithStock(almacenChico))
     	#cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
 
