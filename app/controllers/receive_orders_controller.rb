@@ -21,7 +21,7 @@ def self.run
   #dejarStockEnDespacho(8)
   #despacharOC("572938439fda6e0300480f45")
 
- 	puts "#{Time.now} - iniciar descarga de pedidos"
+ 	puts "#{Time.now} - Iniciar descarga de pedidos"
 	sftp =connect()
 	searchOrders(sftp)
 
@@ -44,7 +44,7 @@ def self.connect()
    	
 
     #cambiar a produccion
-    p 'ESTABLISH SFTP CONNECTION'
+    p '--- Conectandose a Sftp'
     host = 'mare.ing.puc.cl'
     username = 'integra3'
     password = 'm3fzRPd5'
@@ -68,11 +68,12 @@ def self.searchOrders (sftp)
   			Dir.glob(dir+"/*.xml") do |fname|
   			# do work on files ending in .xml in the desired directory
   			#puts fname
-
+        
   			doc = Nokogiri::XML(File.open(fname))
   			sku=doc.css("order sku").first.text
   			id=doc.css("order id").first.text
   			qty=doc.css("order qty").first.text
+
   			processOrder(id , sku , qty)
 			end
   			
@@ -85,7 +86,7 @@ end
 def self.processOrder(id , sku , cantidad)
   require 'json'
   #puts "Trabajando en la orden id: "+ id+ "   sku: "+sku+"   cantidad: "+cantidad+"\n"
-
+  puts "--- Procesando orden Id Orden: " + id + " sku: " + sku + " cantidad: " + cantidad 
   #se validará que la oc del ayudante sea correcta, o sea, que el id sea el mismo para el sku  
   oc = JSON.parse(obtenerOrdenDeCompra(id))
   if oc.nil?
@@ -99,17 +100,17 @@ def self.processOrder(id , sku , cantidad)
 
 
   if(id == id_prueba && @idGrupo == id_proveedor && sku == sku_prueba && cantidad == cantidad_prueba)
-    #puts "oc existente en el sistema"+"\n"
+    puts "--- La oredn de compra existe en el sistema"+"\n"
   else
     rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
     Oc.find_or_create_by(oc: id , estados: "defectuosa", canal: oc[0]['canal'].to_s, factura: "", pago: "", sku: oc[0]['sku'].to_s, cantidad: oc[0]['cantidad'].to_s)#los estados son: defectuosa, aceptada, rechazada
-    puts "oc NO EXISTE en el sistema o tiene errores"+"\n"
+    puts "--- ERROR la orden no existe en el sistema o tiene errores"+"\n"
     return 0        
   end  
   #vaciarStockBodegaChica() #método para resetear este dato y visualizar mejor los cambios
   #vaciarOCdb()
   ret = analizarOC(id)
-
+  puts "--- La oc ya ha sido procesada "
   if ret == true
      Thread.new do
       fact = JSON.parse(emitirFactura(id))
@@ -120,6 +121,7 @@ def self.processOrder(id , sku , cantidad)
       puts "La oc del ftp fue despachada" 
      end
   end
+
 end
 
 
