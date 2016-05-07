@@ -13,7 +13,7 @@
 	        </div>   
 	        <div id="menu">
 	            <ul>
-	                <li class="menuitem"><a href="/home/index">Inicio</a></li>
+	                <li class="menuitem"><a href="/">Inicio</a></li>
                     <li class="menuitem"><a href="/home/productos">Productos</a></li>
                     <li class="menuitem"><a href="/home/bodegas">Bodegas</a></li>
 	                <li class="menuitem"><a href="/home/listaOrdenesCompra">Ordenes de Compra</a></li>
@@ -25,6 +25,30 @@
 	        	<div id="content_top"></div>
 	        		<div id="content_main">
 	            		<p>Proximamente</p>
+					    <h3>Tipo: <%= tipo%>  </h3>
+				<table style="width:100%">
+				  	<tr bgcolor="#B3B5B5">
+				    	<th>id OC</th>
+				    	<th>Estado</th>		
+				    	<th>id Factura</th>
+						<th>id Pago</th>
+						<th>sku</th>
+						<th>cantidad</th>
+				  	</tr>
+				  	<% @ocsdb = Oc.all %>
+				  	<% @ocsdb.each do |ocdb| %>	
+				  	<tr>
+				  		<th><%= ocdb["oc"] %>	</th>
+				  		<th><%= ocdb["estados"] %>	</th>
+				  		<th><%= ocdb["factura"] %>	</th>
+				  		<th><%= ocdb["pago"] %>	</th>
+				  		<th><%= ocdb["sku"] %>	</th>
+				  		<th><%= ocdb["cantidad"] %>	</th>						
+					
+				    </tr>
+					<% end %>
+				</table>
+
 	        		</div>
 	        	<div id="content_bottom"></div>
 	      </div>
