@@ -65,6 +65,7 @@ class InventarioController < ApplicationController
   	if cliente.empty? or proveedor.empty?
   		return nil
   	end	
+    
   	String orden = eval(crearOrdenDeCompra(canal , cantidad , sku , cliente , proveedor , precioUnitario ,   fechaEntrega , nota ))
   
   	json = orden.to_json
