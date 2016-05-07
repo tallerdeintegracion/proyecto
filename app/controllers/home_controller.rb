@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
 	include ApplicationHelper
- 
+  include InventarioHelper
   def index
 
 
@@ -48,6 +48,7 @@ class HomeController < ApplicationController
     #@show = rechazarOrdenDeCompra('57128e450606410300c3fbeb' , "no hay tiempo")
     #@show = obtenerFactura('571b745e79749603006e3eb2')  	
     #@show = emitirFactura('57270b94ba0c0f0300c51bef') 
+    #@show = despacharFTP(14,40,"rerae",7413,"5727c26a4c0ce00300927f5e") # verSiEnviar('572e0be91a58ba03003efa37') 
 
   end
 

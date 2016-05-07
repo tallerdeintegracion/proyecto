@@ -30,10 +30,11 @@ def analizarFactura(id)
     
     ##Confirmamos que no la hayamos pagado ya
     oc = SentOrder.find_by(oc: idoc)
-    if oc["estado"] == "Pagada"
+    if oc != nil
+      if oc["estado"] == "Pagada"
         return false
-    end
-    
+      end
+    end    
     response = pagarFactura(factura)
     ## Falta confirmar si se pago correctamente
     Thread.new do

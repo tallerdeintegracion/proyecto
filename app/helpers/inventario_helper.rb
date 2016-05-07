@@ -68,7 +68,7 @@ module InventarioHelper
     ## QUE CHUCHA ES DIRECCIÓN
     puts "Se despacha al ftp"
     direccion="estadireccion"
-    despacharFTP(cantidad,direccion,precio,idOC)
+    despacharFTP(sku,cantidad,direccion,precio,idOC)
     ocDB = Oc.find_by(oc: idOC)
     puts "FTP despachado"
     ocDB.update(estados: "Despachada")
