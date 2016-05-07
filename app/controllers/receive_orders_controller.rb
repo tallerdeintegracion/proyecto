@@ -86,7 +86,7 @@ end
 def self.processOrder(id , sku , cantidad)
   require 'json'
   #puts "Trabajando en la orden id: "+ id+ "   sku: "+sku+"   cantidad: "+cantidad+"\n"
-  puts "--- Procesando orden Id Orden: " + id + " sku: " + sku + " cantidad: " + cantidad 
+  #puts "--- Procesando orden Id Orden: " + id + " sku: " + sku + " cantidad: " + cantidad 
   #se validará que la oc del ayudante sea correcta, o sea, que el id sea el mismo para el sku  
   oc = JSON.parse(obtenerOrdenDeCompra(id))
   if oc.nil?
