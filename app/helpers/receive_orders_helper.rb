@@ -4,6 +4,8 @@ module ReceiveOrdersHelper
 def analizarOC(id)
 	require 'json'
     #puts "oc cantidad: "+ oc[0]['cantidad'].to_s+ " . oc sku: "+ oc[0]['sku'].to_s+"\n"
+  
+  #puts "------ Iniciando el analisis de la oc "
   oc = JSON.parse(obtenerOrdenDeCompra(id))
   if oc.nil?
       return false
@@ -17,6 +19,7 @@ def analizarOC(id)
     #oc_db.update(estados: 'creada')
   if oc_db.nil? #si es nula se crea más abajo          
   elsif oc_db != nil #si es que preguntan de nuevo, ya no se procesa
+   # puts "------ La oc ya havia sido procesada"
   	return false
   end    
   		#SE ASUME QUE QUE SÍ SE PUEDEN TRABAJAR SKU QUE NO PRODUZCA, SIEMPRE QUE TENGA. 
