@@ -78,7 +78,7 @@ def analizarOC(id)
 			      reservado = fila_sku["reservado"]
 			      nuevo_reservado = reservado.to_i + cantidad.to_i
 			      fila_sku.update(reservado: nuevo_reservado)
-			      puts "antiguo reservado " + reservado + " nuevo reservado " + nuevo_reservado + " sku " + sku.to_s + "\n"  
+			      puts "antiguo reservado " + reservado.to_s + " nuevo reservado " + nuevo_reservado.to_s + " sku " + sku.to_s + "\n"  
 =begin
 			      cantidad_fija = cantidad
 			      movidas = 0
