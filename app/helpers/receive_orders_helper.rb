@@ -16,10 +16,8 @@ def analizarOC(id)
   oc_db = Oc.find_by(oc: id)  
     #oc_db.update(estados: 'creada')
   if oc_db.nil? #si es nula se crea más abajo          
-  elsif oc_db.estados == "rechazada" || oc_db.estados == "defectuosa"
-  	return false #no se sigue con esta oc porque está rechazada o defectuosa
-  elsif oc_db.estados == "aceptada" || oc_db.estados == "Pagada"  || oc_db.estados == "Despachada" #si es que preguntan de nuevo, ya no se procesa
-  	return true
+  elsif oc_db != nil #si es que preguntan de nuevo, ya no se procesa
+  	return false
   end    
   		#SE ASUME QUE QUE SÍ SE PUEDEN TRABAJAR SKU QUE NO PRODUZCA, SIEMPRE QUE TENGA. 
 	    #se validará que se tenga stock por ahora para satisfacer el pedido, sino se tiene se rechaza:

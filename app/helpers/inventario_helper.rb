@@ -67,9 +67,10 @@ module InventarioHelper
   elsif canal == "ftp"
     ## QUE CHUCHA ES DIRECCIÓN
     puts "Se despacha al ftp"
-
+    direccion="estadireccion"
     despacharFTP(cantidad,direccion,precio,idOC)
     ocDB = Oc.find_by(oc: idOC)
+    puts "FTP despachado"
     ocDB.update(estados: "Despachada")
   end
   return true
@@ -154,38 +155,47 @@ module InventarioHelper
     return total+counter
 
   end
- def despacharFTP(sku, cantidad, direccion, precio, idOC)
+   def despacharFTP(sku, cantidad, direccion,precio,idOC)
+    almacenOrigen = JSON.parse(getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
+
     ## Falta confirmar que exista el stock necesario
     
     ## Ejecutamos el código para mover la cantidad necesaria de 100 en 100
+    Rails.logger.debug("debug:: le empezamos a despachar al ftp")
     total = 0
     if cantidad > 100
-      total = despacharFTP(sku,cantidad-100, direccion, precio, idOC)
+      total = despachaFTP(sku,cantidad-100, direccion,precio,idOC)
       cantidad = 100
     end
-    
-      
-    ids = JSON.parse(getStock(almacenOrigen , sku , cantidad))
+    Rails.logger.debug("debug:: cantidad es menor a 100")
+    stock = getStock(almacenOrigen, sku , cantidad)
+    Rails.logger.debug("debug::"+stock)
+    ids = JSON.parse(stock)  
+    Rails.logger.debug("debug::"+ids.to_s)
     counter = 0
     while counter < cantidad
       begin
-        result = JSON.parse(despacharStock(ids[counter]["_id"],direccion,precio,idOC))    
+        
+        movStock = despacharStock(ids[counter]["_id"],direccion,precio, idOC)
+        Rails.logger.debug("debug::"+movStock)
+        result = JSON.parse(movStock)
+            
         if result["message"]
-          puts "No se despacho, intentando nuevamente"
+          Rails.logger.debug("debug::"+"No se despacho, intentando nuevamente")
           ids = JSON.parse(getStock(almacenOrigen , sku , cantidad-counter))
           counter = counter-1
         end
       rescue => ex
-        puts "No se despacho, intentando nuevamente"
+        Rails.logger.debug("debug::"+"No se despacho, intentando nuevamente")
         ids = JSON.parse(getStock(almacenOrigen , sku , cantidad-counter))
         counter = counter-1
       end
-      puts "Despachado correctamente, N= "+ counter.to_s
+      Rails.logger.debug("debug::"+"Despachado correctamente, N= "+ counter.to_s)
       counter = counter+1
     end
     return total+counter
   end
-  
+    
    def despacharCliente(sku, cantidad, direccion,precio,idOC)
     almacenOrigen = JSON.parse(getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
 
