@@ -35,7 +35,9 @@ class ApiController < ApplicationController
     Thread.new do
       Rails.logger.debug("debug:: intentamos despachar")
       ## Gatillamos el envio desde aqui si es posible?
-      res = verSiEnviar(idFactura)
+      if result == true
+        res = verSiEnviar(idFactura)
+      end
       nOtroGrupo = Grupo.find_by(factura: idFactura)["nGrupo"]
       url = "http://localhost/api/despacho/recibir/" + fact["_id"]
       #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura

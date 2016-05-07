@@ -25,7 +25,7 @@ class HomeController < ApplicationController
     #@show = producirStock("8","572283e304c78e0300ce3ee2", 10 )
     #@show = getStock('571262aaa980ba030058a1f2' , 8  , 100)  
 
-    @show = despacharStock('57251793de2f4b0300559bbb' , 'direccion' , 1313 , "571507225bfa0a030038ab75")
+    #@show = despacharStock('57251793de2f4b0300559bbb' , 'direccion' , 1313 , "571507225bfa0a030038ab75")
   	#@show = getSKUWithStock('571262aaa980ba030058a1f1')
   	#@show = getSKUWithStock('571262aaa980ba030058a23d')
     #@show = getSKUWithStock('571262aaa980ba030058a1f2')

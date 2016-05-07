@@ -1,8 +1,5 @@
 module FacturarHelper
 
-# idfactura = 5727e3efc1ff9b0300019b3d
-#idoc =57270b94ba0c0f0300c51bef
-
 
 include ApplicationHelper 
 

@@ -389,25 +389,34 @@ module ApplicationHelper
 	
 	## Retorna la cantidad de stock de un SKU que se puede vender
 	def getStockSKUDisponible(sku)
-	
+
+		intermedio = JSON.parse(getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+		
 		## Revisamos la bodega grande
-		inventario = JSON.parse(getSKUWithStock("571262aaa980ba030058a1f3"))
+        almacenGrande = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
+
+		inventario = JSON.parse(getSKUWithStock(almacenGrande))
     	cantidadJSON = inventario.find { |h1| h1["_id"] == sku }
     	cantidad = 0
 		## Sumamos la cantidad que corresponde
     	if cantidadJSON != nil
     	  cantidad = cantidad + cantidadJSON["total"]
     	end
+	    puts cantidadJSON["total"]
+
 		
 		## Revisamos la bodega chica
-    	inventario1 = JSON.parse(getSKUWithStock("571262aaa980ba030058a23d"))
+		almacenChico = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
+
+    	inventario1 = JSON.parse(getSKUWithStock(almacenChico))
     	cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
     	
 		## Sumamos la cantidad que corresponde
 		if cantidadJSON1 != nil
    	 	  cantidad = cantidad + cantidadJSON1["total"]
     	end
-    	
+    	puts cantidadJSON1["total"]
+
 		## Restamos lo ya reservado
 		skuDB = Sku.find_by(sku: sku)
 		cantidad = cantidad - skuDB["reservado"]

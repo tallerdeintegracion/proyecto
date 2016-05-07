@@ -64,7 +64,3 @@ module PagosHelper
   end
 
 end
-
-#idOC = 5713613ea0aada03009160c6
-#idFactura = 572906af9fda6e030047c890 total = 630960
-#idPago = 572907609fda6e030047d232
