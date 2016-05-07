@@ -248,15 +248,10 @@ class InventarioController < ApplicationController
   	estado = resp["estado"]
   	cantidad= resp["cantidad"]
   	fechaEntrega = resp["fechaEntrega"]
-<<<<<<< HEAD
     puts "--- Registrando oc sku: " + sku + " estado: " + estado + " cantidad " + estado + " entrega: " + fechaEntrega
   	res = SentOrder.find_or_create_by(oc:id , sku: sku , estado: estado, cantidad: cantidad , fechaEntrega: fechaEntrega)
  	  puts "--- Resultado oc: " + res.to_s
     puts "--- Se registro el envio de la oc " + id
-=======
-  	variable = SentOrder.find_or_create_by(oc:id , sku: sku , estado: estado, cantidad: cantidad , fechaEntrega: fechaEntrega)
- 	puts "--- Se registro el envio de la oc " + id + variable.to_s
->>>>>>> 9b8d8ce3f549b8c76c3bc9c1834f2c1dee78b545
   end	
  
 
