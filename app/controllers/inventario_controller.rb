@@ -468,7 +468,7 @@ class InventarioController < ApplicationController
   	produccion = Production.where( 'disponible <= ?', time )
 	puts "--- Fueron removidas  " + produccion.count.to_s + " entregas de la tabla de produccion "
 	produccion.destroy_all	
-	ocs = SentOrder.where( 'fechaEntrega <= ?', time )
+	ocs = SentOrder.where( 'fechaEntrega <= NOW()')
 	puts "--- Fueron removidas  " + ocs.count.to_s + " entregas de la tabla de ocs enviadas "
 	ocs.destroy_all
   end	

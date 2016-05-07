@@ -402,9 +402,7 @@ module ApplicationHelper
     	if cantidadJSON != nil
     	  cantidad = cantidad + cantidadJSON["total"]
     	end
-	    puts cantidadJSON["total"]
 
-		
 		## Revisamos la bodega chica
 		almacenChico = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
 
@@ -415,7 +413,6 @@ module ApplicationHelper
 		if cantidadJSON1 != nil
    	 	  cantidad = cantidad + cantidadJSON1["total"]
     	end
-    	puts cantidadJSON1["total"]
 
 		## Restamos lo ya reservado
 		skuDB = Sku.find_by(sku: sku)

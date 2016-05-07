@@ -76,8 +76,8 @@ module InventarioHelper
   return true
 
   end
-  def moverInventario(sku, cantidad, almacenOrigen, almacenDestino)
-    
+ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
+    puts "Almacen de destino " + almacenDestino
     ## Falta confirmar que exista el stock necesario
     
     ## Ejecutamos el código para mover la cantidad necesaria de 100 en 100
@@ -90,35 +90,28 @@ module InventarioHelper
       
     ids = JSON.parse(getStock(almacenOrigen , sku , cantidad))
     counter = 0
-    if ids.count < cantidad
-      return 0
-    end
     while counter < cantidad
       begin
         result = JSON.parse(moverStock(ids[counter]["_id"], almacenDestino))    
-        if result["message"] == nil
+        if result["message"]
           puts "No se movio, intentando nuevamente"
           ids = JSON.parse(getStock(almacenOrigen , sku , cantidad-counter))
-          if ids.count < cantidad
-            return counter
-          end
-
           counter = counter-1
         end
       rescue => ex
         puts "No se movio, intentando nuevamente"
         ids = JSON.parse(getStock(almacenOrigen , sku , cantidad-counter))
-        if ids.count < cantidad
-          return counter
-        end
-
         counter = counter-1
       end
       puts "Movido correctamente, N= "+ counter.to_s
+      skuDB = Sku.find_by(sku: sku)
+      skuDB.update(reservado: skuDB["reservado"].to_i-1)
       counter = counter+1
     end
     return total+counter
+
   end
+
  def moverInventarioDespacho(sku, cantidad, almacenOrigen)
     almacenDestino = JSON.parse(getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
     puts "Almacen de despacho " + almacenDestino
