@@ -7,22 +7,22 @@ module ApplicationHelper
 	
 
 	def idGrupo
-		return "571262b8a980ba030058ab51"
+		return "572aac69bdb6d403005fb044"
 	end
 	def idBanco
-		return "571262c3a980ba030058ab5d"
+		return "572aac69bdb6d403005fb050"
 	end
 	def bodegaBaseUrl
-		return 'http://integracion-2016-dev.herokuapp.com/bodega'
+		return 'http://integracion-2016-prod.herokuapp.com/bodega'
 	end
 	def bancoBaseUrl
-		return 'http://mare.ing.puc.cl/banco'
+		return 'http://moto.ing.puc.cl/banco'
 	end
 	def ocBaseUrl
-		return 'http://mare.ing.puc.cl/oc'
+		return 'http://moto.ing.puc.cl/oc'
 	end
 	def facturaBaseUrl
-		return 'http://mare.ing.puc.cl/facturas'
+		return 'http://moto.ing.puc.cl/facturas'
 	end
 
 
@@ -372,7 +372,8 @@ module ApplicationHelper
 
 
 	def findKeys
-		key = 'GKTSVmI778e8Mjg'
+		
+		key = '6xMNP5uAUVjt'
 		return key
 	end
 
@@ -408,14 +409,14 @@ module ApplicationHelper
 		## Revisamos la bodega chica
 		#almacenChico = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
 
-<<<<<<< HEAD
+
 
     	inventario1 = JSON.parse(getSKUWithStock(almacenChico))
     	cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
-=======
+
     	#inventario1 = JSON.parse(getSKUWithStock(almacenChico))
     	#cantidadJSON1 = inventario1.find { |h1| h1["_id"] == sku }
->>>>>>> 9b8d8ce3f549b8c76c3bc9c1834f2c1dee78b545
+
     	
 		## Sumamos la cantidad que corresponde
 		#if cantidadJSON1 != nil

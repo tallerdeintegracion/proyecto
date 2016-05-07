@@ -45,9 +45,9 @@ def self.connect()
 
     #cambiar a produccion
     p '--- Conectandose a Sftp'
-    host = 'mare.ing.puc.cl'
+    host = 'moto.ing.puc.cl'
     username = 'integra3'
-    password = 'm3fzRPd5'
+    password = 'yEebXtTy'
     port = 22
 
     sftp = Net::SFTP.start(host, username, :password => password) 
@@ -113,11 +113,11 @@ def self.processOrder(id , sku , cantidad)
  # puts "--- La oc ya ha sido procesada "
 
   if ret == true
-<<<<<<< HEAD
+
     puts "A ingresado una nueva orden de compra"
-=======
+
       puts "La factura del ftp fue generada" 
->>>>>>> 9b8d8ce3f549b8c76c3bc9c1834f2c1dee78b545
+
      Thread.new do
       fact = JSON.parse(emitirFactura(id))
       ocBD = Oc.find_by(oc: id)
