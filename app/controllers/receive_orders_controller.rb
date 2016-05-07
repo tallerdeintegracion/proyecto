@@ -92,10 +92,18 @@ def self.processOrder(id , sku , cantidad)
       return 0
   end   
 
+  ocDB = Oc.find_by[oc: id]
+  puts "La oc que esta en la base de datos es "+ocDB.to_s
+  if ocDB != nil
+    return 0
+  end
+  
+
   id_prueba = oc[0]['_id'].to_s
   id_proveedor = oc[0]['proveedor'].to_s
   sku_prueba = oc[0]['sku'].to_s
   cantidad_prueba = oc[0]['cantidad'].to_s
+
 
   if(id == id_prueba && @idGrupo == id_proveedor && sku == sku_prueba && cantidad == cantidad_prueba)
     #puts "oc existente en el sistema"+"\n"

@@ -475,7 +475,7 @@ class InventarioController < ApplicationController
 
   def self.vaciarAlmacenesRecepcion(bodegaRecepcion , bodegaPulmon, bodegaPrincipal)
 	puts "\n"
-	puts "2) #{Time.now} Reciviendo material de almacen de recepcion "
+	puts "2) #{Time.now} Recibiendo material de almacen de recepcion "
 	puts "\n"
 
   	materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Materia Prima")
@@ -483,7 +483,7 @@ class InventarioController < ApplicationController
   		sku = row.sku	
   		inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
   		inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
-  		puts "--- Reciviendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
+  		puts "--- Recibiendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
   	end
 
   	materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
@@ -491,14 +491,14 @@ class InventarioController < ApplicationController
   		sku = row.sku	
   		inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
   		inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
-  		puts "--- Reciviendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
+  		puts "--- Recibiendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
 
   		ingrediente = Formula.where("sku = ?"  , sku)
  			ingrediente.each do |ing|
 			skuMaterial = ing.skuIngerdiente	
 			inicialRececpcion = recibirMaterial(skuMaterial, bodegaRecepcion, bodegaPrincipal)
   			inicialPulmon =recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal)
-		puts "--- Reciviendo sku " + skuMaterial + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
+		puts "--- Recibiendo sku " + skuMaterial + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
 
  		end	
 
