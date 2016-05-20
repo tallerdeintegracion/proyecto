@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160506200544) do
+ActiveRecord::Schema.define(version: 20160520161412) do
 
   create_table "formulas", force: :cascade do |t|
     t.string   "sku",               limit: 255
@@ -34,6 +34,11 @@ ActiveRecord::Schema.define(version: 20160506200544) do
     t.string   "idAlmacen",  limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "inventarios", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "ocs", force: :cascade do |t|
@@ -72,6 +77,11 @@ ActiveRecord::Schema.define(version: 20160506200544) do
     t.datetime "fechaEntrega"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+  end
+
+  create_table "sistemas", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "skus", force: :cascade do |t|

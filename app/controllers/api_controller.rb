@@ -1,11 +1,4 @@
 class ApiController < ApplicationController
-
-  include	ApplicationHelper
-  include ReceiveOrdersHelper
-  include PagosHelper
-  include FacturarHelper
-  include InventarioHelper
-
   
   layout false
 
@@ -14,34 +7,41 @@ class ApiController < ApplicationController
   end  
   ## Endpoint de /api/consultar/:id
   def inventarioConsultar
+    
+    sist = Sistema.new
 
-    cantidad = getStockSKUDisponible(params[:sku])
+    cantidad = sist.getStockSKUDisponible(params[:sku])
     render :json => { :stock => cantidad,:sku => params[:sku] }
   end
 
   ## Endpoint de /api/facturas/recibir/:id
   def facturarRecibir
     id = params[:id]
-    result = analizarFactura(id)
+    ocClass = Oc.new
+    result = ocClass.analizarFactura(id)
     render :json => {:validado => result, :idfactura => id}    
   end
 
   ## Endpoint de /api/pagos/recibir/:id?idfactura=xxxxx
   def pagoRecibir
-      Rails.logger.debug("debug:: transferencia recibida")
+  
+    ocClass = Oc.new
+    sist = Sistema.new
+    invent = Inventario.new
+    Rails.logger.debug("debug:: transferencia recibida")
     idPago = params[:id]
     idFactura = params[:idfactura]
-    result = analizarPago(idPago,idFactura)
+    result = ocClass.analizarPago(idPago,idFactura)
     Thread.new do
       Rails.logger.debug("debug:: intentamos despachar")
       ## Gatillamos el envio desde aqui si es posible?
       if result == true
-        res = verSiEnviar(idFactura)
+        res = invent.verSiEnviar(idFactura)
       end
       nOtroGrupo = Grupo.find_by(factura: idFactura)["nGrupo"]
-      #url = "http://localhost/api/despacho/recibir/" + fact["_id"]
-      url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
-      ans = httpGetRequest(url ,nil)
+      url = "http://localhost/api/despacho/recibir/" + fact["_id"]
+      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
+      ans = sist.httpGetRequest(url ,nil)
       Rails.logger.debug("debug:: le avisamos al otro grupo")
 
 
@@ -52,8 +52,9 @@ class ApiController < ApplicationController
   ## Endpoint de /api/oc/recibir/:id Debe comprobar la oc antes de enviar al metodo compartido con los ftp
   def ocRecibir
     id = params[:id]
-
-    oc = JSON.parse(obtenerOrdenDeCompra(id))
+    
+    sist = Sistema.new
+    oc = JSON.parse(sist.obtenerOrdenDeCompra(id))
     if oc[0] == nil
       render :json => {:aceptado => false, :idoc => id} 
       return
@@ -68,18 +69,27 @@ class ApiController < ApplicationController
       return
 
     end
-    result = analizarOC(id)      
+    ocClass = Oc.new
+    result = ocClass.analizarOC(id)      
     render :json => {:aceptado => result, :idoc => id} 
     
     Thread.new do
-      fact = JSON.parse(emitirFactura(id))
-      ocBD = Oc.find_by(oc: id)
-      ocBD.update(factura: fact["_id"])
-      nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
-      #url = "http://localhost/api/facturas/recibir/" + fact["_id"]
-      url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/facturas/recibir/"  + fact["_id"]
+      sist = Sistema.new
+      Rails.logger.debug("debug:: generamos la factura")
 
-      ans = httpGetRequest(url ,nil)
+      fact = JSON.parse(sist.emitirFactura(id))
+      ocDB = Oc.find_by(oc: id)   
+      
+      Rails.logger.debug("debug:: la agregamos al sistema de nosotros")
+      ocDB.update(factura: fact["_id"])
+      Rails.logger.debug("debug:: buscamos al otro grupo")
+
+      nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
+      url = "http://localhost:8080/api/facturas/recibir/" + fact["_id"]
+      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/facturas/recibir/"  + fact["_id"]
+      Rails.logger.debug("debug:: le avisamos al otro grupo")
+
+      ans = sist.httpGetRequest(url ,nil)
     end
     
   end

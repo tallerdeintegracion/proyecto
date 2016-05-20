@@ -1,2 +1,0 @@
-class PagosController < ApplicationController
-end
