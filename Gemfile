@@ -32,6 +32,7 @@ gem 'net-ssh', '~> 3.0', '>= 3.0.2'
 gem 'spree', '~> 3.1.0.rc1'
 gem 'spree_auth_devise', '~> 3.1.0.rc1'
 gem 'spree_gateway', '~> 3.1.0.rc1'
+gem 'railties'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
