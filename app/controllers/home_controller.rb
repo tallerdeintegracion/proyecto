@@ -5,6 +5,8 @@ class HomeController < ApplicationController
   def index
 
 
+    #inv = Inventario.new
+    #inv.run
     #almacen id example (79 producto)= 571262aaa980ba030058a1f3
     #producto id 571262aaa980ba030058a23c
     #id orden de compra 571b745e79749603006e3eb2
