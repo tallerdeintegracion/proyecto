@@ -1,5 +1,42 @@
 class Oc < ActiveRecord::Base
 
+def recibirOC(id)
+
+    sist = Sistema.new
+    oc = JSON.parse(sist.obtenerOrdenDeCompra(id))
+    if oc[0] == nil
+      return false
+    end
+    if oc[0]["param"] == "id"
+      return false
+    end
+    ocDB = Oc.find_by(oc: id)   
+    if ocDB != nil
+      return false
+    end
+    result = analizarOC(id)      
+    
+    Thread.new do
+      sist = Sistema.new
+      Rails.logger.debug("debug:: generamos la factura")
+
+      fact = JSON.parse(sist.emitirFactura(id))
+      ocDB = Oc.find_by(oc: id)   
+      
+      Rails.logger.debug("debug:: la agregamos al sistema de nosotros")
+      ocDB.update(factura: fact["_id"])
+      Rails.logger.debug("debug:: buscamos al otro grupo")
+
+      nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
+      url = "http://localhost:8080/api/facturas/recibir/" + fact["_id"]
+      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/facturas/recibir/"  + fact["_id"]
+      Rails.logger.debug("debug:: le avisamos al otro grupo")
+
+      ans = sist.httpGetRequest(url ,nil)
+    end
+    return result
+end
+
 def analizarOC(id)
 	require 'json'
     #puts "oc cantidad: "+ oc[0]['cantidad'].to_s+ " . oc sku: "+ oc[0]['sku'].to_s+"\n"
@@ -51,9 +88,12 @@ def analizarOC(id)
 			      #YA NO MUEVE STOCK, SINO QUE ACTUALIZA LA TABLA SKUS
 			      fila_sku = Sku.find_by(sku: sku.to_s)
 			      reservado = fila_sku["reservado"]
-			      nuevo_reservado = reservado.to_i + cantidad.to_i
-			      fila_sku.update(reservado: nuevo_reservado)
-			      puts "antiguo reservado " + reservado.to_s + " nuevo reservado " + nuevo_reservado.to_s + " sku " + sku.to_s + "\n"  
+			      #nuevo_reservado = reservado.to_i + cantidad.to_i
+			      #fila_sku.update(reservado: nuevo_reservado)
+            fila_sku.increment!(:reservado, cantidad.to_i)
+            fila_sku = Sku.find_by(sku: sku.to_s)
+			      reservado1 = fila_sku["reservado"]
+			      puts "antiguo reservado " + reservado.to_s + " nuevo reservado " + reservado1.to_s + " sku " + sku.to_s + "\n"  
 			      return true
 		      #end	      
 	    end
@@ -169,7 +209,8 @@ def analizarFactura(id)
     if oc != nil
         return false
     end
-    Rails.logger.debug("debug:: El pago es nuevo")
+    sist.facturaPagada(idFactura)
+    Rails.logger.debug("debug:: El pago es nuevo, se marcó en el sistema como ")
 
     
     ## Actualizamos la oc

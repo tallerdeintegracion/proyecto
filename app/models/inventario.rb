@@ -106,7 +106,9 @@ class Inventario < ActiveRecord::Base
       end
       puts "Movido correctamente, N= "+ counter.to_s
       skuDB = Sku.find_by(sku: sku)
-      skuDB.update(reservado: skuDB["reservado"].to_i-1)
+      #skuDB.update(reservado: skuDB["reservado"].to_i-1) //
+      skuDB.increment!(:reservado, -1)
+
       counter = counter+1
     end
     return total+counter
@@ -144,7 +146,8 @@ class Inventario < ActiveRecord::Base
       end
       puts "Movido correctamente, N= "+ counter.to_s
       skuDB = Sku.find_by(sku: sku)
-      skuDB.update(reservado: skuDB["reservado"].to_i-1)
+      #skuDB.update(reservado: skuDB["reservado"].to_i-1)
+      skuDB.increment!(:reservado, -1)
       counter = counter+1
     end
     return total+counter

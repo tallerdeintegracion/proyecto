@@ -249,7 +249,14 @@ class Sistema < ActiveRecord::Base
         data =  httpGetRequest(url , nil )
         return  data
 	end
+	def facturaPagada(idfactura)
 
+		path ='/pay'
+		url =facturaBaseUrl+path
+		params = { "id" => idfactura }
+        data =  httpPostRequest(url , nil, params )
+        return  data
+	end
 
 
 	def httpPostRequest( url, authHeader ,params)
