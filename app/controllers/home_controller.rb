@@ -1,7 +1,4 @@
 class HomeController < ApplicationController
-	include ApplicationHelper
-  include InventarioHelper
-  include 
   def index
 
 
