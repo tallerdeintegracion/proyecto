@@ -17,7 +17,7 @@ every 5.minute do
 
 end
 
-every 5.minute do
+every 1.minute do
 
  runner "InventarioController.run", :output => 'log/inventario_logs.log'
    
