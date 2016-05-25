@@ -26,26 +26,9 @@ class ApiController < ApplicationController
   def pagoRecibir
   
     ocClass = Oc.new
-    sist = Sistema.new
-    invent = Inventario.new
-    Rails.logger.debug("debug:: transferencia recibida")
     idPago = params[:id]
     idFactura = params[:idfactura]
     result = ocClass.analizarPago(idPago,idFactura)
-    Thread.new do
-      Rails.logger.debug("debug:: intentamos despachar")
-      ## Gatillamos el envio desde aqui si es posible?
-      if result == true
-        res = invent.verSiEnviar(idFactura)
-      end
-      nOtroGrupo = Grupo.find_by(factura: idFactura)["nGrupo"]
-      url = "http://localhost/api/despacho/recibir/" + fact["_id"]
-      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
-      ans = sist.httpGetRequest(url ,nil)
-      Rails.logger.debug("debug:: le avisamos al otro grupo")
-
-
-    end
     render :json => {:validado => result, :idtrx => idPago}
   end
 
@@ -97,6 +80,7 @@ class ApiController < ApplicationController
   ## Endpoint de /api/despacho/recibir/:id Debe comprobar la oc antes de enviar al metodo compartido con los ftp
   def despachoRecibir
     idFactura = params[:id]
+    ocClass = Oc.new
     
     ocBD = Oc.findBy(factura: idFactura)
     

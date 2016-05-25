@@ -184,8 +184,19 @@ def analizarFactura(id)
     ocBD.update(pago: idPago)
     Rails.logger.debug("debug:: Datos actualizados")
     
-    return true
-    
+    invent = Inventario.new    
+    Thread.new do
+      Rails.logger.debug("debug:: intentamos despachar")
+      ## Gatillamos el envio desde aqui si es posible?
+      res = invent.verSiEnviar(idFactura)
+      nOtroGrupo = Grupo.find_by(factura: idFactura)["nGrupo"]
+      url = "http://localhost/api/despacho/recibir/" + fact["_id"]
+      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
+      ans = sist.httpGetRequest(url ,nil)
+      Rails.logger.debug("debug:: le avisamos al otro grupo")
+
+
+    end    
   end
 
 end
