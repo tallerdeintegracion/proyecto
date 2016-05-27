@@ -94,7 +94,7 @@ end
   get 'inventario/vaciar'
   get 'inventario/mover' => 'inventario#moverMiStock'
   
-  root 'home#index'
+  get 'home/index'
   
   get 'home/listaOrdenesCompra'
   get 'home/productos'

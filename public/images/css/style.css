@@ -26,18 +26,6 @@ body {
     background: #ededed;
 }
 
-img, iframe {
-    max-width: 100%;
-}
-
-iframe {
-    max-height: 100%;
-}
-
-img {
-    height:auto;
-}
-
 .btn {background:#135571;color:#fff;
 
 		-webkit-transition: all 250ms;
