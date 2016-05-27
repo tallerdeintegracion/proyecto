@@ -6,9 +6,12 @@ Rails.application.routes.draw do
   #
   # We ask that you don't use the :as option here, as Spree relies on it being the default of "spree"
   mount Spree::Core::Engine, at: '/'
-        
 
-
+Spree::Core::Engine.add_routes do
+  post '/integracionpay', :to =>  "integracionpay#pay", :as => :integracionpay
+  get '/integracionpay/confirm' => "integracionpay#confirm"
+  get '/integracionpay/cancel' => "integracionpay#cancel"
+end
   resources :ocs
   resources :skus
   resources :sent_orders
