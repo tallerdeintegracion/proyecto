@@ -1,4 +1,7 @@
 class HomeController < ApplicationController
+  
+  layout false
+  
   def index
 
 
@@ -53,8 +56,8 @@ class HomeController < ApplicationController
   end
 
   def bodegas
-    require 'json'
-    @almacenesInfo = JSON.parse(getAlmacenes())
+    @sist = Sistema.new
+    @almacenesInfo = JSON.parse(@sist.getAlmacenes())
     totalspace = @almacenesInfo[0]["totalSpace"]
     totalspace = @almacenesInfo[0]["usedSpace"]
    
