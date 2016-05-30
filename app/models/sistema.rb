@@ -72,6 +72,26 @@ class Sistema < ActiveRecord::Base
 
 	end
 
+	def getStockSpree(urlReal)
+    
+	    url = urlReal + "/api/stock_locations/1/stock_items"
+	    #X-Spree-Token header
+	    authHeader = "55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00"
+	    data =  httpGetRequestSpree(url , authHeader)
+	    return  data
+
+  	end
+
+  	def putStockSpree(urlReal, cantidad, producto)
+
+		url = urlReal + "/api/stock_locations/1/stock_items/" + producto.to_s
+		#X-Spree-Token header
+		authHeader = "55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00"
+		params = {'stock_item' => {'count_on_hand' => cantidad, 'force' => true } }
+		data =  httpPutRequestSpree(url , authHeader, params)
+		return  data
+	end
+
 	def getStock(almacenId , sku , limit )
 	
 		if limit > 200
@@ -281,8 +301,6 @@ class Sistema < ActiveRecord::Base
 
 	end
 
-
-
 	def httpPutRequest( url, authHeader ,params)
 		require 'net/http'
 		require 'uri'
@@ -293,6 +311,27 @@ class Sistema < ActiveRecord::Base
 		else
 			headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
 		end	
+        
+        uri = URI.parse(url)
+        http = Net::HTTP::new(uri.host, uri.port)
+        if params.nil?
+			#response = HTTParty.put(url, :headers => headers)
+		else
+			response = HTTParty.put(url ,
+				:headers =>  headers,
+				:body => params.to_json	
+				)
+		end	
+    	data =  response.body
+    	return data
+	end
+
+	def httpPutRequestSpree( url, authHeader ,params)
+		require 'net/http'
+		require 'uri'
+		require 'httparty'
+		
+		headers = {'X-Spree-Token' => authHeader , 'Content-Type' => 'application/json'}	
         
         uri = URI.parse(url)
         http = Net::HTTP::new(uri.host, uri.port)
@@ -352,6 +391,30 @@ class Sistema < ActiveRecord::Base
 		else
 			headers = {'Authorization' => authHeader , 'Content-Type' => 'application/json'}
 		end	
+        uri = URI.parse(url)    
+        request = Net::HTTP::Get.new(uri, headers)
+       	
+       	begin 
+       	 	response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) } 
+       	
+       	rescue Errno::ETIMEDOUT  
+       	 	puts "--- Time out de la conexion" 
+        	
+    	end  
+    	if response.nil?
+    		return nil
+    	end	
+  
+    	return data = response.body
+
+	end
+
+	def httpGetRequestSpree( url, authHeader)
+		require 'net/http'
+		require 'uri'
+		
+		headers = {'X-Spree-Token' => authHeader , 'Content-Type' => 'application/json'}
+		
         uri = URI.parse(url)    
         request = Net::HTTP::Get.new(uri, headers)
        	

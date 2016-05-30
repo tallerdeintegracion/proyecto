@@ -15,7 +15,9 @@ class HomeController < ApplicationController
 
   	#@show = getAlmacenes()
 
-  	#@show = getSKUWithStock('571262aaa980ba030058a1f3')
+  	#@show = Sistema.new.getStockSpree("http://localhost:3000")
+    #@show = Sistema.new.putStockSpree("http://localhost:3000", 15, 2) #el producto 2 subido a spree con cantidad 15
+    #@show = Sistema.new.getSKUWithStock('571262aaa980ba030058a23d')
   	#@show = getCuentaFabrica()
   	#@show = getStock('571262aaa980ba030058a1f3' , 49 )
     #@show = moverStock( '571262aaa980ba030058a23c', '571262aaa980ba030058a1f1' )

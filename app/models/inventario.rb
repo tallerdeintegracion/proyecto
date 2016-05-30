@@ -714,4 +714,28 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     return total+counter
   end
 
+  def updateStockSpree()
+  #hacer un for de los productos manejados
+  #revisando llame al getSKUWithStock()
+  #actualice la api con esto
+
+    sist = Sistema.new
+    require 'json'
+    #PONER LUEGO LA URL CORRECTO AL ESTAR DEPLOYADO, ES DECIR, http://integra3.ing.puc.cl
+    urlServidor = "http://localhost:3000"    
+
+    stockSpree = JSON.parse(sist.getStockSpree(urlServidor))
+    if stockSpree.nil?
+      return false
+    end   
+    
+    #En verdad no sirve de nada tener el stock de spree, solo queremos actualizarlo según getStockSKUDisponible
+    skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
+    for i in 0..(skuTrabajados.length-1)
+      stockDispoSku = sist.getStockSKUDisponible(skuTrabajados[i])
+      sist.putStockSpree(urlServidor, stockDispoSku, (i+1))
+    end 
+
+  end 
+
 end
