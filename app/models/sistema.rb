@@ -73,11 +73,11 @@ class Sistema < ActiveRecord::Base
 	end
 
 	def getStockSpree(urlReal)
-    
+   
 	    url = urlReal + "/api/stock_locations/1/stock_items"
 	    #X-Spree-Token header
 	    authHeader = "55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00"
-	    data =  httpGetRequestSpree(url , authHeader)
+	    data =  httpGetRequestSpree(url , authHeader)	
 	    return  data
 
   	end
@@ -86,8 +86,9 @@ class Sistema < ActiveRecord::Base
 
 		url = urlReal + "/api/stock_locations/1/stock_items/" + producto.to_s
 		#X-Spree-Token header
-		authHeader = "55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00"
+		authHeader = '55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00'
 		params = {'stock_item' => {'count_on_hand' => cantidad, 'force' => true } }
+		#params = {'count_on_hand' => cantidad, 'force' => true }
 		data =  httpPutRequestSpree(url , authHeader, params)
 		return  data
 	end
