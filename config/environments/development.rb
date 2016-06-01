@@ -40,4 +40,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
   
   config.serve_static_files = true
+
+  config.assets.debug = false
+
 end

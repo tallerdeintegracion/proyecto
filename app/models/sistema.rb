@@ -83,13 +83,19 @@ class Sistema < ActiveRecord::Base
   	end
 
   	def putStockSpree(urlReal, cantidad, producto)
+  		require 'json'
 
-		url = urlReal + "/api/stock_locations/1/stock_items/" + producto.to_s
+		url = urlReal + "/api/v1/stock_locations/1/stock_items/" + producto.to_s
+
+		puts  " se envia a la url " + url
 		#X-Spree-Token header
 		authHeader = '55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00'
-		params = {'stock_item' => {'count_on_hand' => cantidad, 'force' => true } }
-		#params = {'count_on_hand' => cantidad, 'force' => true }
-		data =  httpPutRequestSpree(url , authHeader, params)
+		params = {	'stock_item' => 
+					{'count_on_hand' => cantidad , 
+					'force' => true 
+					} 
+				}		
+		data =  httpPutRequestSpree(url , authHeader, params )
 		return  data
 	end
 
@@ -333,17 +339,22 @@ class Sistema < ActiveRecord::Base
 		require 'httparty'
 		
 		headers = {'X-Spree-Token' => authHeader , 'Content-Type' => 'application/json'}	
-        
+       
+		puts authHeader
         uri = URI.parse(url)
         http = Net::HTTP::new(uri.host, uri.port)
+
         if params.nil?
 			#response = HTTParty.put(url, :headers => headers)
 		else
+			puts params.to_json
 			response = HTTParty.put(url ,
 				:headers =>  headers,
 				:body => params.to_json	
 				)
 		end	
+		puts "saliendoo al hTTp party "	+ response.to_s	
+
     	data =  response.body
     	return data
 	end

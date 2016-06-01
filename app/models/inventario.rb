@@ -721,8 +721,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
     sist = Sistema.new
     require 'json'
-    #PONER LUEGO LA URL CORRECTO AL ESTAR DEPLOYADO, ES DECIR, http://integra3.ing.puc.cl
-    urlServidor = "http://localhost:3000"    
+     urlServidor = "http://localhost:3000"    
 =begin    
     stockSpree = nil
     a = Thread.new do
@@ -736,30 +735,20 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 =end
     #En verdad no sirve de nada tener el stock de spree, solo queremos actualizarlo según getStockSKUDisponible
     skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
-    for i in 0..(skuTrabajados.length-1)
-      #a = Thread.new do
-      Thread.new do
+    Thread.new do
+ 
+      for i in 0..(skuTrabajados.length-1)
+
         sist = Sistema.new
         stockDispoSku = sist.getStockSKUDisponible(skuTrabajados[i])
 
-
-        #url = "http://localhost:3000/api/stock_locations/1/stock_items/1"
-        ##X-Spree-Token header
-        #authHeader = '55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00'
-        ##params = {'stock_item' => {'count_on_hand' => cantidad, 'force' => true } }
-        #params = {'count_on_hand' => 2, 'force' => true }
-        #data =  sist.httpPutRequestSpree(url , authHeader, params)
-
-
         sist.putStockSpree(urlServidor, stockDispoSku, (i+1))
-        #sist.putStockSpree("http://localhost:3000" , 2, 1)
+        #Rails.logger.info stockDispoSku.to_s + "    " + (i+1).to_s
       end
-      #a.join
-      #return skuTrabajados.length.to_s + " ds " + sist.getStockSKUDisponible(skuTrabajados[0]).to_s
     end 
-    #return true
-    return skuTrabajados.length.to_s + " ds " + sist.getStockSKUDisponible(skuTrabajados[0]).to_s + " " + sist.getStockSKUDisponible(skuTrabajados[1]).to_s + " " + sist.getStockSKUDisponible(skuTrabajados[2]).to_s + " " + sist.getStockSKUDisponible(skuTrabajados[3]).to_s + " " + sist.getStockSKUDisponible(skuTrabajados[4]).to_s + " " + sist.getStockSKUDisponible(skuTrabajados[5]).to_s
 
+    return true
+    
   end 
 
 end

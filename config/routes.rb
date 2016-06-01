@@ -102,6 +102,10 @@ end
   get 'home/listaOrdenesCompra'
   get 'home/productos'
   get 'home/credenciales'
+
+
+
+  get 'home/test'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
