@@ -71,6 +71,11 @@ class Inventario < ActiveRecord::Base
       end 
     end
 
+    #####################################################
+    #AL TRAER NUEVOS PRODUCTOS A LA BODEGA PRINCIPAL, SE ACTUALIZA EL STOCK EN SPREE:
+    updateStockSpree()
+    #####################################################
+
   end
 
   def recibirMaterial( sku , almacenRecepcion , bodegaMateriasPrimas)
@@ -715,33 +720,20 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
   end
 
   def updateStockSpree()
-  #hacer un for de los productos manejados
-  #revisando llame al getSKUWithStock()
-  #actualice la api con esto
+  #método que actualiza el stock en spree
+  #se llama desde 3 lugares:
+  #1) En oc model, al final del método analizarOC(id) que acepta una nueva orden de compra
+  #2) En esta misma clase, en el método vaciarAlmacenesRecepcion(), al pasar productos de la recepción a la bodega principal
+  #3) ...al despechar desde spree...
 
     sist = Sistema.new
     require 'json'
-     urlServidor = "http://localhost:3000"    
-=begin    
-    stockSpree = nil
-    a = Thread.new do
-          stockSpree = JSON.parse(sist.getStockSpree(urlServidor))
-          if stockSpree.nil?
-            return false
-          end 
-        end
-    a.join
-    return stockSpree
-=end
-    #En verdad no sirve de nada tener el stock de spree, solo queremos actualizarlo según getStockSKUDisponible
+     urlServidor = "http://localhost:3000"  
     skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
-    Thread.new do
- 
+    Thread.new do 
       for i in 0..(skuTrabajados.length-1)
-
         sist = Sistema.new
         stockDispoSku = sist.getStockSKUDisponible(skuTrabajados[i])
-
         sist.putStockSpree(urlServidor, stockDispoSku, (i+1))
         #Rails.logger.info stockDispoSku.to_s + "    " + (i+1).to_s
       end
