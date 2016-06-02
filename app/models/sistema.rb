@@ -242,6 +242,14 @@ class Sistema < ActiveRecord::Base
 		return  data		
 
 	end
+	def emitirBoleta (cliente,total)
+		path ='/boleta'
+		url =facturaBaseUrl+path
+		params={ "proveedor" => idGrupo, "cliente" => cliente, "total" => total }
+		data =  httpPutRequest(url , nil, params)
+		return  data		
+
+	end
 	def obtenerFactura(idfactura)
 
 		path ='/'+idfactura

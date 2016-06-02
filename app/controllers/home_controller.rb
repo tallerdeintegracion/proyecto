@@ -53,6 +53,8 @@ class HomeController < ApplicationController
     #@show = emitirFactura('57270b94ba0c0f0300c51bef') 
     #@show = despacharFTP(14,40,"rerae",7413,"5727c26a4c0ce00300927f5e") # verSiEnviar('572e0be91a58ba03003efa37') 
     #@show = vaciarStockBodegaChica()
+     puts ::Spree::Order.find_by(number: "R409719032").to_json.to_s
+
   end
 
   def bodegas

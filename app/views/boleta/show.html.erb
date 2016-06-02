@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Boleta:</strong>
+  <%= @boletum.boleta_id %>
+</p>
+
+<p>
+  <strong>Orden:</strong>
+  <%= @boletum.orden_id %>
+</p>
+
+<p>
+  <strong>Estado:</strong>
+  <%= @boletum.estado %>
+</p>
+
+<p>
+  <strong>Total:</strong>
+  <%= @boletum.total %>
+</p>
+
+<%= link_to 'Edit', edit_boletum_path(@boletum) %> |
+<%= link_to 'Back', boleta_path %>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  boleta_id: MyString
+  orden_id: MyString
+  estado: MyString
+  total: 1
+
+two:
+  boleta_id: MyString
+  orden_id: MyString
+  estado: MyString
+  total: 1
