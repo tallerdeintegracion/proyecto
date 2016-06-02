@@ -82,9 +82,7 @@ def analizarOC(id)
 			      end 
 
 			      Oc.find_or_create_by(oc: id , estados: "aceptada", canal: canal, factura: "", pago: "", sku: sku, cantidad: cantidad)#los estados son: defectuosa, aceptada, rechazada
-			      #Oc.find_by(oc: id).update(estados: 'aceptada')
-			      
-
+			      #Oc.find_by(oc: id).update(estados: 'aceptada')    
 			      #YA NO MUEVE STOCK, SINO QUE ACTUALIZA LA TABLA SKUS
 			      fila_sku = Sku.find_by(sku: sku.to_s)
 			      reservado = fila_sku["reservado"]
@@ -94,7 +92,12 @@ def analizarOC(id)
             fila_sku = Sku.find_by(sku: sku.to_s)
 			      reservado1 = fila_sku["reservado"]
 			      puts "antiguo reservado " + reservado.to_s + " nuevo reservado " + reservado1.to_s + " sku " + sku.to_s + "\n"  
-			      return true
+			      
+            #####################################################
+            #AL ACEPTAR LA OC SE ACTUALIZA EL STOCK EN SPREE:
+            Inventario.new.updateStockSpree()
+            #####################################################
+            return true
 		      #end	      
 	    end
 	 

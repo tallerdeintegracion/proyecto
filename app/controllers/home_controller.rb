@@ -15,7 +15,10 @@ class HomeController < ApplicationController
 
   	#@show = getAlmacenes()
 
-  	#@show = getSKUWithStock('571262aaa980ba030058a1f3')
+  	#@show = Sistema.new.getStockSpree("http://localhost:3000")
+   # @show = Inventario.new.updateStockSpree()
+    #@show = Sistema.new.putStockSpree("http://localhost:3000", 15, 2) #el producto 2 subido a spree con cantidad 15
+    #@show = Sistema.new.getSKUWithStock('571262aaa980ba030058a23d')
   	#@show = getCuentaFabrica()
   	#@show = getStock('571262aaa980ba030058a1f3' , 49 )
     #@show = moverStock( '571262aaa980ba030058a23c', '571262aaa980ba030058a1f1' )
@@ -34,7 +37,9 @@ class HomeController < ApplicationController
     #@show = getSKUWithStock('571262aaa980ba030058a1f2')
   	#@show= getCuentaFabrica()
     #@show= transferir(10 , "571262c3a980ba030058ab5d", "571262aea980ba030058a5d8")
-    #@show = producirStock("8","572283e304c78e0300ce3ee2", 10 )
+         
+
+    #render :text =>Sistema.new.producirStock("8","572283e304c78e0300ce3ee2", 10 ).to_s
     #@show = getStock('571262aaa980ba030058a1f2' , 8  , 100)  
     #@show = getStock('571262aaa980ba030058a1f2' , 49 )  
 
@@ -53,7 +58,6 @@ class HomeController < ApplicationController
     #@show = emitirFactura('57270b94ba0c0f0300c51bef') 
     #@show = despacharFTP(14,40,"rerae",7413,"5727c26a4c0ce00300927f5e") # verSiEnviar('572e0be91a58ba03003efa37') 
     #@show = vaciarStockBodegaChica()
-     puts ::Spree::Order.find_by(number: "R409719032").to_json.to_s
 
   end
 
@@ -64,5 +68,10 @@ class HomeController < ApplicationController
     totalspace = @almacenesInfo[0]["usedSpace"]
    
   
+  end
+
+  def test 
+     render :text => "hola"
+     @show = Inventario.new.updateStockSpree()
   end
 end
