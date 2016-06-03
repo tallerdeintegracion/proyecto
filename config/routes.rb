@@ -65,6 +65,7 @@ end
  
   get 'inventario/run'
   get 'home/bodegas'
+  get 'home/test'
   get 'receive_orders/receive'
   get 'home/documentacion'
   get 'skus/index'

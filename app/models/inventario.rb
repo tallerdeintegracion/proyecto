@@ -3,6 +3,7 @@ class Inventario < ActiveRecord::Base
   def run
 
     definirVariables 
+
     puts "\n \n \n \n "
     puts "#{Time.now}  Inicia revicion de inventario "
     cleanProduccionesDespachadas()
@@ -23,7 +24,7 @@ class Inventario < ActiveRecord::Base
     @bodegaPulmon = "571262aaa980ba030058a23e"
     @bodegaDespacho = "571262aaa980ba030058a1f2"
     @cuentaGrupo = "571262c3a980ba030058ab5d"
-    @GrupoProyecto="3";
+    @GrupoProyecto="3"
     @cuentaFabrica = JSON.parse(@sist.getCuentaFabrica)["cuentaId"]
     @horasEntrega = 4
 
@@ -57,6 +58,7 @@ class Inventario < ActiveRecord::Base
 
     materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
     materias.each do |row|
+     
       sku = row.sku 
       inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
       inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
@@ -69,6 +71,8 @@ class Inventario < ActiveRecord::Base
         inicialPulmon =recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal)
         puts "--- Recibiendo sku " + skuMaterial + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
       end 
+
+
     end
 
     #####################################################
@@ -206,23 +210,33 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     require 'rubygems'
     ## get id grupo
     canal ="b2b"
-    nota = "LoQuieroAhora" ## no deven haver espacioss
+    nota = "LoQuieroAhora" ## no deben haver espacioss
+
     resp = Grupo.find_by(nGrupo: grupo.to_i) 
     proveedor = resp.idGrupo  
     resp = Grupo.find_by(nGrupo: @GrupoProyecto) 
     cliente = resp.idGrupo  
+
+    #if (sku == "20")
+     # proveedor ="572aac69bdb6d403005fb04a"
+      #cliente ="572aac69bdb6d403005fb044"
+    #end  
+
     puts "--- Generando  proveedor: " + proveedor + " cliente: " + cliente + " cantidad: " + cantidad.to_s
     fechaHoy = Time.now.to_i*1000
     fechaEntrega= fechaHoy + 4*3600*1000
+
     if cliente.empty? or proveedor.empty?
+      puts "clinete o proveedor no validos"
       return nil
     end 
     
-    String orden = eval(@sist.crearOrdenDeCompra(canal , cantidad , sku , cliente , proveedor , precioUnitario ,   fechaEntrega , nota ))
-  
+    orden = eval(@sist.crearOrdenDeCompra(canal , cantidad , sku , cliente , proveedor , precioUnitario ,   fechaEntrega , nota ))
+    puts " Esto es la orden \n " + orden.to_s
     json = orden.to_json
     unHash = JSON.parse(json)
     retorno = unHash["_id"]
+    puts "id de la orden " + retorno.to_s;
     return retorno
   
   end 
@@ -353,6 +367,13 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
       end 
     end
+    #
+    #puts "#--- esto e suna prueba"
+     # sku="55"
+      #skuing="20"
+      #ing = Formula.find_by(sku:sku,  skuIngerdiente:skuing)
+      #revisarIngrediente(ing, @bodegaPrincipal)
+    #puts "# fin de la prueba"
   
   end
 
@@ -380,6 +401,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
     resp = Precio.find_by(sku:skuMaterial)
     precioOrden = resp.precioUnitario
+
     id = generarOrdenesDeCompra(skuMaterial , cantidadOrden , precioOrden , grupo)
     
     if id.nil?
@@ -403,7 +425,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
   
   def actualizarRegistoOc(id )
 
-    resp = JSON.parse(obtenerOrdenDeCompra(id)).first
+    resp = JSON.parse(@sist.obtenerOrdenDeCompra(id)).first
     #puts resp
     sku = resp['sku']
     estado = resp["estado"]
@@ -474,12 +496,13 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     puts "--- Enviando orden de compra a: " + url  
     resp = @sist.httpGetRequest( url, nil)
   
+    puts "--- Respuesta " + resp
     if @sist.valid_json?(resp) ==false
       return false
     end
 
     json =JSON.parse(resp)
-    puts "--- Respuesta " + resp
+   
     aceptado = json["aceptado"]
     
     if aceptado.nil?
@@ -625,15 +648,64 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
         ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad-counter))
         counter = counter-1
       end
+
       puts "Movido correctamente, N= "+ counter.to_s
       skuDB = Sku.find_by(sku: sku)
       #skuDB.update(reservado: skuDB["reservado"].to_i-1)
       skuDB.increment!(:reservado, -1)
       counter = counter+1
+
     end
     return total+counter
 
   end
+
+  def listaSkuDisponible(list )
+    #[8, 6, 14, 31, 49, 55] 
+    sist = Sistema.new
+    index = 1
+    list.each do |stockRequerido|
+       
+       sku = idToSku(index).to_s
+       puts "se requiere un stock de " + stockRequerido.to_s + " del sku " + sku
+       avalible = sist.getStockSKUDisponible(sku)
+       puts "existe un stock de " + avalible.to_s
+
+        if stockRequerido > avalible
+         puts "falta stock del sku " + sku
+          return false
+        end
+
+       index = index+1
+   end
+
+    return true
+
+  end 
+  
+
+  def idToSku(id) 
+    
+    if id == 1
+      return 8
+    end
+    if id == 2
+      return 6
+    end
+    if id == 3
+      return 14
+    end
+    if id == 4
+      return 31
+    end
+    if id == 5
+      return 49
+    end
+    if id == 6
+      return 55
+    end
+  end 
+
   
   def despacharFTP(sku, cantidad, direccion,precio,idOC)
     sist = Sistema.new
