@@ -62,10 +62,13 @@ d="+boleta["_id"].to_s
         dir = ::Spree::Address.find_by(id: ord["ship_address_id"])
         direccion = dir["address1"]
         
+
         inv = Inventario.new
-        #### AQUI SE DESPACHA
-        inv.despachar(despachoUnits, direccion, boleta["total"], boleta["boleta_id"])
         
+        despacharLista(despachoUnits, direccion, boleta["total"] , boleta["orden_id"])
+
+
+
         ## Redireccionamos a spree
         redirect_to "/orders/"+boleta["orden_id"], :notice => "La orden fue pagada exitosamente. El id de la boleta es"+boleta["boleta_id"].to_s
 
