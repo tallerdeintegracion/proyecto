@@ -8,43 +8,65 @@ class IntegracionpayController < ApplicationController
       ord = ::Spree::Order.find_by(number: val.to_s)
       ### TODO ver si hay stock ###
       
-      products = ::Spree::LineItem.find_by(order_id: ord[:id].to_s)
-
+      
+      products = ::Spree::LineItem.where(order_id: ord["id"])
+      skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
+      checkStock = [0,0,0,0,0,0]
+      products.each do |prod|
+        checkStock[prod["variant_id"]] = prod["quantity"]
+      end
+      
       inv = Inventario.new
       
-      #res = inv.reservarStock()     
-      res = true
+      res = inv.reservarStock(checkStock)     
+      #res = true
       if(!res)
-        redirect_to "/"
+        redirect_to "/", :alert => "No hay suficiente stock"
+        return
       end
       
       puts ord.to_json.to_s
-      boleta = sist.emitirBoleta(ord[:user_id],ord[:total].to_i)
-      
+      bol = sist.emitirBoleta(ord[:user_id],ord[:total].to_i)
+      boleta = JSON.parse(bol)
       Boletum.find_or_create_by(boleta_id: boleta["_id"].to_s, orden_id: val.to_s, estado: "Creada", total: ord["total"].to_i)
       
-      redirect_to "http://integracion-2016-dev.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Flocalhost%3A8080%2Fintegracionpay%2Fconfirm&cancelUrl=http%3A%2F%2Flocalhost%3A8080%2Fintegracionpay%2Fcancel&boletaI
-d="+JSON.parse(boleta)["_id"].to_s
+      redirect_to "http://integracion-2016-dev.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Flocalhost%3A8080%2Fintegracionpay%2Fconfirm/"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Flocalhost%3A8080%2Fintegracionpay%2Fcancel/"+boleta["_id"].to_s+"&boletaI
+d="+boleta["_id"].to_s
+      return
    end
 
     def confirm
         puts "Entró a confirmado"
 
-
-        boleta = Boletum.find_by(estado: "Creada")
+        boleta = Boletum.find_by(boleta_id: params[:id])
+        
+        ## No puedo buscar una boleta creada?
+        
         boleta.update(estado: "Aceptada")
         ## TODO aceptar la boleta en spree
-        redirect_to "/orders/"+boleta["orden_id"]
+        ord = ::Spree::Order.find_by(number: boleta["orden_id"].to_s)
+        ord.update(state: "complete", completed_at: Time.now, payment_total: ord["total"], payment_state: "paid" )
+        ::Spree::Payment.find_or_create_by(amount: ord["total"], order_id: ord["id"], payment_method_id: 12, state: "completed", number: "PM20A70L") 
+        
+        redirect_to "/orders/"+boleta["orden_id"], :notice => "La orden fue pagada exitosamente"
 
     end
 
+
+
+
+
     def cancel
-        puts "Entro a Cancelado"
         
         
-        boleta = Boletum.find_by(estado: "Creada")
+        boleta = Boletum.find_by(boleta_id: params[:id])
+        puts boleta.to_json.to_s
         boleta.update(estado: "Cancelada")
+        ord = ::Spree::Order.find_by(number: boleta["orden_id"].to_s)
+        ord.update(state: "canceled")
+        ord.update(canceled_at: Time.now)
+
     
-        redirect_to "/orders/"+boleta["orden_id"]
+        redirect_to "/", :alert => "El pago fue cancelado"
     end
 end

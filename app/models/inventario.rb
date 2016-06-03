@@ -728,7 +728,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
     sist = Sistema.new
     require 'json'
-     urlServidor = "http://localhost:3000"  
+    urlServidor = "http://localhost:3000"  
     skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
     Thread.new do 
       for i in 0..(skuTrabajados.length-1)
