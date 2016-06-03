@@ -15,6 +15,7 @@ class Inventario < ActiveRecord::Base
   end
 
   def definirVariables 
+
     @sist = Sistema.new
     @returnPoint = 2000
     @returnPointProcesados = 400
@@ -682,6 +683,18 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     return true
 
   end 
+
+  def despacharLista(list , direccion , precio , idOc)
+    sist = Sistema.new
+    definirVariables
+
+    index = 1
+    list.each do |stockRequerido|
+      sku = idToSku(index).to_s
+      despacharCliente(sku, cantidad, direccion, precio , idOC)
+      index = index+1
+    end
+  end  
   
 
   def idToSku(id) 
