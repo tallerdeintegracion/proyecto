@@ -18,7 +18,9 @@ class HomeController < ApplicationController
 
   def test
       inv = Inventario.new
-      inv.run
+      ary = [50, 0, 40, 231,20,0] 
+      inv.listaSkuDisponible(ary )
+      render :text => "holia"
   end
 
 

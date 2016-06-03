@@ -3,6 +3,7 @@ class Inventario < ActiveRecord::Base
   def run
 
     definirVariables 
+
     puts "\n \n \n \n "
     puts "#{Time.now}  Inicia revicion de inventario "
     cleanProduccionesDespachadas()
@@ -57,6 +58,7 @@ class Inventario < ActiveRecord::Base
 
     materias = Sku.where("grupoProyecto = ? AND tipo = ?"  , @GrupoProyecto , "Producto procesado")
     materias.each do |row|
+     
       sku = row.sku 
       inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
       inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
@@ -69,6 +71,8 @@ class Inventario < ActiveRecord::Base
         inicialPulmon =recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal)
         puts "--- Recibiendo sku " + skuMaterial + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
       end 
+
+
     end
 
     #####################################################
@@ -644,15 +648,64 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
         ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad-counter))
         counter = counter-1
       end
+
       puts "Movido correctamente, N= "+ counter.to_s
       skuDB = Sku.find_by(sku: sku)
       #skuDB.update(reservado: skuDB["reservado"].to_i-1)
       skuDB.increment!(:reservado, -1)
       counter = counter+1
+
     end
     return total+counter
 
   end
+
+  def listaSkuDisponible(list )
+    #[8, 6, 14, 31, 49, 55] 
+    sist = Sistema.new
+    index = 1
+    list.each do |stockRequerido|
+       
+       sku = idToSku(index).to_s
+       puts "se requiere un stock de " + stockRequerido.to_s + " del sku " + sku
+       avalible = sist.getStockSKUDisponible(sku)
+       puts "existe un stock de " + avalible.to_s
+
+        if stockRequerido > avalible
+         puts "falta stock del sku " + sku
+          return false
+        end
+
+       index = index+1
+   end
+
+    return true
+
+  end 
+  
+
+  def idToSku(id) 
+    
+    if id == 1
+      return 8
+    end
+    if id == 2
+      return 6
+    end
+    if id == 3
+      return 14
+    end
+    if id == 4
+      return 31
+    end
+    if id == 5
+      return 49
+    end
+    if id == 6
+      return 55
+    end
+  end 
+
   
   def despacharFTP(sku, cantidad, direccion,precio,idOC)
     sist = Sistema.new
