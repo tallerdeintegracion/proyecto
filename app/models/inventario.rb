@@ -688,21 +688,27 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
   end 
 
-  def despacharLista(list , direccion , precio , idOc)
+  def despacharLista(list , direccion , preciototal , idOc)
     sist = Sistema.new
     definirVariables
-
+    puts"comenzando el despacho "
     index = 1
     list.each do |stockRequerido|
+     if stockRequerido != 0
       sku = idToSku(index).to_s
-      despacharCliente(sku, cantidad, direccion, precio , idOC)
+      resp = Precio.find_by(sku:sku)
+      precio = resp.precioUnitario
+      puts "precio untario " + precio.to_s
+      despacharCliente(sku, stockRequerido, direccion, precio , idOc)
       index = index+1
+     end 
     end
+     puts"despacho exitoso"
   end  
   
 
   def idToSku(id) 
-    
+      
     if id == 1
       return 8
     end

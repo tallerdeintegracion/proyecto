@@ -65,7 +65,7 @@ d="+boleta["_id"].to_s
 
         inv = Inventario.new
         
-        despacharLista(despachoUnits, direccion, boleta["total"] , boleta["orden_id"])
+        inv.despacharLista(despachoUnits, direccion, boleta["total"] , boleta["orden_id"])
 
 
 

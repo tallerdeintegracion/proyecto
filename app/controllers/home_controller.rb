@@ -17,9 +17,10 @@ class HomeController < ApplicationController
   end
 
   def test
+    #[8, 6, 14, 31, 49, 55] 
       inv = Inventario.new
-      ary = [50, 0, 40, 231,20,0] 
-      inv.listaSkuDisponible(ary )
+      ary = [5, 0, 0, 0,0,0] 37,116
+      #despacharLista(ary, false123 , 37116 , idOc)
       render :text => "holia"
   end
 
