@@ -599,7 +599,9 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
       puts "grupo destino es el " + grupoDestino + " y el almacén tiene id " + almacenId.to_s + "\n" 
       puts "Se despacha al cliente"
-      variable = despacharCliente(sku,cantidad,almacenId,precio,idOC)
+      Thread.new do
+        despacharCliente(sku,cantidad,almacenId,precio,idOC)
+      end
       ocDB = Oc.find_by(oc: idOC)
       ocDB.update(estados: "Despachada")
 
@@ -609,7 +611,9 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
       ## QUE CHUCHA ES DIRECCIÓN
       puts "Se despacha al ftp"
       direccion="estadireccion"
-      despacharFTP(sku,cantidad,direccion,precio,idOC)
+      Thread.new do
+        despacharFTP(sku,cantidad,direccion,precio,idOC)
+      end
       ocDB = Oc.find_by(oc: idOC)
       puts "FTP despachado"
       ocDB.update(estados: "Despachada")

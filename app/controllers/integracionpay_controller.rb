@@ -13,12 +13,12 @@ class IntegracionpayController < ApplicationController
       skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
       checkStock = [0,0,0,0,0,0]
       products.each do |prod|
-        checkStock[prod["variant_id"]] = prod["quantity"]
+        checkStock[prod["variant_id"]-1] = prod["quantity"]
       end
       
       inv = Inventario.new
       
-      res = inv.reservarStock(checkStock)     
+      res = inv.listaSkuDisponible(checkStock)     
       #res = true
       if(!res)
         redirect_to "/", :alert => "No hay suficiente stock"
@@ -40,15 +40,34 @@ d="+boleta["_id"].to_s
 
         boleta = Boletum.find_by(boleta_id: params[:id])
         
-        ## No puedo buscar una boleta creada?
-        
+        ## Comprobamos de que la boleta sea nueva
+        if boleta["estado"] != "Creada"
+            redirect_to "/", :alert => "El pago ya había sido realizado. El id de la boleta era "+boleta["boleta_id"].to_s
+            return
+        end
         boleta.update(estado: "Aceptada")
-        ## TODO aceptar la boleta en spree
+
+        ## Marcamos en spree que fue pagada
         ord = ::Spree::Order.find_by(number: boleta["orden_id"].to_s)
         ord.update(state: "complete", completed_at: Time.now, payment_total: ord["total"], payment_state: "paid" )
-        ::Spree::Payment.find_or_create_by(amount: ord["total"], order_id: ord["id"], payment_method_id: 12, state: "completed", number: "PM20A70L") 
+        ::Spree::Payment.find_or_create_by(amount: ord["total"], order_id: ord["id"], payment_method_id: 12, state: "completed", number: ::Spree::Payment.count) 
+                
+        ## Despachamos
+        products = ::Spree::LineItem.where(order_id: ord["id"])
+        skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
+        despachoUnits = [0,0,0,0,0,0]
+        products.each do |prod|
+          despachoUnits[prod["variant_id"]-1] = prod["quantity"]
+        end
+        dir = ::Spree::Address.find_by(id: ord["ship_address_id"])
+        direccion = dir["address1"]
         
-        redirect_to "/orders/"+boleta["orden_id"], :notice => "La orden fue pagada exitosamente"
+        inv = Inventario.new
+        #### AQUI SE DESPACHA
+        inv.despachar(despachoUnits, direccion, boleta["total"], boleta["boleta_id"])
+        
+        ## Redireccionamos a spree
+        redirect_to "/orders/"+boleta["orden_id"], :notice => "La orden fue pagada exitosamente. El id de la boleta es"+boleta["boleta_id"].to_s
 
     end
 
@@ -67,6 +86,6 @@ d="+boleta["_id"].to_s
         ord.update(canceled_at: Time.now)
 
     
-        redirect_to "/", :alert => "El pago fue cancelado"
+        redirect_to "/", :alert => "El pago fue cancelado. El id de la boleta era "+boleta["boleta_id"].to_s
     end
 end
