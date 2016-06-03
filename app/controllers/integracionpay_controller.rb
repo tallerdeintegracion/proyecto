@@ -9,7 +9,7 @@ class IntegracionpayController < ApplicationController
       ### TODO ver si hay stock ###
       
       
-      products = ::Spree::LineItem.where(order_id: ord["id"])
+      products = ::Spree::LineItem.where(order_id: ord["id"]).order("variant_id DESC")
       skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
       checkStock = [0,0,0,0,0,0]
       products.each do |prod|
@@ -53,7 +53,7 @@ d="+boleta["_id"].to_s
         ::Spree::Payment.find_or_create_by(amount: ord["total"], order_id: ord["id"], payment_method_id: 12, state: "completed", number: ::Spree::Payment.count) 
                 
         ## Despachamos
-        products = ::Spree::LineItem.where(order_id: ord["id"])
+        products = ::Spree::LineItem.where(order_id: ord["id"]).order("variant_id DESC")
         skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
         despachoUnits = [0,0,0,0,0,0]
         products.each do |prod|
