@@ -600,7 +600,9 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
       puts "grupo destino es el " + grupoDestino + " y el almacén tiene id " + almacenId.to_s + "\n" 
       puts "Se despacha al cliente"
-      variable = despacharCliente(sku,cantidad,almacenId,precio,idOC)
+      Thread.new do
+        despacharCliente(sku,cantidad,almacenId,precio,idOC)
+      end
       ocDB = Oc.find_by(oc: idOC)
       ocDB.update(estados: "Despachada")
 
@@ -610,7 +612,9 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
       ## QUE CHUCHA ES DIRECCIÓN
       puts "Se despacha al ftp"
       direccion="estadireccion"
-      despacharFTP(sku,cantidad,direccion,precio,idOC)
+      Thread.new do
+        despacharFTP(sku,cantidad,direccion,precio,idOC)
+      end
       ocDB = Oc.find_by(oc: idOC)
       puts "FTP despachado"
       ocDB.update(estados: "Despachada")
@@ -813,7 +817,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
     sist = Sistema.new
     require 'json'
-     urlServidor = "http://localhost:3000"  
+    urlServidor = "http://localhost:3000"  
     skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
     Thread.new do 
       for i in 0..(skuTrabajados.length-1)

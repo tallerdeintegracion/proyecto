@@ -11,8 +11,8 @@ Rails.application.routes.draw do
   mount Spree::Core::Engine, at: '/'
 
   patch '/integracionpay', :to =>  "integracionpay#pay", :as => :integracionpay
-  get '/integracionpay/confirm' => "integracionpay#confirm"
-  get '/integracionpay/cancel' => "integracionpay#cancel"
+  get '/integracionpay/confirm/:id' => "integracionpay#confirm"
+  get '/integracionpay/cancel/:id' => "integracionpay#cancel"
 
   resources :ocs
   resources :skus
