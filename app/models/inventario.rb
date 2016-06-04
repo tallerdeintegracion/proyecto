@@ -699,7 +699,21 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
       resp = Precio.find_by(sku:sku)
       precio = resp.precioUnitario
       puts "precio untario " + precio.to_s
-      despacharCliente(sku, stockRequerido, direccion, precio , idOc)
+     
+      fila_sku = Sku.find_by(sku: sku.to_s)
+			fila_sku.increment!(:reservado, stockRequerido.to_i)
+     
+      puts "En despacharLista: sku: "+sku.to_s
+      puts "En despacharLista: stockRequerido: "+stockRequerido.to_s
+      puts "En despacharLista: direccion: "+direccion.to_s
+      puts "En despacharLista: precio: "+precio.to_s
+      puts "En despacharLista: idboleta: "+idOc.to_s
+      
+      intermedio = JSON.parse(sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+      almacenOrigen = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
+
+      moverInventarioDespacho(sku, stockRequerido, almacenOrigen)
+      despacharFTP(sku, stockRequerido, direccion, precio, idOc)
       index = index+1
      end 
     end
@@ -752,7 +766,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     while counter < cantidad
       begin
         
-        movStock = despacharStock(ids[counter]["_id"],direccion,precio, idOC)
+        movStock = sist.despacharStock(ids[counter]["_id"],direccion,precio, idOC)
         Rails.logger.debug("debug::"+movStock)
         result = JSON.parse(movStock)
             
@@ -823,12 +837,13 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
     sist = Sistema.new
     require 'json'
-    urlServidor = "http://localhost:3000"  
+    urlServidor = "http://integra3.ing.puc.cl"  
     skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
     Thread.new do 
       for i in 0..(skuTrabajados.length-1)
         sist = Sistema.new
-        stockDispoSku = sist.getStockSKUDisponible(skuTrabajados[i])
+        puts i.to_s
+        stockDispoSku = sist.getStockSKUDisponible(skuTrabajados[i].to_s)
         sist.putStockSpree(urlServidor, stockDispoSku, (i+1))
         #Rails.logger.info stockDispoSku.to_s + "    " + (i+1).to_s
       end

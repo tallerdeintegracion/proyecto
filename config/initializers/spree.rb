@@ -15,6 +15,8 @@ Spree.config do |config|
   # config.track_inventory_levels = false
 end
 
+Spree::Auth::Config[:confirmable] = true
+
 Spree.user_class = "Spree::User"
 
 Rails.application.config.spree.payment_methods << Spree::Gateway::Integracionpay

@@ -11,6 +11,7 @@ class ApiController < ApplicationController
     sist = Sistema.new
 
     cantidad = sist.getStockSKUDisponible(params[:sku])
+    puts cantidad.to_s
     render :json => { :stock => cantidad,:sku => params[:sku] }
   end
 

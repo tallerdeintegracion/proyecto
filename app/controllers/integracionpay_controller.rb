@@ -21,7 +21,7 @@ class IntegracionpayController < ApplicationController
       res = inv.listaSkuDisponible(checkStock)     
       #res = true
       if(!res)
-        redirect_to "/", :alert => "No hay suficiente stock"
+        redirect_to "/spree/", :alert => "No hay suficiente stock"
         return
       end
       
@@ -30,7 +30,7 @@ class IntegracionpayController < ApplicationController
       boleta = JSON.parse(bol)
       Boletum.find_or_create_by(boleta_id: boleta["_id"].to_s, orden_id: val.to_s, estado: "Creada", total: ord["total"].to_i)
       
-      redirect_to "http://integracion-2016-dev.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Flocalhost%3A8080%2Fintegracionpay%2Fconfirm/"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Flocalhost%3A8080%2Fintegracionpay%2Fcancel/"+boleta["_id"].to_s+"&boletaI
+      redirect_to "http://integracion-2016-dev.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fconfirm/"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fcancel/"+boleta["_id"].to_s+"&boletaI
 d="+boleta["_id"].to_s
       return
    end
@@ -42,7 +42,7 @@ d="+boleta["_id"].to_s
         
         ## Comprobamos de que la boleta sea nueva
         if boleta["estado"] != "Creada"
-            redirect_to "/", :alert => "El pago ya había sido realizado. El id de la boleta era "+boleta["boleta_id"].to_s
+            redirect_to "/spree/", :alert => "El pago ya había sido realizado. El id de la boleta era "+boleta["boleta_id"].to_s
             return
         end
         boleta.update(estado: "Aceptada")
@@ -63,14 +63,17 @@ d="+boleta["_id"].to_s
         direccion = dir["address1"]
         
 
-        inv = Inventario.new
-        
-        inv.despacharLista(despachoUnits, direccion, boleta["total"] , boleta["orden_id"])
+        Thread.new do
+            inv = Inventario.new
+            inv.despacharLista(despachoUnits, direccion, boleta["total"] , boleta["boleta_id"])
+            inv.updateStockSpree()
+            Rails.logger.debug("Stock actualizado")
+        end
 
 
 
         ## Redireccionamos a spree
-        redirect_to "/orders/"+boleta["orden_id"], :notice => "La orden fue pagada exitosamente. El id de la boleta es"+boleta["boleta_id"].to_s
+        redirect_to "/spree/orders/"+boleta["orden_id"], :notice => "La orden fue pagada exitosamente. El id de la boleta es"+boleta["boleta_id"].to_s
 
     end
 
@@ -89,6 +92,6 @@ d="+boleta["_id"].to_s
         ord.update(canceled_at: Time.now)
 
     
-        redirect_to "/", :alert => "El pago fue cancelado. El id de la boleta era "+boleta["boleta_id"].to_s
+        redirect_to "/spree/", :alert => "El pago fue cancelado. El id de la boleta era "+boleta["boleta_id"].to_s
     end
 end

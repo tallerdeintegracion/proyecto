@@ -74,7 +74,7 @@ class Sistema < ActiveRecord::Base
 
 	def getStockSpree(urlReal)
    
-	    url = urlReal + "/api/stock_locations/1/stock_items"
+	    url = urlReal + "/spree/api/v1/stock_locations/1/stock_items"
 	    #X-Spree-Token header
 	    authHeader = "55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00"
 	    data =  httpGetRequestSpree(url , authHeader)	
@@ -85,7 +85,7 @@ class Sistema < ActiveRecord::Base
   	def putStockSpree(urlReal, cantidad, producto)
   		require 'json'
 
-		url = urlReal + "/api/v1/stock_locations/1/stock_items/" + producto.to_s
+		url = urlReal + "/spree/api/v1/stock_locations/1/stock_items/" + producto.to_s
 
 		puts  " se envia a la url " + url
 		#X-Spree-Token header
