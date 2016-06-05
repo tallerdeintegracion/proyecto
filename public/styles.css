@@ -26,6 +26,13 @@ body {
   width: 960px;
 }
 
+#container2
+{
+  display: block; 
+  height:auto;
+  position: auto; 
+  width: 960px;
+}
 
 #header
 {
