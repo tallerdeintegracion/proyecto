@@ -30,7 +30,7 @@
   <li><a href="/home/index">Inicio</a></li>
   <li><a href="/home/productos">Productos</a></li>
   <li><a href="/home/bodegas">Bodegas</a></li>
-  <li><a href="/home/listaOrdenesCompra">Ordenes de Compra</a></li>
+  <li><a href="/home/listaOrdenesCompra">Estados</a></li>
   <li><a href="/home/credenciales">Credenciales</a></li>
   <li><a href="/home/documentacion">Documentación</a></li>
   <li><a href="/spree">Spree</a></li>
@@ -44,13 +44,12 @@
 <section>
   <div class="container">
     <!--div class="docs-content" style=""-->
-    <table id="t01"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse;">
+    <h3>Saldo:</h3>
+    <a href="#" onclick='show(1);'><h3>Ordenes de compra</h3></a>
+    <table id="t01"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse; display: none;">
 				  	<tr bgcolor="#B3B5B5">
 				    <th>id OC</th>
-				    <th>Estado OC</th>		
-				    <th>id Factura</th>
-            <th>Estado Factura
-						<th>id Pago</th>
+				    <th>Estado OC</th>
 						<th>sku</th>
 						<th>cantidad</th>
 				  	</tr>
@@ -59,15 +58,47 @@
 				  	<tr>
 				  		<th><%= ocdb["oc"] %>	</th>
 				  		<th><%= ocdb["estados"] %>	</th>
-				  		<th><%= ocdb["factura"] %>	</th>
-				  		<th><%= ocdb[""] %></th>
-              <th><%= ocdb["pago"] %>	</th>
 				  		<th><%= ocdb["sku"] %>	</th>
 				  		<th><%= ocdb["cantidad"] %>	</th>						
-					
 				    </tr>
 					<% end %>
 				</table>
+    <a href="#" onclick='show(2);'><h3>Facturas</h3></a>
+    <table id="t02"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse;display: none;">
+            <tr bgcolor="#B3B5B5">
+            <th>id Factura</th>
+            <th>id OC</th>
+            <th>Estado Factura</th>
+            <th>Monto</th>
+            </tr>
+            <% @ocsdb = Oc.all %>
+            <% @ocsdb.each do |ocdb| %> 
+            <tr>
+              <th><%= ocdb["factura"] %>  </th>
+              <th><%= ocdb["oc"] %> </th>
+              <th><%= ocdb[""] %> </th>
+              <th><%= ocdb[""] %> </th>
+            </tr>
+          <% end %>
+        </table>
+        <a href="#" onclick='show(3);'><h3>Transacciones</h3></a>
+    <table id="t03"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse;display: none;">
+            <tr bgcolor="#B3B5B5">
+            <th>id Pago</th>
+            <th>id Factura</th>
+            <th>Fecha</th>
+            <th>Monto</th> 
+            </tr>
+            <% @ocsdb = Oc.all %>
+            <% @ocsdb.each do |ocdb| %> 
+            <tr>
+              <th><%= ocdb["pago"] %> </th>
+              <th><%= ocdb["factura"] %>  </th>
+              <th><%= ocdb[""] %> </th>
+              <th><%= ocdb[""] %> </th>
+            </tr>
+          <% end %>
+        </table>
   </div>
 </section>
 <!--section class="vibrant centered">
@@ -86,6 +117,15 @@
 <script type="text/javascript" src="/assets/prettify.js"></script> 
 <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script>
 <script src="/assets/layout.js"></script>
+<script>
+function show(nr) {
+    if (document.getElementById("t0"+nr).style.display=="table") {
+       document.getElementById("t0"+nr).style.display="none";
+    }
+    else{
+      document.getElementById("t0"+nr).style.display="table";
+    }
+}</script>
 </body>
 </html>
 <style>
