@@ -1,140 +1,117 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta name="description" content="">
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Grupo 3</title>
-<link rel="alternate" type="application/rss+xml" title="frittt.com" href="feed/index.html">
-<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet"
-        type="text/css">
-<link rel="stylesheet" href="/images/css/style.css">
-<link rel="stylesheet" href="/images/css/prettify.css">
-</head>
-<body>
-<div class="wrapper">
-<nav>
- 
-    <!--div class="pull-left">
-        <h1><a href="javascript:"><img src="img/icon.png" alt="Free Documentation Template Icon" /> <span>DocWeb</span></a></h1>
-    </div-->
-    
-    
-    <!--div class="pull-right">
-        <a href="http://frittt.com/free-documentation-html-template-docweb" target="_blank" class="btn btn-download"><img src="img/download.png" width="25" alt="Download Free Documentation Template" /> Download Now</a>
-    </div-->
-    
-<ul id="menu">
-  <li><a href="/home/index">Inicio</a></li>
-  <li><a href="/home/productos">Productos</a></li>
-  <li><a href="/home/bodegas">Bodegas</a></li>
-  <li><a href="/home/listaOrdenesCompra">Estados</a></li>
-  <li><a href="/home/credenciales">Credenciales</a></li>
-  <li><a href="/home/documentacion">Documentación</a></li>
-  <li><a href="/spree">Spree</a></li>
-</ul>  
-</nav>
-<header>
-  <div class="container">
-    <h2 class="lone-header">Estados</h2>
-  </div>
-</header>
-<section>
-  <div class="container">
-    <!--div class="docs-content" style=""-->
-    <h3>Saldo:</h3>
-    <a href="#" onclick='show(1);'><h3>Ordenes de compra</h3></a>
-    <table id="t01"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse; display: none;">
-				  	<tr bgcolor="#B3B5B5">
-				    <th>id OC</th>
-				    <th>Estado OC</th>
-						<th>sku</th>
-						<th>cantidad</th>
-				  	</tr>
-				  	<% @ocsdb = Oc.all %>
-				  	<% @ocsdb.each do |ocdb| %>	
-				  	<tr>
-				  		<th><%= ocdb["oc"] %>	</th>
-				  		<th><%= ocdb["estados"] %>	</th>
-				  		<th><%= ocdb["sku"] %>	</th>
-				  		<th><%= ocdb["cantidad"] %>	</th>						
-				    </tr>
-					<% end %>
-				</table>
-    <a href="#" onclick='show(2);'><h3>Facturas</h3></a>
-    <table id="t02"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse;display: none;">
-            <tr bgcolor="#B3B5B5">
-            <th>id Factura</th>
-            <th>id OC</th>
-            <th>Estado Factura</th>
-            <th>Monto</th>
-            </tr>
-            <% @ocsdb = Oc.all %>
-            <% @ocsdb.each do |ocdb| %> 
-            <tr>
-              <th><%= ocdb["factura"] %>  </th>
-              <th><%= ocdb["oc"] %> </th>
-              <th><%= ocdb[""] %> </th>
-              <th><%= ocdb[""] %> </th>
-            </tr>
-          <% end %>
-        </table>
-        <a href="#" onclick='show(3);'><h3>Transacciones</h3></a>
-    <table id="t03"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse;display: none;">
-            <tr bgcolor="#B3B5B5">
-            <th>id Pago</th>
-            <th>id Factura</th>
-            <th>Fecha</th>
-            <th>Monto</th> 
-            </tr>
-            <% @ocsdb = Oc.all %>
-            <% @ocsdb.each do |ocdb| %> 
-            <tr>
-              <th><%= ocdb["pago"] %> </th>
-              <th><%= ocdb["factura"] %>  </th>
-              <th><%= ocdb[""] %> </th>
-              <th><%= ocdb[""] %> </th>
-            </tr>
-          <% end %>
-        </table>
-  </div>
-</section>
-<!--section class="vibrant centered">
-  <div class="">
-    <h4> This documentation template is provided by <a href="http://www.frittt.com" target="_blank">Frittt Templates</a>. You can download and use this template for free. If you have used this template, please pay the developer's effort by Tweeting, sharing on Facebook, social mention or with a linkback. Enjoy! :)</h4>
-  </div>
-</section>
-<footer>
-  <div class="">
-    <p> &copy; Copyright Frittt Templates. All Rights Reserved.</p>
-  </div>
-</footer-->
-</div>
-
-<script src="/assets/jquery.min.js"></script> 
-<script type="text/javascript" src="/assets/prettify.js"></script> 
-<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script>
-<script src="/assets/layout.js"></script>
-<script>
-function show(nr) {
-    if (document.getElementById("t0"+nr).style.display=="table") {
-       document.getElementById("t0"+nr).style.display="none";
-    }
-    else{
-      document.getElementById("t0"+nr).style.display="table";
-    }
-}</script>
-</body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="320">
+		<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Grupo 3</title>
+		<link rel="alternate" type="application/rss+xml" title="frittt.com" href="feed/index.html">
+		<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/images/css/style.css">
+		<link rel="stylesheet" href="/images/css/prettify.css">
+	</head>
+	<body>
+		<div class="wrapper">
+			<nav>
+				<ul id="menu">
+  					<li><a href="/home/index">Inicio</a></li>
+  					<li><a href="/home/productos">Productos</a></li>
+  					<li><a href="/home/bodegas">Bodegas</a></li>
+  					<li><a href="/home/listaOrdenesCompra">Estados</a></li>
+  					<li><a href="/home/credenciales">Credenciales</a></li>
+					<li><a href="/home/documentacion">Documentación</a></li>
+  					<li><a href="/spree">Spree</a></li>
+				</ul>
+			</nav>
+			<header>
+  				<div class="container">
+    				<h2 class="lone-header">Estados</h2>
+  				</div>
+			</header>
+			<section>
+  				<div class="container">
+    				<h3>Saldo:</h3>
+				    <a href="#" onclick='show(1);'><h3>Ordenes de compra</h3></a>
+				    <table id="t01"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse; display: none;">
+				  		<tr bgcolor="#B3B5B5">
+				    		<th>id OC</th>
+				    		<th>Estado OC</th>
+							<th>sku</th>
+							<th>cantidad</th>
+				  		</tr>
+				  		<% @ocsdb = Oc.all %>
+				  		<% @ocsdb.each do |ocdb| %>
+				  		<tr>
+				  			<th><%= ocdb["oc"] %>	</th>
+				  			<th><%= ocdb["estados"] %>	</th>
+				  			<th><%= ocdb["sku"] %>	</th>
+				  			<th><%= ocdb["cantidad"] %>	</th>
+				    	</tr>
+						<% end %>
+					</table>
+    				<a href="#" onclick='show(2);'><h3>Facturas</h3></a>
+    				<table id="t02"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse;display: none;">
+            			<tr bgcolor="#B3B5B5">
+            				<th>id Factura</th>
+            				<th>id OC</th>
+            				<th>Estado Factura</th>
+            				<th>Monto</th>
+            			</tr>
+            			<% @ocsdb = Oc.all %>
+            			<% @ocsdb.each do |ocdb| %>
+            			<tr>
+              				<th><%= ocdb["factura"] %>  </th>
+              				<th><%= ocdb["oc"] %> </th>
+              				<th><%= ocdb[""] %> </th>
+              				<th><%= ocdb[""] %> </th>
+            			</tr>
+          				<% end %>
+        			</table>
+        			<a href="#" onclick='show(3);'><h3>Transacciones</h3></a>
+    				<table id="t03"style="width:1000px;margin-top: 100px; background-color: #F0F0F0; border: 1px solid white; border-collapse: collapse;display: none;">
+            			<tr bgcolor="#B3B5B5">
+            				<th>id Pago</th>
+            				<th>id Factura</th>
+            				<th>Fecha</th>
+            				<th>Monto</th>
+            			</tr>
+            			<% @ocsdb = Oc.all %>
+            			<% @ocsdb.each do |ocdb| %>
+            			<tr>
+              				<th><%= ocdb["pago"] %> </th>
+              				<th><%= ocdb["factura"] %>  </th>
+              				<th><%= ocdb[""] %> </th>
+              				<th><%= ocdb[""] %> </th>
+            			</tr>
+          				<% end %>
+        			</table>
+  				</div>
+			</section>
+		</div>
+		<script src="/assets/jquery.min.js"></script>
+		<script type="text/javascript" src="/assets/prettify.js"></script>
+		<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script>
+		<script src="/assets/layout.js"></script>
+		<script>
+			function show(nr) {
+    			if (document.getElementById("t0"+nr).style.display=="table") {
+       				document.getElementById("t0"+nr).style.display="none";
+    			}
+    			else{
+      				document.getElementById("t0"+nr).style.display="table";
+    			}
+			}
+		</script>
+	</body>
 </html>
 <style>
-    /*div { width: 100%; } */
     .success { background-color: #FFFFFF; }
     .boxed {
-        background-color: white; 
+        background-color: white;
         width: 600px;
-        border: 1px solid black ;
+        border: 1px solid black;
     }
     table, tr, th {
       border: 2px solid white;

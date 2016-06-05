@@ -1,284 +1,88 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta name="description" content="">
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Grupo 3</title>
-<link rel="alternate" type="application/rss+xml" title="frittt.com" href="feed/index.html">
-<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet"
-        type="text/css">
-<link rel="stylesheet" href="/images/css/style.css">
-<link rel="stylesheet" href="/images/css/prettify.css">
-</head>
-<body>
-<div class="wrapper">
-<nav>
- 
-  	<!--div class="pull-left">
-    	<h1><a href="javascript:"><img src="img/icon.png" alt="Free Documentation Template Icon" /> <span>DocWeb</span></a></h1>
-    </div-->
-    
-    
-    <!--div class="pull-right">
-    	<a href="http://frittt.com/free-documentation-html-template-docweb" target="_blank" class="btn btn-download"><img src="img/download.png" width="25" alt="Download Free Documentation Template" /> Download Now</a>
-    </div-->
-    
-<ul id="menu">
-  <li><a href="/home/index">Inicio</a></li>
-  <li><a href="/home/productos">Productos</a></li>
-  <li><a href="/home/bodegas">Bodegas</a></li>
-  <li><a href="/home/listaOrdenesCompra">Estados</a></li>
-  <li><a href="/home/credenciales">Credenciales</a></li>
-  <li><a href="/home/documentacion">Documentación</a></li>
-  <li><a href="/spree">Spree</a></li>
-</ul>  
-</nav>
-<header>
-  <div class="container">
-    <h2 class="lone-header">Bodegas</h2>
-  </div>
-</header>
-<section>
-  <div class="container">
-    <div class="docs-content" style="">
-
-      <div class="boxed">
-				<p>&emsp;</p>
-				<% @almacenesInfo.each do |almacen| %>
-				<p>&emsp;</p>
-				<h3>Almacen: <%= almacen["_id"]%>  </h3>
-				<h3>Total Space  <%= almacen["totalSpace"]%> </h3>
-				<h3>Used Space <%= almacen["usedSpace"]%></h3>  
-				<%
-					despacho =almacen["despacho"]
-				    recepcion =almacen["recepcion"]
-				    pulmon =almacen["pulmon"]
-				    tipo = "Normal"
-				    if pulmon == true
-				  	  tipo ="Pulmon"
-					end 
-				    if recepcion == true
-				      tipo ="Recepcion"
-				    end
-				    if despacho == true
-				      tipo ="Despacho"
-				    end  
-				%>
-				<h3>Tipo: <%= tipo%>  </h3>
-				<table style="width:100%">
-				  	<tr bgcolor="#B3B5B5">
-				    	<th>SKU</th>
-				    	<th>Nombre</th>		
-				    	<th>Cantidad</th>
-				  	</tr>
-				  	<% @products = JSON.parse(@sist.getSKUWithStock(almacen["_id"]))%>
-				  	<% @products.each do |product| %>	
-				  	<tr>
-				  		<th><%= product["_id"] %>	</th>
-				    	<th><%= Sku.find_by(sku: product["_id"]).descripcion%></th>		
-				    	<th><%= product["total"] %></th>
-				    </tr>
-					<% end %>
-				</table>
-				<% end %>
-            </div>
-      <!--h2> Customizing Opineo</h2>
-      <p> Before you make any cusomization or even start using Opineo create a 'div' element
-        and assign it some id. Now add references to necessary Javascrip files e.g.</p>
-      <ul>
-        <li>A reference to latest jQuery library </li>
-        <li>A reference to Opineo script file sudo nano opineo.js</li>
-      </ul>
-      <p> The following customization options are available in Opineo:</p>
-      <h3 id="view_type"> View Type</h3>
-      <ul>
-        <li>Detailed View</li>
-      </ul>
-     
-      <pre class="prettyprint">&lt;script&gt;
-      	$(document).ready(function (){
-        $('#DefaultOptions').opineo('results.php', {curvalue:3,
-            view: 'detailed',
-            animation_speed: 'super',
-            show_total_votes_counter: false,
-            show_overall_rating: true});
-         })
-&lt;/script&gt;</pre>
-      <ul>
-        <li>Compact View</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-	$(document).ready(function (){
-	$('#CompactView').opineo('results.php',
-    	    {curvalue:3, view: 'compact',
-    	    animation_speed: 'super'});
-	})
-&lt;/script&gt;</pre>
-      <ul>
-        <li>Mini View</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#MiniView').opineo('results.php', {curvalue:0, view: 'mini', callback: myCallback});
-    })	
-&lt;/script&gt;</pre>
-      <h3 id="animation_style"> Animation Style</h3>
-      <ul>
-        <li>Slow</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'slow'});
-    })	
-&lt;/script&gt; </pre>
-      <ul>
-        <li>Medium</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'mild'});
-    })	
-&lt;/script&gt; </pre>
-      <ul>
-        <li>Fast</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'fast'});
-    })	
- &lt;/script&gt;</pre>
-      <ul>
-        <li>Super Fast</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'super'});
-    })	
-&lt;/script&gt;</pre>
-      <ul>
-        <li>Ultra Fast</li>
-      </ul>
-      <pre class="prettyprint"> &lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', animation_speed:'ultra fast'});
-    })	
-&lt;/script&gt; </pre>
-      <h3 id="bars_text"> Bars Text</h3>
-      <ul>
-        <li>Show</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', votes_label:true});
-    })	
-&lt;/script&gt;</pre>
-      <ul>
-        <li>Hide</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', votes_label:false});
-    })	
- &lt;/script&gt;</pre>
-      <h3 id="vote_counter"> Vote Counter</h3>
-      <ul>
-        <li>Show</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', show_votes_counter:true});
-    })	
-&lt;/script&gt; </pre>
-      <ul>
-        <li>Hide</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', votes_label:false});
-    })	
-&lt;/script&gt;</pre>
-      <h3 id="rating_icons"> Rating Icons</h3>
-      <ul>
-        <li>Colored</li>
-        <li>Grey</li>
-      </ul>
-      <h3 id="rating_titles"> Rating Titles</h3>
-      <ul>
-        <li>Text For First Star</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_1_text:'Hate It'});
-    })	
-&lt;/script&gt;</pre>
-      <ul>
-        <li>Text For Second Star</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_2_text:'Don't Like It'});
-    })	
-&lt;/script&gt; </pre>
-      <ul>
-        <li>Text For Third Star</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_1_text:'Its OK'});
-    })	
-&lt;/script&gt;</pre>
-      <ul>
-        <li>Text For Fourth Star</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_1_text:'Like It'});
-    })	
-&lt;/script&gt;</pre>
-      <ul>
-        <li>Text For Fifth Star</li>
-      </ul>
-      <pre class="prettyprint">&lt;script&gt;
-    $(document).ready(function (){
-    $('#opineo').opineo('results.php', {curvalue:0, view: 'mini', star_1_text:'Love It'});
-    })	
-&lt;/script&gt;</pre>
-      <h3 id="bar_colors"> Bar Colors</h3>
-      <ul>
-        <li>Colors of Red Bar</li>
-        <li>Colors of Yellow Bar</li>
-        <li>Colors of Green Bar</li>
-      </ul-->
-    </div>
-  </div>
-</section>
-<!--section class="vibrant centered">
-  <div class="">
-    <h4> This documentation template is provided by <a href="http://www.frittt.com" target="_blank">Frittt Templates</a>. You can download and use this template for free. If you have used this template, please pay the developer's effort by Tweeting, sharing on Facebook, social mention or with a linkback. Enjoy! :)</h4>
-  </div>
-</section>
-<footer>
-  <div class="">
-    <p> &copy; Copyright Frittt Templates. All Rights Reserved.</p>
-  </div>
-</footer-->
-</div>
-
-<script src="/assets/jquery.min.js"></script> 
-<script type="text/javascript" src="/assets/prettify.js"></script> 
-<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script>
-<script src="/assets/layout.js"></script>
-</body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="320">
+		<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Grupo 3</title>
+		<link rel="alternate" type="application/rss+xml" title="frittt.com" href="feed/index.html">
+		<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/images/css/style.css">
+		<link rel="stylesheet" href="/images/css/prettify.css">
+	</head>
+	<body>
+		<div class="wrapper">
+			<nav>
+				<ul id="menu">
+					<li><a href="/home/index">Inicio</a></li>
+					<li><a href="/home/productos">Productos</a></li>
+					<li><a href="/home/bodegas">Bodegas</a></li>
+					<li><a href="/home/listaOrdenesCompra">Estados</a></li>
+					<li><a href="/home/credenciales">Credenciales</a></li>
+					<li><a href="/home/documentacion">Documentación</a></li>
+					<li><a href="/spree">Spree</a></li>
+				</ul>
+			</nav>
+			<header>
+				<div class="container">
+			    	<h2 class="lone-header">Bodegas</h2>
+			  	</div>
+			</header>
+			<section>
+			  	<div class="container">
+			    	<div class="docs-content" style="">
+			      		<div class="boxed">
+							<p>&emsp;</p>
+							<% @almacenesInfo.each do |almacen| %>
+							<p>&emsp;</p>
+							<h3>Almacen: <%= almacen["_id"]%>  </h3>
+							<h3>Total Space  <%= almacen["totalSpace"]%> </h3>
+							<h3>Used Space <%= almacen["usedSpace"]%></h3>
+							<%
+								despacho =almacen["despacho"]
+							    recepcion =almacen["recepcion"]
+							    pulmon =almacen["pulmon"]
+							    tipo = "Normal"
+							    if pulmon == true
+							  	  tipo ="Pulmon"
+								end
+							    if recepcion == true
+							      tipo ="Recepcion"
+							    end
+							    if despacho == true
+							      tipo ="Despacho"
+							    end
+							%>
+							<h3>Tipo: <%= tipo%>  </h3>
+							<table style="width:100%">
+							  	<tr bgcolor="#B3B5B5">
+							    	<th>SKU</th>
+							    	<th>Nombre</th>
+							    	<th>Cantidad</th>
+							  	</tr>
+							  	<% @products = JSON.parse(@sist.getSKUWithStock(almacen["_id"]))%>
+							  	<% @products.each do |product| %>
+							  	<tr>
+							  		<th><%= product["_id"] %>	</th>
+							    	<th><%= Sku.find_by(sku: product["_id"]).descripcion%></th>
+							    	<th><%= product["total"] %></th>
+							    </tr>
+								<% end %>
+							</table>
+							<% end %>
+			            </div>
+			    	</div>
+			  	</div>
+			</section>
+		</div>
+		<script src="/assets/jquery.min.js"></script>
+		<script type="text/javascript" src="/assets/prettify.js"></script>
+		<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script>
+		<script src="/assets/layout.js"></script>
+	</body>
 </html>
 <style>
-    /*div { width: 100%; } */
     .success { background-color: #FFFFFF; }
-    /*.boxed {
-        background-color: white; 
-        width: 600px;
-        border: 1px solid black ;
-    }*/
 </style>
