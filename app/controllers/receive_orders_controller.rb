@@ -36,7 +36,8 @@ def self.definirVariables
     @bodegaPulmon = "572aad41bdb6d403005fb207"
     @bodegaDespacho = "572aad41bdb6d403005fb1c0"
     @cuentaGrupo = " 572aac69bdb6d403005fb050"
-    @cuentaFabrica = JSON.parse(getCuentaFabrica)["cuentaId"]
+    sist = Sistema.new
+    @cuentaFabrica = JSON.parse(sist.getCuentaFabrica)["cuentaId"]
     @idGrupo = "572aac69bdb6d403005fb044"
 
   end 
@@ -87,10 +88,11 @@ end
 
 def self.processOrder(id , sku , cantidad)
   require 'json'
+  sist = Sistema.new
   #puts "Trabajando en la orden id: "+ id+ "   sku: "+sku+"   cantidad: "+cantidad+"\n"
   #puts "--- Procesando orden Id Orden: " + id + " sku: " + sku + " cantidad: " + cantidad 
   #se validará que la oc del ayudante sea correcta, o sea, que el id sea el mismo para el sku  
-  oc = JSON.parse(obtenerOrdenDeCompra(id))
+  oc = JSON.parse(sist.obtenerOrdenDeCompra(id))
   if oc.nil?
       return 0
   end   
@@ -111,13 +113,14 @@ def self.processOrder(id , sku , cantidad)
   end  
   #vaciarStockBodegaChica() #método para resetear este dato y visualizar mejor los cambios
   #vaciarOCdb()
-  ret = analizarOC(id)
+  ocs = Oc.new
+  ret = ocs.analizarOC(id)
  # puts "--- La oc ya ha sido procesada "
 
   if ret == true
 
      Thread.new do
-      fact = JSON.parse(emitirFactura(id))
+      fact = JSON.parse(ocs.emitirFactura(id))
       ocBD = Oc.find_by(oc: id)
       ocBD.update(factura: fact["_id"])
       puts "La factura del ftp fue generada" 

@@ -377,6 +377,3 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
   whenever (~> 0.9.0)
-
-BUNDLED WITH
-   1.12.5
