@@ -1,0 +1,8 @@
+<!-- Aquí va todo el codigo que va debajo del select de payments cuando uno selecciona el de proyecto de integracion -->
+  <%= # link_to 'Pagar', "/integracionpay?orderid="+@order.number.to_s, class: 'btn btn-info btn-block' 
+  %>
+  <script>
+  
+  $('#checkout_form_payment').attr("action","/integracionpay?orderid=<%= @order.number.to_s %> ");
+  $("input[name=commit]").attr("value","Place Order");
+ </script>

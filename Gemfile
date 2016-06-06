@@ -21,7 +21,7 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 gem 'json', '~> 1.8', '>= 1.8.3'
-
+gem 'rmagick', '~> 2.15', '>= 2.15.4'
 gem 'whenever','~> 0.9.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
@@ -29,6 +29,13 @@ gem "passenger"
 gem 'httparty', '~> 0.13.7'
 gem 'net-sftp'
 gem 'net-ssh', '~> 3.0', '>= 3.0.2'
+gem 'spree', '~> 3.1.0.rc1'
+gem 'spree_auth_devise', '~> 3.1.0.rc1'
+gem 'spree_gateway', '~> 3.1.0.rc1'
+gem 'railties'
+
+gem 'rest-client'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -48,8 +55,11 @@ group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
   gem 'capistrano'
-
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'capistrano-rvm'    
+  gem 'capistrano-rails'
+  gem 'capistrano-bundler'
   gem 'spring'
+  
+  
 end
 

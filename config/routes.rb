@@ -1,6 +1,18 @@
 Rails.application.routes.draw do
 
+  resources :boleta
+  resources :boleta
+  resources :boleta
+  # This line mounts Spree's routes at the root of your application.
+  # This means, any requests to URLs such as /products, will go to Spree::ProductsController.
+  # If you would like to change where this engine is mounted, simply change the :at option to something different.
+  #
+  # We ask that you don't use the :as option here, as Spree relies on it being the default of "spree"
+  mount Spree::Core::Engine, at: '/spree'
 
+  patch '/integracionpay', :to =>  "integracionpay#pay", :as => :integracionpay
+  get '/integracionpay/confirm/:id' => "integracionpay#confirm"
+  get '/integracionpay/cancel/:id' => "integracionpay#cancel"
 
   resources :ocs
   resources :skus
@@ -53,6 +65,7 @@ end
  
   get 'inventario/run'
   get 'home/bodegas'
+  get 'home/test'
   get 'receive_orders/receive'
   get 'home/documentacion'
   get 'skus/index'
@@ -87,11 +100,15 @@ end
   get 'inventario/vaciar'
   get 'inventario/mover' => 'inventario#moverMiStock'
   
-  root 'home#index'
+  get 'home/index'
   
   get 'home/listaOrdenesCompra'
   get 'home/productos'
   get 'home/credenciales'
+
+  root 'home#index'
+
+  get 'home/test'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

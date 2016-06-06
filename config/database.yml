@@ -55,5 +55,5 @@ test:
 production:
   <<: *default
   database: ProyectoIntegracion_production
-  username: ProyectoIntegracion
-  password: <%= ENV['PROYECTOINTEGRACION_DATABASE_PASSWORD'] %>
+  username: root
+  password: TF2Zsm8kJXXJkWPs

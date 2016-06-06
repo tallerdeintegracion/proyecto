@@ -1,2 +1,0 @@
-class FacturarController < ApplicationController
-end

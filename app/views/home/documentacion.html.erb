@@ -1,75 +1,77 @@
-<!--h1>Home#documentacion</h1>
-<p>Find me in app/views/home/documentacion.html.erb</p-->
-<!DOCTYPE html ">
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" type="text/css" href="/images/style.css" />
-        <title>Taller de Integración Grupo 3</title>
-    </head>
-
-    <body>
-        <div id="container">
-        	<div id="header">
-            	<h1>Taller de Integración<span class="off">Grupo 3</span></h1>
-            </div>   
-            <div id="menu">
-            	<ul>
-	                <li class="menuitem"><a href="/">Inicio</a></li>
-                    <li class="menuitem"><a href="/home/productos">Productos</a></li>
-                    <li class="menuitem"><a href="/home/bodegas">Bodegas</a></li>
-	                <li class="menuitem"><a href="/home/listaOrdenesCompra">Ordenes de Compra</a></li>
-	                <li class="menuitem"><a href="/home/credenciales">Credenciales</a></li>
-                    <li class="menuitem"><a href="/home/documentacion">Documentación</a></li>
-                </ul>
-            </div>
-    		<div id="content">
-                <div id="content_top"></div>
-                <div id="content_main">
-            	   <div class="success";id="pantalla" style="overflow-y:scroll; overflow-x: hidden; height:600px;">
-                        <h1 id="top">Documentación API</h1>
-                        <p>&emsp;</p>
-                        <p>&emsp;</p>
-                        <a href="#1">1. Descripción de la API</a>
-                        <p>&emsp;</p>
-                        <a href="#2">2. Arquitectura subyacente</a>
-                        <p>&emsp;</p>
-                        <a href="#3">3. Descripción de Sistemas y Métodos</a>
-                        <p>&emsp;</p>
-                        <a href="#4">4. Flujos</a>
-                        <p>&emsp;</p>
-                        <a href="#5">5. Creadores</a>
-                        <p>&emsp;</p>
-                        <h3 id="1">1. Descripción de la API</h3>
-                        <p>&emsp;</p>
-                        <p>Esta API cumple la funcion de permitir interactuar entre empresas de producción para la elaboración de productos manufacturados.</p>
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="320">
+		<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Grupo 3</title>
+		<link rel="alternate" type="application/rss+xml" title="frittt.com" href="feed/index.html">
+		<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/images/css/style.css">
+		<link rel="stylesheet" href="/images/css/prettify.css">
+	</head>
+	<body>
+		<div class="wrapper">
+			<nav>
+				<ul id="menu">
+					<li><a href="/home/index">Inicio</a></li>
+					<li><a href="/home/productos">Productos</a></li>
+					<li><a href="/home/bodegas">Bodegas</a></li>
+					<li><a href="/home/listaOrdenesCompra">Estados</a></li>
+					<li><a href="/home/credenciales">Credenciales</a></li>
+					<li><a href="/home/documentacion">Documentación</a></li>
+					<li><a href="/spree">Spree</a></li>
+				</ul>
+			</nav>
+			<header>
+  				<div class="container">
+    				<h2 class="lone-header">Documentación</h2>
+  				</div>
+			</header>
+			<section>
+  				<div class="container">
+    				<ul class="docs-nav fixed" style="top: 150px;">
+      					<li><strong>Indice</strong></li>
+      					<li><a href="#descrip" class="cc-active">Descripción de la API</a></li>
+					   	<li><a href="#arqui" class="cc-active">Arquitectura subyacente</a></li>
+					    <li><a href="#sistymet" class="cc-active">Descripción de Sistemas y Métodos</a></li>
+					    <li><a href="#flujos" class="cc-active">Flujos</a></li>
+					    <li><a href="#creadores" class="cc-active">Creadores</a></li>
+    				</ul>
+    				<div class="docs-content" style="">
+      					<h3 id="descrip"> 1. Descripción de la API</h3>
+      					<p>Esta API cumple la funcion de permitir interactuar entre empresas de producción para la elaboración de productos manufacturados.</p>
                         <p>Su principal objetivo es administrar el proceso de producción desde el momento de recibir una orden de compra, hasta haber entregado el producto, pasando por la producción, manejos de inventario y facturación.</p>
-                        <a href="#top">Volver</a>
-                        <p>&emsp;</p>
-                        <h3 id="2">2. Arquitectura subyacente</h3>
-                        <p>&emsp;</p>
-                        <p>Este software fue creado basándonos en el modelo vista controlador (MVC) con el objetivo de separar bien las funciones y permitirnos administrar eficientemente los distintos recursos en cada nivel según fuera necesario.</p>
-                        <p>El framework utilizado fue Ruby on Rails (RoR), el cual permite trabajar eficientemente con este patrón, separando en:</p>
-                        <p>El Modelo:</p>
-                        <p>&emsp;-Las tablas de las Bases de Datos</p>
-                        <p>&emsp;-Las migraciones</p>
-                        <p>&emsp;-Las observaciones</p>
-                        <p>&emsp;-Las emigraciones</p>
-                        <p>La Vista:</p>
-                        <p>&emsp;-La interfaz presentada al Usuario para interactuar con el controlador</p>
-                        <p>El Controlador:</p>
-                        <p>&emsp;-La lógica detrás de la aplicación</p>
-                        <p>&emsp;-La lógica detrás de las interacciones con Usuarios</p>
-                        <a href="#top">Volver</a>
-                        <p>&emsp;</p>
-                        <h3 id="3">3. Descripción de Sistemas y Métodos</h3>
-                        <p>&emsp;</p>
-                        <div class="boxed">
-                            <p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/consultar/:id (GET)</span></p>
+      					<h3 id="arqui"> 2. Arquitectura subyacente</h3>
+      					<p>Este software fue creado basándonos en el modelo vista controlador (MVC) con el objetivo de separar bien las funciones y permitirnos administrar eficientemente los distintos recursos en cada nivel según fuera necesario.</p>
+      					<p>El framework utilizado fue Ruby on Rails (RoR), el cual permite trabajar eficientemente con este patrón, separando en:</p>
+      					<p>El Modelo:</p>
+      					<ul>
+        					<li>Las tablas de las Bases de Datos</li>
+        					<li>Las migraciones</li>
+        					<li>Las observaciones</li>
+        					<li>Las emigraciones</li>
+      					</ul>
+      					<p>La Vista:</p>
+      					<ul>
+        					<li>La interfaz presentada al Usuario para interactuar con el controlador</li>
+      					</ul>
+      					<p>El Controlador:</p>
+      					<ul>
+        					<li>La lógica detrás de la aplicación</li>
+        					<li>La lógica detrás de las interacciones con Usuarios</li>
+     	 				</ul>
+      					<p>Diagrama de Componentes:</p>
+      					<img src="/images/DiagramaComp.png" alt="Mountain View" style="width:350px;height:550px;">
+      					<h3 id="sistymet"> 3. Descripción de Sistemas y Métodos</h3>
+      					<div class="boxed">
+                        	<p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/consultar/:id (GET)</span></p>
                             <p>&emsp;Retorna un JSON con el stock del sku</p>
                             <p>&emsp;Parámetros: Ninguno</p>
                             <p>&emsp;Retorna:{"stock": int, "sku": int} </p>
-                        </div>
+                      	</div>
                         <p>&emsp;</p>
                         <div class="boxed">
                             <p>&emsp;<span style="text-decoration: underline;">integra3.ing.puc.cl/api/facturas/recibir/:id (GET)</span></p>
@@ -98,51 +100,44 @@
                             <p>&emsp;Parámetros: Ninguno</p>
                             <p>&emsp;Retorna:{"aceptado": boolean}</p>
                         </div>
-                        <p>&emsp;</p>
-                        <a href="#top">Volver</a>
-                        <p>&emsp;</p>
-                        <p>&emsp;</p>
-                        <h3 id="4">4. Flujos</h3>
-                        <p>&emsp;</p>
-                        <p>1. Flujo FTP</p>
-                        <p>&emsp;</p>
-                        <img src="/images/Flowchart4.png" alt="Mountain View" style="width:350px;height:550px;">
-                        <p>&emsp;</p>
-                        <p>&emsp;</p>
-                        <p>2. Flujo B2B (Compra)</p>
-                        <p>&emsp;</p>
-                        <img src="/images/Flowchart2.png" alt="Mountain View" style="width:650px;height:550px;">
-                        <p>&emsp;</p>
-                        <p>&emsp;</p>
-                        <p>3. Flujo B2B (Venta)</p>
-                        <p>&emsp;</p>
-                        <img src="/images/Flowchart3.png" alt="Mountain View" style="width:650px;height:550px;">
-                        <p>&emsp;</p>
-                        <a href="#top">Volver</a>
-                        <p>&emsp;</p>
-                        <p>&emsp;</p>
-                        <h3 id="5">5. Creadores</h3>
-                        <p>Jefe de Grupo: Benjamín Gimenez</p>
-                        <p>&emsp;</p>
-                        <p>Información de contacto:</p>
-                        <p>Benjamín Gimenez (<a href="mailto:bagimene@uc.cl">bagimene@uc.cl</a>)</p>
-                        <p>Juan Pablo Silva (<a href="mailto:jpsilva6@uc.cl">jpsilva6@uc.cl</a>)</p>
-                        <p>Cristóbal Richards (<a href="mailto:crichard1@uc.cl">crichard1@uc.cl</a>)</p>
-                        <p>Víctor Vidaurre (<a href="mailto:vmvidaurre@uc.cl">vmvidaurre@uc.cl</a>)</p>
-                        <a href="#top">Volver</a>
-                    </div>
-                </div>
-                <div id="content_bottom"></div>
-            </div>
-        </div>
-    </body>
+      					<h3 id="flujos"> 4. Flujos</h3>
+      					<p>1. Flujo FTP</p>
+      					<img src="/images/Flowchart4.png" alt="Mountain View" style="width:350px;height:550px;">
+      					<p>2. Flujo B2B (Compra)</p>
+      					<img src="/images/Flowchart2.png" alt="Mountain View" style="width:650px;height:550px;">
+      					<p>3. Flujo B2B (Venta)</p>
+      					<img src="/images/Flowchart3.png" alt="Mountain View" style="width:650px;height:550px;">
+      					<hr>
+      					<h3 id="creadores"> 5. Creadores</h3>
+      					<p>Jefe de Grupo: Benjamín Gimenez</p>
+      					<p>&emsp;</p>
+      					<p>Información de contacto:</p>
+      					<p>Benjamín Gimenez (<a href="mailto:bagimene@uc.cl">bagimene@uc.cl</a>)</p>
+      					<p>Juan Pablo Silva (<a href="mailto:jpsilva6@uc.cl">jpsilva6@uc.cl</a>)</p>
+      					<p>Cristóbal Richards (<a href="mailto:crichard1@uc.cl">crichard1@uc.cl</a>)</p>
+      					<p>Víctor Vidaurre (<a href="mailto:vmvidaurre@uc.cl">vmvidaurre@uc.cl</a>)</p>
+      					<p>&emsp;</p>
+      					<p>&emsp;</p>
+      					<p>&emsp;</p>
+      					<p>&emsp;</p>
+      					<p>&emsp;</p>
+      					<p>&emsp;</p>
+      					<p>&emsp;</p>
+    				</div>
+  				</div>
+			</section>
+		</div>
+		<script src="/assets/jquery.min.js"></script>
+		<script type="text/javascript" src="/assets/prettify.js"></script>
+		<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script>
+		<script src="/assets/layout.js"></script>
+	</body>
 </html>
 <style>
-    div { width: 100%; }
     .success { background-color: #FFFFFF; }
     .boxed {
-        background-color: white; 
+        background-color: white;
         width: 600px;
-        border: 1px solid black ;
+        border: 1px solid black;
     }
 </style>

@@ -1,82 +1,88 @@
-
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" type="text/css" href="/images/style.css" />
-		<title>Taller de Integración Grupo 3</title>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="320">
+		<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Grupo 3</title>
+		<link rel="alternate" type="application/rss+xml" title="frittt.com" href="feed/index.html">
+		<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/images/css/style.css">
+		<link rel="stylesheet" href="/images/css/prettify.css">
 	</head>
 	<body>
-		<div id="container">
-	        <div id="header">
-	            <h1>Taller de Integración<span class="off">Grupo 3</span></h1>
-	        </div>   
-	        <div id="menu">
-	            <ul>
-	                <li class="menuitem"><a href="/">Inicio</a></li>
-                    <li class="menuitem"><a href="/home/productos">Productos</a></li>
-                    <li class="menuitem"><a href="/home/bodegas">Bodegas</a></li>
-	                <li class="menuitem"><a href="/home/listaOrdenesCompra">Ordenes de Compra</a></li>
-	                <li class="menuitem"><a href="/home/credenciales">Credenciales</a></li>
-                    <li class="menuitem"><a href="/home/documentacion">Documentación</a></li>
-	            </ul>
-	        </div>
-	   </div>
-	   	        <div class="boxed">
-                <h1>Bodegas</h1>
-				<p>&emsp;</p>
-				<% @almacenesInfo.each do |almacen| %>
-				<p>&emsp;</p>
-				<h3>Almacen: <%= almacen["_id"]%>  </h3>
-				<h3>Total Space  <%= almacen["totalSpace"]%> </h3>
-				<h3>Used Space <%= almacen["usedSpace"]%></h3>  
-				<%
-					despacho =almacen["despacho"]
-				    recepcion =almacen["recepcion"]
-				    pulmon =almacen["pulmon"]
-				    tipo = "Normal"
-				    if pulmon == true
-				  	  tipo ="Pulmon"
-					end 
-				    if recepcion == true
-				      tipo ="Recepcion"
-				    end
-				    if despacho == true
-				      tipo ="Despacho"
-				    end  
-				%>
-				<h3>Tipo: <%= tipo%>  </h3>
-				<table style="width:100%">
-				  	<tr bgcolor="#B3B5B5">
-				    	<th>SKU</th>
-				    	<th>Nombre</th>		
-				    	<th>Cantidad</th>
-				  	</tr>
-				  	<% @products = JSON.parse(getSKUWithStock(almacen["_id"]))%>
-				  	<% @products.each do |product| %>	
-				  	<tr>
-				  		<th><%= product["_id"] %>	</th>
-				    	<th><%= Sku.find_by(sku: product["_id"]).descripcion%></th>		
-				    	<th><%= product["total"] %></th>
-				    </tr>
-					<% end %>
-				</table>
-				<% end %>
-            </div>
+		<div class="wrapper">
+			<nav>
+				<ul id="menu">
+					<li><a href="/home/index">Inicio</a></li>
+					<li><a href="/home/productos">Productos</a></li>
+					<li><a href="/home/bodegas">Bodegas</a></li>
+					<li><a href="/home/listaOrdenesCompra">Estados</a></li>
+					<li><a href="/home/credenciales">Credenciales</a></li>
+					<li><a href="/home/documentacion">Documentación</a></li>
+					<li><a href="/spree">Spree</a></li>
+				</ul>
+			</nav>
+			<header>
+				<div class="container">
+			    	<h2 class="lone-header">Bodegas</h2>
+			  	</div>
+			</header>
+			<section>
+			  	<div class="container">
+			    	<div class="docs-content" style="">
+			      		<div class="boxed">
+							<p>&emsp;</p>
+							<% @almacenesInfo.each do |almacen| %>
+							<p>&emsp;</p>
+							<h3>Almacen: <%= almacen["_id"]%>  </h3>
+							<h3>Total Space  <%= almacen["totalSpace"]%> </h3>
+							<h3>Used Space <%= almacen["usedSpace"]%></h3>
+							<%
+								despacho =almacen["despacho"]
+							    recepcion =almacen["recepcion"]
+							    pulmon =almacen["pulmon"]
+							    tipo = "Normal"
+							    if pulmon == true
+							  	  tipo ="Pulmon"
+								end
+							    if recepcion == true
+							      tipo ="Recepcion"
+							    end
+							    if despacho == true
+							      tipo ="Despacho"
+							    end
+							%>
+							<h3>Tipo: <%= tipo%>  </h3>
+							<table style="width:100%">
+							  	<tr bgcolor="#B3B5B5">
+							    	<th>SKU</th>
+							    	<th>Nombre</th>
+							    	<th>Cantidad</th>
+							  	</tr>
+							  	<% @products = JSON.parse(@sist.getSKUWithStock(almacen["_id"]))%>
+							  	<% @products.each do |product| %>
+							  	<tr>
+							  		<th><%= product["_id"] %>	</th>
+							    	<th><%= Sku.find_by(sku: product["_id"]).descripcion%></th>
+							    	<th><%= product["total"] %></th>
+							    </tr>
+								<% end %>
+							</table>
+							<% end %>
+			            </div>
+			    	</div>
+			  	</div>
+			</section>
+		</div>
+		<script src="/assets/jquery.min.js"></script>
+		<script type="text/javascript" src="/assets/prettify.js"></script>
+		<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script>
+		<script src="/assets/layout.js"></script>
 	</body>
 </html>
 <style>
-	.boxed {
-        background-color: white; 
-        width: 1000px;
-        border: 1px solid black ;
-		clear: both;
-    }
-	table, th, td {
-    	border: 1px solid black;
-    	border-collapse: collapse;
-	}
-	th, td {
-    	padding: 5px;
-	}
+    .success { background-color: #FFFFFF; }
 </style>
