@@ -57,15 +57,22 @@
             				<th>id Factura</th>
             				<th>id OC</th>
             				<th>Estado Factura</th>
-            				<th>Monto</th>
             			</tr>
-            			<% @ocsdb = Oc.all %>
+            			<% @ocsdb = Oc.where.not(factura: "")
+						 %>
             			<% @ocsdb.each do |ocdb| %>
+						<%
+						@est = "";
+						if(ocdb["pago"] != "")
+							est = "Creada"
+						else
+							est = "Pagada"
+						end
+						 %>
             			<tr>
               				<th><%= ocdb["factura"] %>  </th>
               				<th><%= ocdb["oc"] %> </th>
-              				<th><%= ocdb[""] %> </th>
-              				<th><%= ocdb[""] %> </th>
+              				<th><%=  est %> </th>
             			</tr>
           				<% end %>
         			</table>
@@ -74,16 +81,15 @@
             			<tr bgcolor="#B3B5B5">
             				<th>id Pago</th>
             				<th>id Factura</th>
-            				<th>Fecha</th>
-            				<th>Monto</th>
+            				<th>Estado</th>
+
             			</tr>
-            			<% @ocsdb = Oc.all %>
-            			<% @ocsdb.each do |ocdb| %>
+            			<% @ocsdb1 = Oc.where.not(pago: "") %>
+            			<% @ocsdb1.each do |ocdb| %>
             			<tr>
               				<th><%= ocdb["pago"] %> </th>
               				<th><%= ocdb["factura"] %>  </th>
-              				<th><%= ocdb[""] %> </th>
-              				<th><%= ocdb[""] %> </th>
+              				<th><%= "Pagada" %> </th>
             			</tr>
           				<% end %>
         			</table>
