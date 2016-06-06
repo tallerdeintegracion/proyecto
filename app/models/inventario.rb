@@ -692,8 +692,11 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     sist = Sistema.new
     definirVariables
     puts"comenzando el despacho "
-    index = 1
+    
+    index = 0
+   
     list.each do |stockRequerido|
+    index = index+1
      if stockRequerido != 0
       sku = idToSku(index).to_s
       resp = Precio.find_by(sku:sku)
@@ -713,16 +716,16 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
       almacenOrigen = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
 
       moverInventarioDespacho(sku, stockRequerido, almacenOrigen)
-      despacharFTP(sku, stockRequerido, direccion, precio, idOc)
-      index = index+1
+      despacharFTP(sku, stockRequerido, direccion, precio, idOc)     
      end 
+
     end
      puts"despacho exitoso"
   end  
   
 
   def idToSku(id) 
-      
+    #[8, 6, 14, 31, 49, 55] 
     if id == 1
       return 8
     end
