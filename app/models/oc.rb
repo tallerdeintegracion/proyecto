@@ -28,8 +28,8 @@ def recibirOC(id)
       Rails.logger.debug("debug:: buscamos al otro grupo")
 
       nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
-      url = "http://localhost:8080/api/facturas/recibir/" + fact["_id"]
-      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/facturas/recibir/"  + fact["_id"]
+      #url = "http://localhost:8080/api/facturas/recibir/" + fact["_id"]
+      url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/facturas/recibir/"  + fact["_id"]
       Rails.logger.debug("debug:: le avisamos al otro grupo")
 
       ans = sist.httpGetRequest(url ,nil)
@@ -159,8 +159,8 @@ def analizarFactura(id)
   def avisarTransferencia(factura,response)
     sist = Sistema.new
     nOtroGrupo = Grupo.find_by(idGrupo: factura[0]["proveedor"])["nGrupo"]
-    url = "http://localhost:8080/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
-    #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+    #url = "http://localhost:8080/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+    url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
     Rails.logger.debug("debug:: se avisa la transferencia")
 
     ans = sist.httpGetRequest(url ,nil)
@@ -234,8 +234,8 @@ def analizarFactura(id)
       ## Gatillamos el envio desde aqui si es posible?
       res = invent.verSiEnviar(idFactura)
       nOtroGrupo = Grupo.find_by(factura: idFactura)["nGrupo"]
-      url = "http://localhost/api/despacho/recibir/" + fact["_id"]
-      #url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
+      #url = "http://localhost/api/despacho/recibir/" + fact["_id"]
+      url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
       ans = sist.httpGetRequest(url ,nil)
       Rails.logger.debug("debug:: le avisamos al otro grupo")
 

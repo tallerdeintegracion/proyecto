@@ -1,22 +1,22 @@
 class Sistema < ActiveRecord::Base
 
 	def idGrupo
-		return "571262b8a980ba030058ab51"
+		return "572aac69bdb6d403005fb044"
 	end
 	def idBanco
-		return "571262c3a980ba030058ab5d"
+		return "572aac69bdb6d403005fb050"
 	end
 	def bodegaBaseUrl
-		return 'http://integracion-2016-dev.herokuapp.com/bodega'
+		return 'http://integracion-2016-prod.herokuapp.com/bodega'
 	end
 	def bancoBaseUrl
-		return 'http://mare.ing.puc.cl/banco'
+		return 'http://moto.ing.puc.cl/banco'
 	end
 	def ocBaseUrl
-		return 'http://mare.ing.puc.cl/oc'
+		return 'http://moto.ing.puc.cl/oc'
 	end
 	def facturaBaseUrl
-		return 'http://mare.ing.puc.cl/facturas'
+		return 'http://moto.ing.puc.cl/facturas'
 	end
 
 
@@ -457,7 +457,7 @@ class Sistema < ActiveRecord::Base
 
 	def findKeys
 		
-		key = 'GKTSVmI778e8Mjg' # '6xMNP5uAUVjt'
+		key =  '6xMNP5uAUVjt' #'GKTSVmI778e8Mjg' 
 		return key
 	end
 
