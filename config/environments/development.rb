@@ -41,4 +41,6 @@ Rails.application.configure do
   
   config.serve_static_files = true
 
+  config.action_mailer.default_url_options = { :host => "integra3.ing.puc.cl" }
+  config.action_mailer.delivery_method = :sendmail
 end
