@@ -3,7 +3,9 @@ class HomeController < ApplicationController
   layout false
   
   def index
-
+    social = SocialMedium.new
+    social.publishToSocialMedia("6" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
+    render :text => "Search for messages Method"
 
   end
 

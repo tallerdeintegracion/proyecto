@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :social_media
   resources :boleta
   resources :boleta
   resources :boleta
@@ -62,7 +63,7 @@ end
 #  post 'api/pagos/recibir/:id' => 'api#pagosRecibir'
 #  post 'api/oc/recibir/:id' => 'api#ocRecibir'
 
- 
+  get 'socialmedia/search'
   get 'inventario/run'
   get 'home/bodegas'
   get 'home/test'
