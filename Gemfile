@@ -16,6 +16,7 @@ gem 'coffee-rails', '~> 4.1.0'
 gem "amqp", "~> 1.5.0"
 gem "bunny", ">= 2.3.1"
 gem 'twitter', '~> 5.16'
+gem "koala", "~> 2.2"
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
