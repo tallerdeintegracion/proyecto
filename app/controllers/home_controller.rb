@@ -3,9 +3,9 @@ class HomeController < ApplicationController
   layout false
   
   def index
-    social = SocialMedium.new
-    social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
-    render :text => "Search for messages Method"
+    #social = SocialMedium.new
+    #social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
+    #render :text => "Search for messages Method"
 
   end
 
@@ -53,6 +53,14 @@ class HomeController < ApplicationController
       ];
       #@options = {}
       render :text => "hola"
+  end
+
+  def recibirStock
+    Thread.new do
+        inv = Inventario.new
+        inv.definirVariables
+        inv.moverInventario(31,1503,"571262aaa980ba030058a23d","571262aaa980ba030058a1f3")
+    end
   end
 
 end

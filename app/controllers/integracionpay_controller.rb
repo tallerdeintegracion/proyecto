@@ -1,15 +1,20 @@
 class IntegracionpayController < ApplicationController
-
+## Ambiente: dev 
+## Cambiar: l34
    layout false
    
    def pay
+      puts "Entramos al pago"
       val = params[:orderid]
       sist = Sistema.new
       ord = ::Spree::Order.find_by(number: val.to_s)
       ### TODO ver si hay stock ###
+      puts "Encontramos la orden"
       
       
       products = ::Spree::LineItem.where(order_id: ord["id"]).order("variant_id DESC")
+      puts "Entramos los productos"
+
       skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
       checkStock = [0,0,0,0,0,0]
       products.each do |prod|
@@ -24,13 +29,19 @@ class IntegracionpayController < ApplicationController
         redirect_to "/spree/", :alert => "No hay suficiente stock"
         return
       end
-      
+      userId = ord[:user_id]
+      if ord[:user_id] == nil
+        userId = 0
+      end
+
       puts ord.to_json.to_s
-      bol = sist.emitirBoleta(ord[:user_id],ord[:total].to_i)
+      bol = sist.emitirBoleta(userId,ord[:total].to_i)
       boleta = JSON.parse(bol)
       Boletum.find_or_create_by(boleta_id: boleta["_id"].to_s, orden_id: val.to_s, estado: "Creada", total: ord["total"].to_i)
       
-      redirect_to "http://integracion-2016-prod.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fconfirm/"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fcancel/"+boleta["_id"].to_s+"&boletaI
+      #redirect_to "http://integracion-2016-prod.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fconfirm/"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fcancel/"+boleta["_id"].to_s+"&boletaI
+#d="+boleta["_id"].to_s
+        redirect_to "http://integracion-2016-dev.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Flocalhost%3A%0A3000%2Fintegracionpay%2Fconfirm%2F"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Flocalhost%3A%0A3000%2Fintegracionpay%2Fcancel%2F"+boleta["_id"].to_s+"&boletaI
 d="+boleta["_id"].to_s
       return
    end
