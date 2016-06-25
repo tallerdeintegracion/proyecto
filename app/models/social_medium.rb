@@ -2,7 +2,65 @@ class SocialMedium < ActiveRecord::Base
 
 	def searchMessages
 		
+		require "bunny" # don't forget to put gem "bunny" in your Gemfile 
+		require 'amqp'
+		require 'json'
+		b = Bunny.new("amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com/lbhfijnx")
+		b.start
+
+		ch   = b.create_channel
+		#result = ch.exchange_declare(exchange='promocion', type='fanout')
+
+		q = ch.queue('ofertas', :auto_delete => true, :exclusive => false, :durable=>false)
+		#puts "mensajes " + q.message_count.to_s
+		messages = q.message_count
+
+		while messages > 0
+
+			msg = q.pop
+			msg_hash = JSON.parse(msg)
+			sku = msg_hash['sku']
+			precio = msg_hash['precio']
+			inicio = msg_hash['inicio']
+			publicar = msg_hash['publicar']
+			codigo = msg_hash['codigo']
+			
+			puts "el sku es " + sku 
+
+
+
+			messages = q.message_count
+		end
+
+
+		#{"sku":"25","precio":844,"inicio":1466558218578,"fin":1466572618578,"publicar":true,"codigo":"integrapromo41447"}
+
+		ch.close
+		b.stop 
+
 	end
+
+
+	def sendMessageUrl
+		require "bunny" # don't forget to put gem "bunny" in your Gemfile 
+		require 'amqp'
+		b = Bunny.new("amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com/lbhfijnx")
+		#amqp://user:pass@host:10000/vhost
+		#{}"amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com:10000/lbhfijnx"
+		puts "bunny " + b.to_s
+		b.start # start a communication session with the amqp server
+		puts b.to_s
+		ch   = b.create_channel
+		#result = ch.exchange_declare(exchange='promocion', type='fanout')
+		e = ch.exchange("ofertas")
+		e.publish('{"sku":"25","precio":844,"inicio":1466558218578,"fin":1466572618578,"publicar":true,"codigo":"integrapromo41447"}', :key => '')
+		#q = ch.queue("develop_promociones", :durable => true)
+		ch.close
+	
+		b.stop # close the connection
+
+
+	end	
 
 	def sendMessage
 		
@@ -17,12 +75,12 @@ class SocialMedium < ActiveRecord::Base
 		#result = ch.exchange_declare(exchange='promocion', type='fanout')
 		e = ch.exchange("promociones")
 		e.publish("Hello, everybody!", :key => 'promocion')
-
-
 		#q = ch.queue("develop_promociones", :durable => true)
 		ch.close
 	
 		b.stop # close the connection
+
+		
 	end
 
 	def publishToSocialMedia(sku , precio, inicio , fin , codigo )
@@ -35,15 +93,11 @@ class SocialMedium < ActiveRecord::Base
 	def publishFacebook(name , sku , precio, inicio , fin , codigo  )
 		require 'koala'
 
-		user_token = 'EAARmLDyuvpoBAMyb4s7KeQXRA1KL5JzZBX1Q0aQT3E50NBDWKL9yAfi7xDITULqZB2SQcoLNgbNdnM2VbiQM95yYZAtyBqWmCZAHvMKPH6XSrfzwKpMeO6ZCjws6rHb0OVbgwM0n9pqJJqaI7SQMBrbiFRCmMBxdNxcwFPvmGK3ps2YNcznZBL'
-		app_token  = '1238240089521818|HwmsfvhgWV8rKtWW13k5FUqnE-8'
-		graph = Koala::Facebook::API.new(user_token)
-		pages = graph.get_connections('me', 'accounts')
-		page_token = graph.get_page_access_token(1224653564211958)
-	
- 		Rails.logger.debug("token " + graph.to_s)
-		page_graph = Koala::Facebook::API.new(page_token)
+		#Non expiring token
+ 		page_token ='EAARmLDyuvpoBADZCli0Lm4pTeIZC9CMZAHGFcCcoHcGYZCK26aW3swdpL2lb3vkj0b4dIGj30SiJLc02qMLXRlwmL7oO6LYZC5Piiq0AOe7FLBAdQcbcGScC6Ve8WJ4gUNdsr9oFqZA3BrFPwUhOP2i7rzaN6dIbelsiuSuTZCFInuxQ3YjWHxu3koBr58eEIwZD'
+ 	
 
+		page_graph = Koala::Facebook::API.new(page_token)
 		page_graph.get_connection('me', 'feed') # the page's wall
 
 		message = makeMessage(name , sku , precio, inicio , fin , codigo  )
@@ -54,10 +108,8 @@ class SocialMedium < ActiveRecord::Base
 											    :picture =>"http://integra3.ing.puc.cl" + url 
 											} ) # post as page, requires new publish_pages permission
 													
-	
-
-
 	end	
+
 	def makeMessage(name , sku , precio, inicio , fin , codigo  )
 		message = "Promocion: " + name + " a " + precio.to_s + '$'
 		message= message + "\n Desde: "+ inicio + " hasta el " + fin + "\n"
