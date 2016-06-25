@@ -4,6 +4,7 @@ class HomeController < ApplicationController
   
   def index
 
+
   end
 
   def bodegas
@@ -16,11 +17,13 @@ class HomeController < ApplicationController
   end
 
   def test
+
     social = SocialMedium.new
     social.searchMessages
     #social.sendMessageUrl
     #social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
     render :text => "Search for messages Method"
+
   end
 
   def datosDashboard

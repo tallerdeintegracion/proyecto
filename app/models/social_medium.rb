@@ -18,18 +18,31 @@ class SocialMedium < ActiveRecord::Base
 		while messages > 0
 
 			msg = q.pop
+			msg = msg[2].to_s
 			msg_hash = JSON.parse(msg)
 			sku = msg_hash['sku']
 			precio = msg_hash['precio']
 			inicio = msg_hash['inicio']
+			fin = msg_hash['fin']	
 			publicar = msg_hash['publicar']
 			codigo = msg_hash['codigo']
-			
+
 			puts "el sku es " + sku 
+			puts "precio " + precio.to_s
+			puts "inicio " +  inicio.to_s
+			puts "fin " + fin.to_s
+			puts "publicar " + publicar.to_s
+			puts "codigo " + codigo
 
-
+			if(publicar == true )
+				if (ourProduct(sku) == true)
+					publishToSocialMedia(sku , precio, inicio.to_s, fin.to_s , codigo )
+					puts "La promocion a sido publicada en redes sociales"
+				end
+			end
 
 			messages = q.message_count
+
 		end
 
 
@@ -40,7 +53,13 @@ class SocialMedium < ActiveRecord::Base
 
 	end
 
-
+	def ourProduct(sku)
+		if sku == "8"|| sku == "31" || sku == "14" || sku == "55" || sku == "49" || sku == "6"
+			return true
+		end	
+		return false
+		
+	end
 	def sendMessageUrl
 		require "bunny" # don't forget to put gem "bunny" in your Gemfile 
 		require 'amqp'
@@ -61,6 +80,8 @@ class SocialMedium < ActiveRecord::Base
 
 
 	end	
+
+
 
 	def sendMessage
 		
@@ -94,9 +115,8 @@ class SocialMedium < ActiveRecord::Base
 		require 'koala'
 
 		#Non expiring token
- 		page_token ='EAARmLDyuvpoBADZCli0Lm4pTeIZC9CMZAHGFcCcoHcGYZCK26aW3swdpL2lb3vkj0b4dIGj30SiJLc02qMLXRlwmL7oO6LYZC5Piiq0AOe7FLBAdQcbcGScC6Ve8WJ4gUNdsr9oFqZA3BrFPwUhOP2i7rzaN6dIbelsiuSuTZCFInuxQ3YjWHxu3koBr58eEIwZD'
- 	
-
+ 		page_token ='EAARmLDyuvpoBAAZCDBt3ZBRUAT6SlNPljwKOniZArCaZBJFsSOlJ6W1efpv3MWGSNQY5WNHwG0PfZBaeCPsQeZBzYq1viagaXIPv5tZB2usxknwCvGYZCJ1uuUH9kXZCiDRkT34ZC1XKQMtTZCPEgt9zYhq6J4M5rtZADA87vs6pEnQlroiQULVDldcm'
+ 		
 		page_graph = Koala::Facebook::API.new(page_token)
 		page_graph.get_connection('me', 'feed') # the page's wall
 

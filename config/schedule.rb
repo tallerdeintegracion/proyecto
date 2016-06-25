@@ -11,15 +11,23 @@
 set :environment, "production"
 set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log"}
 
-every 5.minute do
+every 50.minute do
 
  runner "ReceiveOrdersController.run", :output => 'log/shedule_logs.log' 
 
 end
 
-every 1.minute do
+every 50.minute do
 
  runner "InventarioController.run", :output => 'log/inventario_logs.log'
+   
+
+end
+
+
+every 1.minute do
+
+ runner "InventarioController.run", :output => 'log/promotion_logs.log'
    
 
 end
