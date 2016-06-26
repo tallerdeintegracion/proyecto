@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   mount Spree::Core::Engine, at: '/spree'
 
   patch '/integracionpay', :to =>  "integracionpay#pay", :as => :integracionpay
+  get '/integracionpay' =>  "integracionpay#pay"
   get '/integracionpay/confirm/:id' => "integracionpay#confirm"
   get '/integracionpay/cancel/:id' => "integracionpay#cancel"
 
