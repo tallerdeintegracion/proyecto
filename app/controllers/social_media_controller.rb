@@ -5,8 +5,9 @@ class SocialMediaController < ApplicationController
   def self.search
     
     social = SocialMedium.new
+    puts "lookig form messages"
     social.searchMessages()
-    render :text => "Search for messages Method"
+    #render :text => "Search for messages Method"
   end
   # GET /social_media
   # GET /social_media.json
