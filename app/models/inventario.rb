@@ -778,7 +778,27 @@ end
       return 55
     end
   end 
-
+  def SKUToId(id) 
+    #[8, 6, 14, 31, 49, 55] 
+    if id == 8
+      return 1
+    end
+    if id == 6
+      return 2
+    end
+    if id == 14
+      return 3
+    end
+    if id == 31
+      return 4
+    end
+    if id == 49
+      return 5
+    end
+    if id == 55
+      return 6
+    end
+  end 
   
   def despacharFTP(sku, cantidad, direccion,precio,idOC)
     sist = Sistema.new

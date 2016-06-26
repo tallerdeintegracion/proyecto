@@ -1,3 +1,4 @@
+require 'bigdecimal'
 class SocialMedium < ActiveRecord::Base
 
 	def searchMessages
@@ -107,8 +108,21 @@ class SocialMedium < ActiveRecord::Base
 		end	
 		if(sku == '6')
 			return '/images/FotoCrema.jpeg'
-		end	
+		end		
+	end
 
+	def insertPromotionSpree(sku,precio,inicio,fin,codigo)
+
+		#puts Spree::Calculator.find_by(type:"Spree::Calculator::ProductWithOptionValueCalculator").to_json.to_s
+		promocion = Spree::Promotion.find_or_create_by(description: "La media promo" ,expires_at: fin ,starts_at: inicio ,name:"Nueva Promocion",type: nil,usage_limit:nil,match_policy:"all", code: codigo, advertise: 0, path: nil, created_at: "",updated_at: "",promotion_category_id: nil )
+		action = Spree::PromotionAction.create(promotion_id: promocion[:id],position:nil,type: "Spree::Promotion::Actions::CreateAdjustment",deleted_at: nil)
+		inv = Inventario.new
+		pref = { :product_price => BigDecimal.new(precio), :idProducto => inv.SKUToId(sku)} ##cambiar
 		
+		Spree::Calculator.create(type: "Spree::Calculator::ProductWithOptionValueCalculator",calculable_id: action[:id] ,calculable_type: "Spree::PromotionAction", created_at: "",updated_at:"", preferences: pref) ##Faltan los preferences
+
+		toDelete = Spree::Calculator.find_by(type: "Spree::Calculator::FlatPercentItemTotal",calculable_id: action[:id])
+
+		toDelete.destroy
 	end
 end

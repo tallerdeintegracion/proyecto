@@ -59,8 +59,13 @@ class HomeController < ApplicationController
     Thread.new do
         inv = Inventario.new
         inv.definirVariables
-        inv.moverInventario(31,1503,"571262aaa980ba030058a23d","571262aaa980ba030058a1f3")
+        inv.moverInventario(8,200,"571262aaa980ba030058a1f1","571262aaa980ba030058a1f3")
     end
+  end
+
+  def insertPromotion
+    sm = SocialMedium.new
+    sm.insertPromotionSpree(55,1500,"2016-01-01 00:00:00","2016-08-08 00:00:00","webeta")
   end
 
 end
