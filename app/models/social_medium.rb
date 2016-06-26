@@ -1,8 +1,88 @@
+require 'bigdecimal'
 class SocialMedium < ActiveRecord::Base
 
 	def searchMessages
 		
+		require "bunny" # don't forget to put gem "bunny" in your Gemfile 
+		require 'amqp'
+		require 'json'
+		b = Bunny.new("amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com/lbhfijnx")
+		b.start
+
+		ch   = b.create_channel
+		#result = ch.exchange_declare(exchange='promocion', type='fanout')
+
+		q = ch.queue('ofertas', :auto_delete => true, :exclusive => false, :durable=>false)
+		#puts "mensajes " + q.message_count.to_s
+		messages = q.message_count
+
+		while messages > 0
+
+			msg = q.pop
+			msg = msg[2].to_s
+			msg_hash = JSON.parse(msg)
+			sku = msg_hash['sku']
+			precio = msg_hash['precio']
+			inicio = msg_hash['inicio']
+			fin = msg_hash['fin']	
+			publicar = msg_hash['publicar']
+			codigo = msg_hash['codigo']
+
+			puts "el sku es " + sku 
+			puts "precio " + precio.to_s
+			puts "inicio " +  inicio.to_s
+			puts "fin " + fin.to_s
+			puts "publicar " + publicar.to_s
+			puts "codigo " + codigo
+
+			if(publicar == true )
+				if (ourProduct(sku) == true)
+					publishToSocialMedia(sku , precio, inicio.to_s, fin.to_s , codigo )
+					puts "La promocion a sido publicada en redes sociales"
+				end
+			end
+
+			messages = q.message_count
+
+		end
+
+
+		#{"sku":"25","precio":844,"inicio":1466558218578,"fin":1466572618578,"publicar":true,"codigo":"integrapromo41447"}
+
+		ch.close
+		b.stop 
+
 	end
+
+	def ourProduct(sku)
+		if sku == "8"|| sku == "31" || sku == "14" || sku == "55" || sku == "49" || sku == "6"
+			return true
+		end	
+		return false
+		
+	end
+	def sendMessageUrl
+		require "bunny" # don't forget to put gem "bunny" in your Gemfile 
+		require 'amqp'
+		b = Bunny.new("amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com/lbhfijnx")
+		#amqp://user:pass@host:10000/vhost
+		#{}"amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com:10000/lbhfijnx"
+		puts "bunny " + b.to_s
+		b.start # start a communication session with the amqp server
+		puts b.to_s
+		ch   = b.create_channel
+		#result = ch.exchange_declare(exchange='promocion', type='fanout')
+		e = ch.exchange("ofertas")
+		e.publish('{"sku":"25","precio":844,"inicio":1466558218578,"fin":1466572618578,"publicar":true,"codigo":"integrapromo41447"}', :key => '')
+		#q = ch.queue("develop_promociones", :durable => true)
+		ch.close
+	
+		b.stop # close the connection
+
+
+	end	
+
+
 
 	def sendMessage
 		
@@ -17,12 +97,12 @@ class SocialMedium < ActiveRecord::Base
 		#result = ch.exchange_declare(exchange='promocion', type='fanout')
 		e = ch.exchange("promociones")
 		e.publish("Hello, everybody!", :key => 'promocion')
-
-
 		#q = ch.queue("develop_promociones", :durable => true)
 		ch.close
 	
 		b.stop # close the connection
+
+		
 	end
 
 	def publishToSocialMedia(sku , precio, inicio , fin , codigo )
@@ -35,15 +115,10 @@ class SocialMedium < ActiveRecord::Base
 	def publishFacebook(name , sku , precio, inicio , fin , codigo  )
 		require 'koala'
 
-		user_token = 'EAARmLDyuvpoBAMyb4s7KeQXRA1KL5JzZBX1Q0aQT3E50NBDWKL9yAfi7xDITULqZB2SQcoLNgbNdnM2VbiQM95yYZAtyBqWmCZAHvMKPH6XSrfzwKpMeO6ZCjws6rHb0OVbgwM0n9pqJJqaI7SQMBrbiFRCmMBxdNxcwFPvmGK3ps2YNcznZBL'
-		app_token  = '1238240089521818|HwmsfvhgWV8rKtWW13k5FUqnE-8'
-		graph = Koala::Facebook::API.new(user_token)
-		pages = graph.get_connections('me', 'accounts')
-		page_token = graph.get_page_access_token(1224653564211958)
-	
- 		Rails.logger.debug("token " + graph.to_s)
+		#Non expiring token
+ 		page_token ='EAARmLDyuvpoBAAZCDBt3ZBRUAT6SlNPljwKOniZArCaZBJFsSOlJ6W1efpv3MWGSNQY5WNHwG0PfZBaeCPsQeZBzYq1viagaXIPv5tZB2usxknwCvGYZCJ1uuUH9kXZCiDRkT34ZC1XKQMtTZCPEgt9zYhq6J4M5rtZADA87vs6pEnQlroiQULVDldcm'
+ 		
 		page_graph = Koala::Facebook::API.new(page_token)
-
 		page_graph.get_connection('me', 'feed') # the page's wall
 
 		message = makeMessage(name , sku , precio, inicio , fin , codigo  )
@@ -54,10 +129,8 @@ class SocialMedium < ActiveRecord::Base
 											    :picture =>"http://integra3.ing.puc.cl" + url 
 											} ) # post as page, requires new publish_pages permission
 													
-	
-
-
 	end	
+
 	def makeMessage(name , sku , precio, inicio , fin , codigo  )
 		message = "Promocion: " + name + " a " + precio.to_s + '$'
 		message= message + "\n Desde: "+ inicio + " hasta el " + fin + "\n"
@@ -107,8 +180,21 @@ class SocialMedium < ActiveRecord::Base
 		end	
 		if(sku == '6')
 			return '/images/FotoCrema.jpeg'
-		end	
+		end		
+	end
 
+	def insertPromotionSpree(sku,precio,inicio,fin,codigo)
+
+		#puts Spree::Calculator.find_by(type:"Spree::Calculator::ProductWithOptionValueCalculator").to_json.to_s
+		promocion = Spree::Promotion.find_or_create_by(description: "La media promo" ,expires_at: fin ,starts_at: inicio ,name:"Nueva Promocion",type: nil,usage_limit:nil,match_policy:"all", code: codigo, advertise: 0, path: nil, created_at: "",updated_at: "",promotion_category_id: nil )
+		action = Spree::PromotionAction.create(promotion_id: promocion[:id],position:nil,type: "Spree::Promotion::Actions::CreateAdjustment",deleted_at: nil)
+		inv = Inventario.new
+		pref = { :product_price => BigDecimal.new(precio), :idProducto => inv.SKUToId(sku)} ##cambiar
 		
+		Spree::Calculator.create(type: "Spree::Calculator::ProductWithOptionValueCalculator",calculable_id: action[:id] ,calculable_type: "Spree::PromotionAction", created_at: "",updated_at:"", preferences: pref) ##Faltan los preferences
+
+		toDelete = Spree::Calculator.find_by(type: "Spree::Calculator::FlatPercentItemTotal",calculable_id: action[:id])
+
+		toDelete.destroy
 	end
 end

@@ -3,9 +3,7 @@ class HomeController < ApplicationController
   layout false
   
   def index
-    social = SocialMedium.new
-    social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
-    render :text => "Search for messages Method"
+
 
   end
 
@@ -91,4 +89,16 @@ class HomeController < ApplicationController
     
   end
   
+  def recibirStock
+    Thread.new do
+        inv = Inventario.new
+        inv.definirVariables
+        inv.moverInventario(8,200,"571262aaa980ba030058a1f1","571262aaa980ba030058a1f3")
+    end
+  end
+
+  def insertPromotion
+    sm = SocialMedium.new
+    sm.insertPromotionSpree(55,1500,"2016-01-01 00:00:00","2016-08-08 00:00:00","webeta")
+  end
 end

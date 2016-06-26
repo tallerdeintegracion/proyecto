@@ -113,7 +113,16 @@ end
   get 'home/test'
 
   get 'home/dashboard'
+  get 'home/recibirStock'
+
+  get 'home/insertPromotion'
   
+Spree::Core::Engine.add_routes do
+  namespace :api, :defaults => { :format => 'json' } do
+    resources :option_values
+  end
+end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

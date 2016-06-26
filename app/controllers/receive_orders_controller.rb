@@ -1,5 +1,7 @@
 class ReceiveOrdersController < ApplicationController
-  
+
+## Aqui no hay que cambiar nada para pasar a o de produccion
+
 extend  ApplicationHelper
 extend ReceiveOrdersHelper
 extend InventarioHelper
@@ -29,7 +31,7 @@ def self.run
 end
 
 def self.definirVariables 
-      
+=begin      
     @returnPoint = 400
     @bodegaPrincipal = "572aad41bdb6d403005fb1c1"
     @bodegaRecepcion = "572aad41bdb6d403005fb1bf"
@@ -39,7 +41,19 @@ def self.definirVariables
     sist = Sistema.new
     @cuentaFabrica = JSON.parse(sist.getCuentaFabrica)["cuentaId"]
     @idGrupo = "572aac69bdb6d403005fb044"
+=end
 
+    @sist = Sistema.new
+    @returnPoint = 400
+
+    intermedio = JSON.parse(sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+   
+    @bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
+    @bodegaRecepcion = JSON.parse(sist.getAlmacenes).find {|h1| h1['recepcion'] == true }['_id']
+    @bodegaPulmon = JSON.parse(sist.getAlmacenes).find {|h1| h1['pulmon'] == true }['_id']
+    @bodegaDespacho = JSON.parse(sist.getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
+    @idGrupo = sist.idGrupo
+    @cuentaFabrica = JSON.parse(@sist.getCuentaFabrica)["cuentaId"]
   end 
 
 

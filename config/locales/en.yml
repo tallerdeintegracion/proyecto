@@ -21,3 +21,8 @@
 
 en:
   hello: "Hello world"
+  spree:
+    promotion_action_types:
+      DescuentoProducto:
+        name: Descuento a un Producto
+        description: Realiza un descuento a un unico producto
