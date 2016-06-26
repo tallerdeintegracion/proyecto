@@ -8,7 +8,7 @@
 # set :output, "/path/to/my/cron_log.log"
 #
 
-set :environment, "production"
+set :environment, "development"
 set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log"}
 
 every 50.minute do
@@ -20,7 +20,7 @@ end
 every 50.minute do
 
  runner "InventarioController.run", :output => 'log/inventario_logs.log'
-   
+
 
 end
 
@@ -32,3 +32,6 @@ every 1.minute do
 
 end
 # Learn more: http://github.com/javan/whenever
+every 1.day, :at => '11:59 pm' do
+	runner "HomeController.guardaSaldoDiario"#, :output => 'log/inventario_logs.log'
+end

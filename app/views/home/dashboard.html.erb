@@ -1,27 +1,118 @@
 <!DOCTYPE html>
 <html>
-
 		<head>
     <meta charset="utf-8"/>
-    <title>Chart.js demo</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
+    <title>Estadísticas Business-Intelligence</title>
+   
 </head>
 <body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js" ></script>
+
+	<h1>I.- Gráficos Finacieros</h1>
+	<h2>1) Saldo Cuenta por día</h2>
+	<div style="height: 250px; width: 450px">
+	 <canvas id="saldos"></canvas>
+	</div>
+		<script>
+		var ctx = document.getElementById("saldos");
+		var data = {
+    labels: ["<%= @diasEjeX[0]%>", "<%= @diasEjeX[1]%>", "<%= @diasEjeX[2]%>", "<%= @diasEjeX[3]%>", "<%= @diasEjeX[4]%>", "<%= @diasEjeX[5]%>", "<%= @diasEjeX[6]%>", "<%= @diasEjeX[7]%>", "<%= @diasEjeX[8]%>", "<%= @diasEjeX[9]%>", "<%= @diasEjeX[10]%>", "<%= @diasEjeX[11]%>", "<%= @diasEjeX[12]%>", "<%= @diasEjeX[13]%>"],
+    datasets: [
+        {
+            label: "Mis saldos en dos semanas",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: ["<%= @saldosEjeY[0]%>", "<%= @saldosEjeY[1]%>", "<%= @saldosEjeY[2]%>", "<%= @saldosEjeY[3]%>", "<%= @saldosEjeY[4]%>", "<%= @saldosEjeY[5]%>", "<%= @saldosEjeY[6]%>", "<%= @saldosEjeY[7]%>", "<%= @saldosEjeY[8]%>", "<%= @saldosEjeY[9]%>", "<%= @saldosEjeY[10]%>", "<%= @saldosEjeY[11]%>", "<%= @saldosEjeY[12]%>", "<%= @saldosEjeY[13]%>"]
+		        }
+		    ]
+		};
+		var options = {  
+		        scaleBeginAtZero : false,
+      scaleOverride: true,
+      scaleSteps: 20,
+      scaleStepWidth: 2,
+      scaleStartValue: -20,
+      responsive: true
+		    };
+		var myChart = new Chart(ctx, {
+		    type: 'line',
+		    data: data,
+		    options: options
+		});
+		</script>
+
+    <h2>2) Facturas y Boletas emitidas por día (en pesos)</h2>
 
 
-    <h1>Chart.js Sample</h1>
 
-    <canvas id="countries" width="600" height="400"></canvas>
-        <script>
-        var array = <%= @pieData %>;
-        // Get the context of the canvas element we want to select
-        var countries= document.getElementById("countries").getContext("2d");
-        new Chart(countries).Pie(array);
-    </script>
+    <h2>3) Facturas y Boletas emitidas por día (en número)</h2>
 
-    <p>&emsp;</p>
-	<%= @pieData %>
-	<p>&emsp;</p>
+
+    <div style="height: 250px; width: 450px">
+	 <canvas id="numeroBoletas"></canvas>
+	</div>
+		<script>
+		var ctx = document.getElementById("numeroBoletas");
+		var data = {
+    labels: ["<%= @diasEjeXBoletas[0]%>", "<%= @diasEjeXBoletas[1]%>", "<%= @diasEjeXBoletas[2]%>", "<%= @diasEjeXBoletas[3]%>", "<%= @diasEjeXBoletas[4]%>", "<%= @diasEjeXBoletas[5]%>", "<%= @diasEjeXBoletas[6]%>", "<%= @diasEjeXBoletas[7]%>", "<%= @diasEjeXBoletas[8]%>", "<%= @diasEjeXBoletas[9]%>", "<%= @diasEjeXBoletas[10]%>", "<%= @diasEjeXBoletas[11]%>", "<%= @diasEjeXBoletas[12]%>", "<%= @diasEjeXBoletas[13]%>"],
+    datasets: [
+        {
+            label: "Mis boletas y facturas en dos semanas",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: ["<%= @saldosEjeYBoletas[0]%>", "<%= @saldosEjeYBoletas[1]%>", "<%= @saldosEjeYBoletas[2]%>", "<%= @saldosEjeYBoletas[3]%>", "<%= @saldosEjeYBoletas[4]%>", "<%= @saldosEjeYBoletas[5]%>", "<%= @saldosEjeYBoletas[6]%>", "<%= @saldosEjeYBoletas[7]%>", "<%= @saldosEjeYBoletas[8]%>", "<%= @saldosEjeYBoletas[9]%>", "<%= @saldosEjeYBoletas[10]%>", "<%= @saldosEjeYBoletas[11]%>", "<%= @saldosEjeYBoletas[12]%>", "<%= @saldosEjeYBoletas[13]%>"]
+		        }
+		    ]
+		};
+		var options = {  
+		        scaleBeginAtZero : false,
+      scaleOverride: true,
+      scaleSteps: 20,
+      scaleStepWidth: 2,
+      scaleStartValue: -20,
+      responsive: true
+		    };
+		var myChart = new Chart(ctx, {
+		    type: 'line',
+		    data: data,
+		    options: options
+		});
+		</script>
+
+    <h1>II.- Gráficos Logísticos</h1>
+
+    <h2>1) Stock por sku diario</h2>
+    <h2>2) Porcentaje uso bodega y almacenes</h2>
 
 </body>
 </html>

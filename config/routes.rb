@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :saldos
   resources :social_media
   resources :boleta
   resources :boleta
@@ -101,7 +102,7 @@ end
   
   get 'inventario/vaciar'
   get 'inventario/mover' => 'inventario#moverMiStock'
-  
+  get 'saldos/show'
   get 'home/index'
   
   get 'home/listaOrdenesCompra'
