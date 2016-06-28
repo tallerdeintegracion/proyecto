@@ -1,0 +1,32 @@
+<style>
+    #checkout-summary {
+        display: none;
+    }
+    .col-md-9 {
+        width:100%;
+    }
+</style>
+  <script>
+   //window.location.href = "/integracionpay?orderid=<%= @order.number.to_s %>";
+   //$("#checkout-summary").css("display","none");
+   //$("#col-md-9").css("width","100% ");
+   //$('#checkout_form_payment').attr("action","/integracionpay?orderid=<%= @order.number.to_s %> ");
+   //$("input[name=commit]").attr("value","Place Order");
+ </script>
+
+
+ <div class="panel panel-default" id="order_details" data-hook>
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= Spree.t(:confirm) %></h3>
+  </div>
+  <div class="panel-body">
+    <%= render partial: 'spree/shared/order_details', locals: { order: @order } %>
+  </div>
+</div>
+
+<div class="well text-right form-buttons" data-hook="buttons">
+  <a href="/integracionpay?orderid=<%= @order.number.to_s %>" class="btn btn-lg btn-success">Pay</a>
+  
+  <!--%= button_to "/integracionpay?orderid=<%= @order.number.to_s %>", class: 'btn btn-lg btn-success' %-->
+  <!--script>Spree.disableSaveOnClick();</script-->
+</div>

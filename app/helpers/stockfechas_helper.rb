@@ -1,0 +1,2 @@
+module StockfechasHelper
+end

@@ -29,13 +29,13 @@ class IntegracionpayController < ApplicationController
         redirect_to "/spree/", :alert => "No hay suficiente stock"
         return
       end
-      userId = ord[:user_id]
-      if ord[:user_id] == nil
-        userId = 0
-      end
+      #userId = ord[:user_id]
+      #if ord[:user_id] == nil
+      #  userId = 0
+      #end
 
       puts ord.to_json.to_s
-      bol = sist.emitirBoleta(userId,ord[:total].to_i)
+      bol = sist.emitirBoleta(3,ord[:total].to_i)
       boleta = JSON.parse(bol)
       Boletum.find_or_create_by(boleta_id: boleta["_id"].to_s, orden_id: val.to_s, estado: "Creada", total: ord["total"].to_i)
       

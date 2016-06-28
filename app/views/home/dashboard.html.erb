@@ -1,27 +1,603 @@
 <!DOCTYPE html>
 <html>
-
 		<head>
     <meta charset="utf-8"/>
-    <title>Chart.js demo</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
+    <title>Estadísticas Business-Intelligence</title>
+   
 </head>
 <body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.2/Chart.min.js" ></script>
 
+	<h1>I.- Gráficos Finacieros</h1>
+	<h2>1) Saldo Cuenta por día</h2>
+    <div id="roomForChart" style="height: 250px; width: 450px">
+        <center>
+         <select id= listasaldo name="diasSaldos" style="margin: 10px 10px 10px 10px">
+           <option value="13"><%= @diasEjeX[13]%></option> 
+           <option value="12"><%= @diasEjeX[12]%></option> 
+           <option value="11"><%= @diasEjeX[11]%></option>
+           <option value="10"><%= @diasEjeX[10]%></option> 
+           <option value="9"><%= @diasEjeX[9]%></option> 
+           <option value="8"><%= @diasEjeX[8]%></option> 
+           <option value="7"><%= @diasEjeX[7]%></option> 
+           <option value="6"><%= @diasEjeX[6]%></option> 
+           <option value="5"><%= @diasEjeX[5]%></option> 
+           <option value="4"><%= @diasEjeX[4]%></option> 
+           <option value="3"><%= @diasEjeX[3]%></option> 
+           <option value="2"><%= @diasEjeX[2]%></option> 
+           <option value="1"><%= @diasEjeX[1]%></option> 
+           <option value="0"><%= @diasEjeX[0]%></option> 
+        </select>
+        <button value="Ver saldo diario" style='width:100px; height:20px' onclick="hacer_click()"/>
+        Ver Detalle</button>
+        </center>
+    </div>
+		<script>
 
-    <h1>Chart.js Sample</h1>
+        function hacer_click()
+        {
+            var e = document.getElementById("listasaldo");
+            var strUser = e.options[e.selectedIndex].value;
+            if (strUser == "0") { alert("<%= @detalleTransacciones[0]%>"); }
+            else if (strUser == "1") {  alert("<%= @detalleTransacciones[1]%>"); }
+            else if (strUser == "2") {  alert("<%= @detalleTransacciones[2]%>"); }
+            else if (strUser == "3") {  alert("<%= @detalleTransacciones[3]%>"); }
+            else if (strUser == "4") {  alert("<%= @detalleTransacciones[4]%>"); }
+            else if (strUser == "5") {  alert("<%= @detalleTransacciones[5]%>"); }
+            else if (strUser == "6") {  alert("<%= @detalleTransacciones[6]%>"); }
+            else if (strUser == "7") {  alert("<%= @detalleTransacciones[7]%>"); }
+            else if (strUser == "8") {  alert("<%= @detalleTransacciones[8]%>"); }
+            else if (strUser == "9") {  alert("<%= @detalleTransacciones[9]%>"); }
+            else if (strUser == "10") {  alert("<%= @detalleTransacciones[10]%>"); }
+            else if (strUser == "11") {  alert("<%= @detalleTransacciones[11]%>"); }
+            else if (strUser == "12") {  alert("<%= @detalleTransacciones[12]%>"); }
+            else if (strUser == "13") {  alert("<%= @detalleTransacciones[13]%>"); }
+        };
 
-    <canvas id="countries" width="600" height="400"></canvas>
+        htmlForGraph = "<canvas id='saldos'>";
+        holder = document.getElementById('roomForChart');
+        holder.innerHTML += htmlForGraph;
+
+		var ctx = document.getElementById("saldos");
+		var data = {
+    labels: ["<%= @diasEjeX[0]%>", "<%= @diasEjeX[1]%>", "<%= @diasEjeX[2]%>", "<%= @diasEjeX[3]%>", "<%= @diasEjeX[4]%>", "<%= @diasEjeX[5]%>", "<%= @diasEjeX[6]%>", "<%= @diasEjeX[7]%>", "<%= @diasEjeX[8]%>", "<%= @diasEjeX[9]%>", "<%= @diasEjeX[10]%>", "<%= @diasEjeX[11]%>", "<%= @diasEjeX[12]%>", "<%= @diasEjeX[13]%>"],
+    datasets: [
+        {
+            label: "Mis saldos en dos semanas",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: ["<%= @saldosEjeY[0]%>", "<%= @saldosEjeY[1]%>", "<%= @saldosEjeY[2]%>", "<%= @saldosEjeY[3]%>", "<%= @saldosEjeY[4]%>", "<%= @saldosEjeY[5]%>", "<%= @saldosEjeY[6]%>", "<%= @saldosEjeY[7]%>", "<%= @saldosEjeY[8]%>", "<%= @saldosEjeY[9]%>", "<%= @saldosEjeY[10]%>", "<%= @saldosEjeY[11]%>", "<%= @saldosEjeY[12]%>", "<%= @saldosEjeY[13]%>"]
+		        }
+		    ]
+		};
+		var options = {  
+		      scaleBeginAtZero : false,
+              scaleOverride: true,
+              scaleSteps: 20,
+              scaleStepWidth: 2,
+              scaleStartValue: -20,
+              responsive: true
+        		    };
+		var myChart = new Chart(ctx, {
+		    type: 'line',
+		    data: data,
+		    options: options
+		});
+		</script>
+
+    <h2>2) Facturas y Boletas emitidas por día (en pesos)</h2>
+
+    <div style="height: 250px; width: 450px">
+    <center>
+         <select id= listaboletasP name="diasBoletasP" style="margin: 10px 10px 10px 10px">
+           <option value="13"><%= @diasEjeXBoletasP[13]%></option> 
+           <option value="12"><%= @diasEjeXBoletasP[12]%></option> 
+           <option value="11"><%= @diasEjeXBoletasP[11]%></option>
+           <option value="10"><%= @diasEjeXBoletasP[10]%></option> 
+           <option value="9"><%= @diasEjeXBoletasP[9]%></option> 
+           <option value="8"><%= @diasEjeXBoletasP[8]%></option> 
+           <option value="7"><%= @diasEjeXBoletasP[7]%></option> 
+           <option value="6"><%= @diasEjeXBoletasP[6]%></option> 
+           <option value="5"><%= @diasEjeXBoletasP[5]%></option> 
+           <option value="4"><%= @diasEjeXBoletasP[4]%></option> 
+           <option value="3"><%= @diasEjeXBoletasP[3]%></option> 
+           <option value="2"><%= @diasEjeXBoletasP[2]%></option> 
+           <option value="1"><%= @diasEjeXBoletasP[1]%></option> 
+           <option value="0"><%= @diasEjeXBoletasP[0]%></option> 
+        </select>
+        <button value="Ver boletas diarias" style='width:100px; height:20px' onclick="click_facturasP()"/>
+        Ver Detalle</button>
+        </center>
+     <canvas id="numeroBoletasP"></canvas>
+    </div>
         <script>
-        var array = <%= @pieData %>;
-        // Get the context of the canvas element we want to select
-        var countries= document.getElementById("countries").getContext("2d");
-        new Chart(countries).Pie(array);
-    </script>
 
-    <p>&emsp;</p>
-	<%= @pieData %>
-	<p>&emsp;</p>
+        function click_facturasP()
+        {
+            var e = document.getElementById("listaboletasP");
+            var strUser = e.options[e.selectedIndex].value;
+            if (strUser == "0") { alert("<%= @detalleBoletasFacturasP[0]%>"); }
+            else if (strUser == "1") {  alert("<%= @detalleBoletasFacturasP[1]%>"); }
+            else if (strUser == "2") {  alert("<%= @detalleBoletasFacturasP[2]%>"); }
+            else if (strUser == "3") {  alert("<%= @detalleBoletasFacturasP[3]%>"); }
+            else if (strUser == "4") {  alert("<%= @detalleBoletasFacturasP[4]%>"); }
+            else if (strUser == "5") {  alert("<%= @detalleBoletasFacturasP[5]%>"); }
+            else if (strUser == "6") {  alert("<%= @detalleBoletasFacturasP[6]%>"); }
+            else if (strUser == "7") {  alert("<%= @detalleBoletasFacturasP[7]%>"); }
+            else if (strUser == "8") {  alert("<%= @detalleBoletasFacturasP[8]%>"); }
+            else if (strUser == "9") {  alert("<%= @detalleBoletasFacturasP[9]%>"); }
+            else if (strUser == "10") {  alert("<%= @detalleBoletasFacturasP[10]%>"); }
+            else if (strUser == "11") {  alert("<%= @detalleBoletasFacturasP[11]%>"); }
+            else if (strUser == "12") {  alert("<%= @detalleBoletasFacturasP[12]%>"); }
+            else if (strUser == "13") {  alert("<%= @detalleBoletasFacturasP[13]%>"); }
+        };
+
+
+        var ctx = document.getElementById("numeroBoletasP");
+        var data = {
+    labels: ["<%= @diasEjeXBoletasP[0]%>", "<%= @diasEjeXBoletasP[1]%>", "<%= @diasEjeXBoletasP[2]%>", "<%= @diasEjeXBoletasP[3]%>", "<%= @diasEjeXBoletasP[4]%>", "<%= @diasEjeXBoletasP[5]%>", "<%= @diasEjeXBoletasP[6]%>", "<%= @diasEjeXBoletasP[7]%>", "<%= @diasEjeXBoletasP[8]%>", "<%= @diasEjeXBoletasP[9]%>", "<%= @diasEjeXBoletasP[10]%>", "<%= @diasEjeXBoletasP[11]%>", "<%= @diasEjeXBoletasP[12]%>", "<%= @diasEjeXBoletasP[13]%>"],
+    datasets: [
+        {
+            label: "Mis boletas en dos semanas",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: ["<%= @saldosEjeYBoletasP[0]%>", "<%= @saldosEjeYBoletasP[1]%>", "<%= @saldosEjeYBoletasP[2]%>", "<%= @saldosEjeYBoletasP[3]%>", "<%= @saldosEjeYBoletasP[4]%>", "<%= @saldosEjeYBoletasP[5]%>", "<%= @saldosEjeYBoletasP[6]%>", "<%= @saldosEjeYBoletasP[7]%>", "<%= @saldosEjeYBoletasP[8]%>", "<%= @saldosEjeYBoletasP[9]%>", "<%= @saldosEjeYBoletasP[10]%>", "<%= @saldosEjeYBoletasP[11]%>", "<%= @saldosEjeYBoletasP[12]%>", "<%= @saldosEjeYBoletasP[13]%>"]
+                },
+                  {
+            label: "Mis facturas en dos semanas",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(48,197,83,0.2)",
+            borderColor: "rgba(48,197,83,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(48,197,83,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: ["<%= @saldosEjeYFacturasP[0]%>", "<%= @saldosEjeYFacturasP[1]%>", "<%= @saldosEjeYFacturasP[2]%>", "<%= @saldosEjeYFacturasP[3]%>", "<%= @saldosEjeYFacturasP[4]%>", "<%= @saldosEjeYFacturasP[5]%>", "<%= @saldosEjeYFacturasP[6]%>", "<%= @saldosEjeYFacturasP[7]%>", "<%= @saldosEjeYFacturasP[8]%>", "<%= @saldosEjeYFacturasP[9]%>", "<%= @saldosEjeYFacturasP[10]%>", "<%= @saldosEjeYFacturasP[11]%>", "<%= @saldosEjeYFacturasP[12]%>", "<%= @saldosEjeYFacturasP[13]%>"]
+                }
+            ]
+        };
+        var options = {  
+                scaleBeginAtZero : false,
+      scaleOverride: true,
+      scaleSteps: 20,
+      scaleStepWidth: 2,
+      scaleStartValue: -20,
+      responsive: true
+            };
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
+        });
+        </script>
+
+
+    <h2>3) Facturas y Boletas emitidas por día (en cantidad)</h2>
+
+
+    <div style="height: 250px; width: 450px">
+    <center>
+         <select id= listaboletas name="diasBoletas" style="margin: 10px 10px 10px 10px">
+           <option value="13"><%= @diasEjeXBoletas[13]%></option> 
+           <option value="12"><%= @diasEjeXBoletas[12]%></option> 
+           <option value="11"><%= @diasEjeXBoletas[11]%></option>
+           <option value="10"><%= @diasEjeXBoletas[10]%></option> 
+           <option value="9"><%= @diasEjeXBoletas[9]%></option> 
+           <option value="8"><%= @diasEjeXBoletas[8]%></option> 
+           <option value="7"><%= @diasEjeXBoletas[7]%></option> 
+           <option value="6"><%= @diasEjeXBoletas[6]%></option> 
+           <option value="5"><%= @diasEjeXBoletas[5]%></option> 
+           <option value="4"><%= @diasEjeXBoletas[4]%></option> 
+           <option value="3"><%= @diasEjeXBoletas[3]%></option> 
+           <option value="2"><%= @diasEjeXBoletas[2]%></option> 
+           <option value="1"><%= @diasEjeXBoletas[1]%></option> 
+           <option value="0"><%= @diasEjeXBoletas[0]%></option> 
+        </select>
+        <button value="Ver boletas diarias" style='width:100px; height:20px' onclick="click_facturas()"/>
+        Ver Detalle</button>
+        </center>
+	 <canvas id="numeroBoletas"></canvas>
+	</div>
+		<script>
+
+        function click_facturas()
+        {
+            var e = document.getElementById("listaboletas");
+            var strUser = e.options[e.selectedIndex].value;
+            if (strUser == "0") { alert("<%= @detalleBoletasFacturas[0]%>"); }
+            else if (strUser == "1") {  alert("<%= @detalleBoletasFacturas[1]%>"); }
+            else if (strUser == "2") {  alert("<%= @detalleBoletasFacturas[2]%>"); }
+            else if (strUser == "3") {  alert("<%= @detalleBoletasFacturas[3]%>"); }
+            else if (strUser == "4") {  alert("<%= @detalleBoletasFacturas[4]%>"); }
+            else if (strUser == "5") {  alert("<%= @detalleBoletasFacturas[5]%>"); }
+            else if (strUser == "6") {  alert("<%= @detalleBoletasFacturas[6]%>"); }
+            else if (strUser == "7") {  alert("<%= @detalleBoletasFacturas[7]%>"); }
+            else if (strUser == "8") {  alert("<%= @detalleBoletasFacturas[8]%>"); }
+            else if (strUser == "9") {  alert("<%= @detalleBoletasFacturas[9]%>"); }
+            else if (strUser == "10") {  alert("<%= @detalleBoletasFacturas[10]%>"); }
+            else if (strUser == "11") {  alert("<%= @detalleBoletasFacturas[11]%>"); }
+            else if (strUser == "12") {  alert("<%= @detalleBoletasFacturas[12]%>"); }
+            else if (strUser == "13") {  alert("<%= @detalleBoletasFacturas[13]%>"); }
+        };
+
+
+		var ctx = document.getElementById("numeroBoletas");
+		var data = {
+    labels: ["<%= @diasEjeXBoletas[0]%>", "<%= @diasEjeXBoletas[1]%>", "<%= @diasEjeXBoletas[2]%>", "<%= @diasEjeXBoletas[3]%>", "<%= @diasEjeXBoletas[4]%>", "<%= @diasEjeXBoletas[5]%>", "<%= @diasEjeXBoletas[6]%>", "<%= @diasEjeXBoletas[7]%>", "<%= @diasEjeXBoletas[8]%>", "<%= @diasEjeXBoletas[9]%>", "<%= @diasEjeXBoletas[10]%>", "<%= @diasEjeXBoletas[11]%>", "<%= @diasEjeXBoletas[12]%>", "<%= @diasEjeXBoletas[13]%>"],
+    datasets: [
+        {
+            label: "Mis boletas en dos semanas",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: ["<%= @saldosEjeYBoletas[0]%>", "<%= @saldosEjeYBoletas[1]%>", "<%= @saldosEjeYBoletas[2]%>", "<%= @saldosEjeYBoletas[3]%>", "<%= @saldosEjeYBoletas[4]%>", "<%= @saldosEjeYBoletas[5]%>", "<%= @saldosEjeYBoletas[6]%>", "<%= @saldosEjeYBoletas[7]%>", "<%= @saldosEjeYBoletas[8]%>", "<%= @saldosEjeYBoletas[9]%>", "<%= @saldosEjeYBoletas[10]%>", "<%= @saldosEjeYBoletas[11]%>", "<%= @saldosEjeYBoletas[12]%>", "<%= @saldosEjeYBoletas[13]%>"]
+		        },
+                  {
+            label: "Mis facturas en dos semanas",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(48,197,83,0.2)",
+            borderColor: "rgba(48,197,83,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(48,197,83,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: ["<%= @saldosEjeYFacturas[0]%>", "<%= @saldosEjeYFacturas[1]%>", "<%= @saldosEjeYFacturas[2]%>", "<%= @saldosEjeYFacturas[3]%>", "<%= @saldosEjeYFacturas[4]%>", "<%= @saldosEjeYFacturas[5]%>", "<%= @saldosEjeYFacturas[6]%>", "<%= @saldosEjeYFacturas[7]%>", "<%= @saldosEjeYFacturas[8]%>", "<%= @saldosEjeYFacturas[9]%>", "<%= @saldosEjeYFacturas[10]%>", "<%= @saldosEjeYFacturas[11]%>", "<%= @saldosEjeYFacturas[12]%>", "<%= @saldosEjeYFacturas[13]%>"]
+                }
+		    ]
+		};
+		var options = {  
+		        scaleBeginAtZero : false,
+      scaleOverride: true,
+      scaleSteps: 20,
+      scaleStepWidth: 2,
+      scaleStartValue: -20,
+      responsive: true
+		    };
+		var myChart = new Chart(ctx, {
+		    type: 'line',
+		    data: data,
+		    options: options
+		});
+		</script>
+
+    <h1>II.- Gráficos Logísticos</h1>
+
+    <h2>1) Stock por sku diario</h2>
+
+    <div style="height: 250; width: 450px">  
+     <canvas id="stock"></canvas>     
+    </div>
+        <script>      
+
+        var ctx = document.getElementById("stock");
+        var data = {
+    labels: ["<%= @diasEjeXStock[0]%>", "<%= @diasEjeXStock[1]%>", "<%= @diasEjeXStock[2]%>", "<%= @diasEjeXStock[3]%>", "<%= @diasEjeXStock[4]%>", "<%= @diasEjeXStock[5]%>", "<%= @diasEjeXStock[6]%>", "<%= @diasEjeXStock[7]%>", "<%= @diasEjeXStock[8]%>", "<%= @diasEjeXStock[9]%>", "<%= @diasEjeXStock[10]%>", "<%= @diasEjeXStock[11]%>", "<%= @diasEjeXStock[12]%>", "<%= @diasEjeXStock[13]%>"],
+    datasets: [
+        {
+            label: "Mis trigos en dos semanas",
+            fill: false, lineTension: 0.1, backgroundColor: "#4169E1",
+            borderColor: "#4169E1",  borderCapStyle: 'butt',
+            borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
+            pointBorderColor: "#4169E1",
+            pointBackgroundColor: "#fff", pointBorderWidth: 1,
+            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
+            pointRadius: 1,  pointHitRadius: 10,
+            data: ["<%= @stockEjeYTrigo[0]%>", "<%= @stockEjeYTrigo[1]%>", "<%= @stockEjeYTrigo[2]%>", "<%= @stockEjeYTrigo[3]%>", "<%= @stockEjeYTrigo[4]%>", "<%= @stockEjeYTrigo[5]%>", "<%= @stockEjeYTrigo[6]%>", "<%= @stockEjeYTrigo[7]%>", "<%= @stockEjeYTrigo[8]%>", "<%= @stockEjeYTrigo[9]%>", "<%= @stockEjeYTrigo[10]%>", "<%= @stockEjeYTrigo[11]%>", "<%= @stockEjeYTrigo[12]%>", "<%= @stockEjeYTrigo[13]%>"] },
+            {
+            label: "Mis cremas en dos semanas",
+            fill: false, lineTension: 0.1, backgroundColor: "#228B22",
+            borderColor: "#228B22",  borderCapStyle: 'butt',
+            borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
+            pointBorderColor: "#228B22",
+            pointBackgroundColor: "#fff", pointBorderWidth: 1,
+            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
+            pointRadius: 1,  pointHitRadius: 10,
+            data: ["<%= @stockEjeYCrema[0]%>", "<%= @stockEjeYCrema[1]%>", "<%= @stockEjeYCrema[2]%>", "<%= @stockEjeYCrema[3]%>", "<%= @stockEjeYCrema[4]%>", "<%= @stockEjeYCrema[5]%>", "<%= @stockEjeYCrema[6]%>", "<%= @stockEjeYCrema[7]%>", "<%= @stockEjeYCrema[8]%>", "<%= @stockEjeYCrema[9]%>", "<%= @stockEjeYCrema[10]%>", "<%= @stockEjeYCrema[11]%>", "<%= @stockEjeYCrema[12]%>", "<%= @stockEjeYCrema[13]%>"] },
+            {
+            label: "Mis cebadas en dos semanas",
+            fill: false, lineTension: 0.1, backgroundColor: "#ff0000",
+            borderColor: "#ff0000",  borderCapStyle: 'butt',
+            borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
+            pointBorderColor: "#ff0000",
+            pointBackgroundColor: "#fff", pointBorderWidth: 1,
+            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
+            pointRadius: 1,  pointHitRadius: 10,
+            data: ["<%= @stockEjeYCebada[0]%>", "<%= @stockEjeYCebada[1]%>", "<%= @stockEjeYCebada[2]%>", "<%= @stockEjeYCebada[3]%>", "<%= @stockEjeYCebada[4]%>", "<%= @stockEjeYCebada[5]%>", "<%= @stockEjeYCebada[6]%>", "<%= @stockEjeYCebada[7]%>", "<%= @stockEjeYCebada[8]%>", "<%= @stockEjeYCebada[9]%>", "<%= @stockEjeYCebada[10]%>", "<%= @stockEjeYCebada[11]%>", "<%= @stockEjeYCebada[12]%>", "<%= @stockEjeYCebada[13]%>"] },
+            {
+            label: "Mis lanas en dos semanas",
+            fill: false, lineTension: 0.1, backgroundColor: "#000000",
+            borderColor: "#000000",  borderCapStyle: 'butt',
+            borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
+            pointBorderColor: "#000000",
+            pointBackgroundColor: "#fff", pointBorderWidth: 1,
+            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
+            pointRadius: 1,  pointHitRadius: 10,
+            data: ["<%= @stockEjeYLana[0]%>", "<%= @stockEjeYLana[1]%>", "<%= @stockEjeYLana[2]%>", "<%= @stockEjeYLana[3]%>", "<%= @stockEjeYLana[4]%>", "<%= @stockEjeYLana[5]%>", "<%= @stockEjeYLana[6]%>", "<%= @stockEjeYLana[7]%>", "<%= @stockEjeYLana[8]%>", "<%= @stockEjeYLana[9]%>", "<%= @stockEjeYLana[10]%>", "<%= @stockEjeYLana[11]%>", "<%= @stockEjeYLana[12]%>", "<%= @stockEjeYLana[13]%>"] },
+            {
+            label: "Mis leches descremadas en dos semanas",
+            fill: false, lineTension: 0.1, backgroundColor: "#4B0082",
+            borderColor: "#4B0082",  borderCapStyle: 'butt',
+            borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
+            pointBorderColor: "#4B0082",
+            pointBackgroundColor: "#fff", pointBorderWidth: 1,
+            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
+            pointRadius: 1,  pointHitRadius: 10,
+            data: ["<%= @stockEjeYLecheD[0]%>", "<%= @stockEjeYLecheD[1]%>", "<%= @stockEjeYLecheD[2]%>", "<%= @stockEjeYLecheD[3]%>", "<%= @stockEjeYLecheD[4]%>", "<%= @stockEjeYLecheD[5]%>", "<%= @stockEjeYLecheD[6]%>", "<%= @stockEjeYLecheD[7]%>", "<%= @stockEjeYLecheD[8]%>", "<%= @stockEjeYLecheD[9]%>", "<%= @stockEjeYLecheD[10]%>", "<%= @stockEjeYLecheD[11]%>", "<%= @stockEjeYLecheD[12]%>", "<%= @stockEjeYLecheD[13]%>"] },
+            {
+            label: "Mis galletas integrales en dos semanas",
+            fill: false, lineTension: 0.1, backgroundColor: "#FF00FF",
+            borderColor: "#FF00FF",  borderCapStyle: 'butt',
+            borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
+            pointBorderColor: "#FF00FF",
+            pointBackgroundColor: "#fff", pointBorderWidth: 1,
+            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
+            pointRadius: 1,  pointHitRadius: 10,
+            data: ["<%= @stockEjeYGalletaI[0]%>", "<%= @stockEjeYGalletaI[1]%>", "<%= @stockEjeYGalletaI[2]%>", "<%= @stockEjeYGalletaI[3]%>", "<%= @stockEjeYGalletaI[4]%>", "<%= @stockEjeYGalletaI[5]%>", "<%= @stockEjeYGalletaI[6]%>", "<%= @stockEjeYGalletaI[7]%>", "<%= @stockEjeYGalletaI[8]%>", "<%= @stockEjeYGalletaI[9]%>", "<%= @stockEjeYGalletaI[10]%>", "<%= @stockEjeYGalletaI[11]%>", "<%= @stockEjeYGalletaI[12]%>", "<%= @stockEjeYGalletaI[13]%>"] }  ] };
+        var myChart = new Chart(ctx, {type: 'line', data: data});
+        </script>
+
+
+
+    <h2>2) Porcentaje uso Bodega total (no considera al Pulmón)</h2>
+
+    <div style="height: 250px; width: 450px">
+    
+     <canvas id="Almacenes"></canvas>
+    </div>
+        <script>
+        var ctx = document.getElementById("Almacenes");
+        var data = 
+        { labels: ["<%= @stockEjeXBodega[0]%>", "<%= @stockEjeXBodega[1]%>"], 
+        datasets: [
+        {
+            data: ["<%= @stockEjeYBodega[0]%>", "<%= @stockEjeYBodega[1]%>"],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ]
+        }]
+        };
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: data
+        });
+        </script>
+
+    <h2>3) Porcentaje uso Almacén Grande</h2>
+
+    <div style="height: 250px; width: 450px">
+    
+     <canvas id="grande"></canvas>
+    </div>
+        <script>
+        var ctx = document.getElementById("grande");
+        var data = 
+        { labels: ["<%= @stockEjeXGrande[0]%>", "<%= @stockEjeXGrande[1]%>"], 
+        datasets: [
+        {
+            data: ["<%= @stockEjeYGrande[0]%>", "<%= @stockEjeYGrande[1]%>"],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ]
+        }]
+        };
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: data
+        });
+        </script>
+
+    <h2>4) Porcentaje uso Almacén Chico</h2>
+
+    <div style="height: 250px; width: 450px">
+    
+     <canvas id="chico"></canvas>
+    </div>
+        <script>
+        var ctx = document.getElementById("chico");
+        var data = 
+        { labels: ["<%= @stockEjeXChica[0]%>", "<%= @stockEjeXChica[1]%>"], 
+        datasets: [
+        {
+            data: ["<%= @stockEjeYChica[0]%>", "<%= @stockEjeYChica[1]%>"],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ]
+        }]
+        };
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: data
+        });
+        </script>
+
+        <h2>5) Porcentaje uso Almacén Recepción</h2>
+
+        <div style="height: 250px; width: 450px">
+        
+         <canvas id="recepcion"></canvas>
+        </div>
+            <script>
+            var ctx = document.getElementById("recepcion");
+            var data = 
+            { labels: ["<%= @stockEjeXRecepcion[0]%>", "<%= @stockEjeXRecepcion[1]%>"], 
+            datasets: [
+            {
+                data: ["<%= @stockEjeYRecepcion[0]%>", "<%= @stockEjeYRecepcion[1]%>"],
+                backgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ],
+                hoverBackgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ]
+            }]
+            };
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: data
+            });
+            </script>
+
+        <h2>6) Porcentaje uso Almacén Despacho</h2>
+
+        <div style="height: 250px; width: 450px">
+        
+         <canvas id="despacho"></canvas>
+        </div>
+            <script>
+            var ctx = document.getElementById("despacho");
+            var data = 
+            { labels: ["<%= @stockEjeXDespacho[0]%>", "<%= @stockEjeXDespacho[1]%>"], 
+            datasets: [
+            {
+                data: ["<%= @stockEjeYDespacho[0]%>", "<%= @stockEjeYDespacho[1]%>"],
+                backgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ],
+                hoverBackgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ]
+            }]
+            };
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: data
+            });
+            </script>
+
+        <h2>7) Porcentaje uso Almacén Pulmón</h2>
+
+        <div style="height: 250px; width: 450px">
+        
+         <canvas id="pulmon"></canvas>
+        </div>
+            <script>
+            var ctx = document.getElementById("pulmon");
+            var data = 
+            { labels: ["<%= @stockEjeXPulmon[0]%>", "<%= @stockEjeXPulmon[1]%>"], 
+            datasets: [
+            {
+                data: ["<%= @stockEjeYPulmon[0]%>", "<%= @stockEjeYPulmon[1]%>"],
+                backgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ],
+                hoverBackgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ]
+            }]
+            };
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: data
+            });
+            </script>
 
 </body>
 </html>
+<style>
+    #listasaldo{
+text-align: center;
+}
+</style>
