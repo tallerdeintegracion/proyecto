@@ -1,4 +1,5 @@
 require 'bigdecimal'
+require 'date'
 class SocialMedium < ActiveRecord::Base
 
 	def searchMessages
@@ -21,6 +22,9 @@ class SocialMedium < ActiveRecord::Base
 			msg = q.pop
 			msg = msg[2].to_s
 			msg_hash = JSON.parse(msg)
+			
+			#msg_hash = { "sku" => "8", "precio"  => "1200", "inicio" => "1466964673962", "fin" => "1466979073962", "publicar" => false, "codigo" => "hgdfsdsac" }
+			
 			sku = msg_hash['sku']
 			precio = msg_hash['precio']
 			inicio = msg_hash['inicio']
@@ -35,6 +39,12 @@ class SocialMedium < ActiveRecord::Base
 			puts "publicar " + publicar.to_s
 			puts "codigo " + codigo
 
+			if(ourProduct(sku))
+
+			  start = Time.strptime(inicio.to_s, '%Q').strftime("%Y-%m-%d %H:%M:%S")
+			  ending = Time.strptime(fin.to_s, '%Q').strftime("%Y-%m-%d %H:%M:%S")
+			  insertPromotionSpree(sku.to_i,precio,ending,start,codigo.to_s)
+			end
 			if(publicar == true )
 				if (ourProduct(sku) == true)
 					publishToSocialMedia(sku , precio, inicio.to_s, fin.to_s , codigo )
@@ -186,7 +196,7 @@ class SocialMedium < ActiveRecord::Base
 	def insertPromotionSpree(sku,precio,inicio,fin,codigo)
 
 		#puts Spree::Calculator.find_by(type:"Spree::Calculator::ProductWithOptionValueCalculator").to_json.to_s
-		promocion = Spree::Promotion.find_or_create_by(description: "La media promo" ,expires_at: fin ,starts_at: inicio ,name:"Nueva Promocion",type: nil,usage_limit:nil,match_policy:"all", code: codigo, advertise: 0, path: nil, created_at: "",updated_at: "",promotion_category_id: nil )
+		promocion = Spree::Promotion.find_or_create_by(description: "Promocion" ,expires_at: fin ,starts_at: inicio ,name:"Promocion del SKU "+sku.to_s,type: nil,usage_limit:nil,match_policy:"all", code: codigo, advertise: 0, path: nil, created_at: "",updated_at: "",promotion_category_id: nil )
 		action = Spree::PromotionAction.create(promotion_id: promocion[:id],position:nil,type: "Spree::Promotion::Actions::CreateAdjustment",deleted_at: nil)
 		inv = Inventario.new
 		pref = { :product_price => BigDecimal.new(precio), :idProducto => inv.SKUToId(sku)} ##cambiar

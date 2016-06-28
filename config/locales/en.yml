@@ -26,3 +26,5 @@ en:
       DescuentoProducto:
         name: Descuento a un Producto
         description: Realiza un descuento a un unico producto
+    order_state:
+      integra: Confirmation
