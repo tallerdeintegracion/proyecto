@@ -101,4 +101,8 @@ class HomeController < ApplicationController
     sm = SocialMedium.new
     sm.insertPromotionSpree(55,1500,"2016-01-01 00:00:00","2016-08-08 00:00:00","webeta")
   end
+  def updatePromotions
+    sm = SocialMedium.new
+    sm.searchMessages
+  end
 end
