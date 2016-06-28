@@ -10,26 +10,33 @@ class Inventario < ActiveRecord::Base
     puts "\n \n \n \n "
     puts "#{Time.now}  Inicia revicion de inventario "
     cleanProduccionesDespachadas()
-    vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal)
+    
     checkMateriasPrimas(@bodegaPrincipal)
     checkCompraMaterial(@bodegaPrincipal)
     producirMaterialesProcesados(@bodegaPrincipal)
 
   end
+      
+  def rutinaRecibirMaterial
+     definirVariables
+     limit = 10
+     vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal , limit)
+    
+  end 
 
   def definirVariables 
 
     @sist = Sistema.new
     @returnPoint = 2000
     @returnPointProcesados = 400
-   
-    intermedio = JSON.parse(@sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+    almac = @sist.getAlmacenes
+    intermedio = JSON.parse().select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
    
     @bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
     @bodegaChica = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
-    @bodegaRecepcion = JSON.parse(@sist.getAlmacenes).find {|h1| h1['recepcion'] == true }['_id']
-    @bodegaPulmon = JSON.parse(@sist.getAlmacenes).find {|h1| h1['pulmon'] == true }['_id']
-    @bodegaDespacho = JSON.parse(@sist.getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
+    @bodegaRecepcion = JSON.parse(almac).find {|h1| h1['recepcion'] == true }['_id']
+    @bodegaPulmon = JSON.parse(almac).find {|h1| h1['pulmon'] == true }['_id']
+    @bodegaDespacho = JSON.parse(almac).find {|h1| h1['despacho'] == true }['_id']
     @cuentaGrupo = "571262c3a980ba030058ab5d" #"572aac69bdb6d403005fb050"
     @GrupoProyecto="3"
     @cuentaFabrica = JSON.parse(@sist.getCuentaFabrica)["cuentaId"]
@@ -50,7 +57,7 @@ class Inventario < ActiveRecord::Base
     ocs.destroy_all
   end
 
-  def vaciarAlmacenesRecepcion(bodegaRecepcion = @bodegaRecepcion , bodegaPulmon = @bodegaPulmon, bodegaPrincipal = @bodegaPrincipal)
+  def vaciarAlmacenesRecepcion(bodegaRecepcion = @bodegaRecepcion , bodegaPulmon = @bodegaPulmon, bodegaPrincipal = @bodegaPrincipal ,limit)
 
     puts "\n"
     puts "2) #{Time.now} Recibiendo material de almacen de recepcion "
@@ -59,8 +66,8 @@ class Inventario < ActiveRecord::Base
     
     materias.each do |row|
       sku = row.sku 
-      inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
-      inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+      inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal , limit)
+      inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal , limit)
       puts "--- Recibiendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
     end
 
@@ -68,15 +75,15 @@ class Inventario < ActiveRecord::Base
     materias.each do |row|
      
       sku = row.sku 
-      inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
-      inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+      inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal , limit)
+      inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal , limit)
       puts "--- Recibiendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
       ingrediente = Formula.where("sku = ?"  , sku)
     
       ingrediente.each do |ing|
         skuMaterial = ing.skuIngerdiente  
-        inicialRececpcion = recibirMaterial(skuMaterial, bodegaRecepcion, bodegaPrincipal)
-        inicialPulmon =recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal)
+        inicialRececpcion = recibirMaterial(skuMaterial, bodegaRecepcion, bodegaPrincipal , limit)
+        inicialPulmon =recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal , limit)
         puts "--- Recibiendo sku " + skuMaterial + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
       end 
 
@@ -90,11 +97,16 @@ class Inventario < ActiveRecord::Base
 
   end
 
-  def recibirMaterial( sku , almacenRecepcion , bodegaMateriasPrimas)
+  def recibirMaterial( sku , almacenRecepcion , bodegaMateriasPrimas , limit)
             
       stock = checkStock(sku ,almacenRecepcion) 
       stockInicial = stock  
-      moverInventario(sku, stock, almacenRecepcion, bodegaMateriasPrimas)
+
+      if (stock < limit)
+        limit = stock
+      end  
+
+      moverInventario(sku, limit, almacenRecepcion, bodegaMateriasPrimas)
       return stockInicial
   end
 =begin

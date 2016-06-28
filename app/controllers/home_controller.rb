@@ -17,20 +17,25 @@ class HomeController < ApplicationController
   end
 
   def test
+     social = SocialMedium.new
+      social.searchMessages
+      #social.sendMessageUrl
+      social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
+
     #[8, 6, 14, 31, 49, 55] 
-      inv = Inventario.new
-      sist = Sistema.new
+      #inv = Inventario.new
+      #sist = Sistema.new
      # ary = [5, 0, 0, 0,0,0] 37,116
       #despacharLista(ary, false123 , 37116 , idOc)
-      Thread.new do
-        inv.updateStockSpree()
+      #Thread.new do
+        #inv.updateStockSpree()
 #        sist.putStockSpree("http://localhost:8080", 2, 1)
-      end
+      #end
       #render :text => sist.obtenerCartola((0).day.ago.to_time.to_i, Time.now.tomorrow.to_time.to_i, sist.idBanco)
-      diaInicial = (13).day.ago.to_date #parte desde las 4am por defecto
-      diaSiguiente = Time.now.tomorrow.to_date
-      render :text => sist.obtenerCartola(Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i, Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i, sist.idBanco)
-
+      #diaInicial = (13).day.ago.to_date #parte desde las 4am por defecto
+      #diaSiguiente = Time.now.tomorrow.to_date
+     #render :text => sist.obtenerCartola(Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i, Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i, sist.idBanco)
+     render :text => "hola"
   end
   
   def self.guardaSaldoDiarioYStock
@@ -401,5 +406,9 @@ class HomeController < ApplicationController
   def insertPromotion
     sm = SocialMedium.new
     sm.insertPromotionSpree(55,1500,"2016-01-01 00:00:00","2016-08-08 00:00:00","webeta")
+  end
+  def updatePromotions
+    sm = SocialMedium.new
+    sm.searchMessages
   end
 end

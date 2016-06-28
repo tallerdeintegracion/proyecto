@@ -120,6 +120,7 @@ end
   get 'home/recibirStock'
 
   get 'home/insertPromotion'
+  get 'home/updatePromotions'
   
 Spree::Core::Engine.add_routes do
   namespace :api, :defaults => { :format => 'json' } do
