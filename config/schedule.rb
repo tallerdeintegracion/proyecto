@@ -8,6 +8,8 @@
 # set :output, "/path/to/my/cron_log.log"
 #
 
+##Cambiar el enviroment production
+
 set :environment, "development"
 set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log"}
 
