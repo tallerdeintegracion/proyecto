@@ -33,5 +33,5 @@ every 1.minute do
 end
 # Learn more: http://github.com/javan/whenever
 every 1.day, :at => '11:59 pm' do
-	runner "HomeController.guardaSaldoDiario"#, :output => 'log/inventario_logs.log'
+	runner "HomeController.guardaSaldoDiarioYStock"#, :output => 'log/inventario_logs.log'
 end
