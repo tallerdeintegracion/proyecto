@@ -7,6 +7,7 @@
 </head>
 <body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.2/Chart.min.js" ></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js" ></script>
 
 	<h1>I.- Gráficos Finacieros</h1>
 	<h2>1) Saldo Cuenta por día</h2>
@@ -435,8 +436,14 @@
         };
         var myChart = new Chart(ctx, {
             type: 'pie',
-            data: data
-        });
+            data: data,
+            options: {tooltips: { callbacks: {
+                label: function(tooltipItem, data) {
+                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                var tooltipLabel = data.labels[tooltipItem.index];
+                var tooltipData = allData[tooltipItem.index];
+                return tooltipLabel + ': ' + tooltipData + '%'; }} } }
+            });
         </script>
 
     <h2>3) Porcentaje uso Almacén Grande</h2>
@@ -466,7 +473,13 @@
         };
         var myChart = new Chart(ctx, {
             type: 'pie',
-            data: data
+            data: data,
+            options: {tooltips: { callbacks: {
+            label: function(tooltipItem, data) {
+            var allData = data.datasets[tooltipItem.datasetIndex].data;
+            var tooltipLabel = data.labels[tooltipItem.index];
+            var tooltipData = allData[tooltipItem.index];
+            return tooltipLabel + ': ' + tooltipData + '%'; }} } }
         });
         </script>
 
@@ -497,7 +510,13 @@
         };
         var myChart = new Chart(ctx, {
             type: 'pie',
-            data: data
+            data: data,
+            options: {tooltips: { callbacks: {
+            label: function(tooltipItem, data) {
+            var allData = data.datasets[tooltipItem.datasetIndex].data;
+            var tooltipLabel = data.labels[tooltipItem.index];
+            var tooltipData = allData[tooltipItem.index];
+            return tooltipLabel + ': ' + tooltipData + '%'; }} } }
         });
         </script>
 
@@ -528,7 +547,13 @@
             };
             var myChart = new Chart(ctx, {
                 type: 'pie',
-                data: data
+                data: data,
+                options: {tooltips: { callbacks: {
+                label: function(tooltipItem, data) {
+                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                var tooltipLabel = data.labels[tooltipItem.index];
+                var tooltipData = allData[tooltipItem.index];
+                return tooltipLabel + ': ' + tooltipData + '%'; }} } }
             });
             </script>
 
@@ -559,7 +584,13 @@
             };
             var myChart = new Chart(ctx, {
                 type: 'pie',
-                data: data
+                data: data,
+                options: {tooltips: { callbacks: {
+                label: function(tooltipItem, data) {
+                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                var tooltipLabel = data.labels[tooltipItem.index];
+                var tooltipData = allData[tooltipItem.index];
+                return tooltipLabel + ': ' + tooltipData + '%'; }} } }
             });
             </script>
 
@@ -590,7 +621,13 @@
             };
             var myChart = new Chart(ctx, {
                 type: 'pie',
-                data: data
+                data: data,
+                options: {tooltips: { callbacks: {
+                label: function(tooltipItem, data) {
+                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                var tooltipLabel = data.labels[tooltipItem.index];
+                var tooltipData = allData[tooltipItem.index];
+                return tooltipLabel + ': ' + tooltipData + '%'; }} } }
             });
             </script>
 

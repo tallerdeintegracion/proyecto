@@ -372,21 +372,22 @@ class HomeController < ApplicationController
     #no se considera la pulmón para sacar el total
     totalAlmacenes = (almacenGrandeTotal + almacenChicoTotal + recepcionTotal + despachoTotal).to_f
     totalUsado = (almacenGrandeUso + almacenChicoUso + recepcionUso + despachoUso).to_f
-    totalPorcentajeUso = (totalUsado/totalAlmacenes).to_s
-    totalPorcentajeDisponible = (1-totalUsado/totalAlmacenes).to_s
+    redondearA = 100.0
+    totalPorcentajeUso = (((totalUsado/totalAlmacenes)*100*redondearA).floor/redondearA).to_s
+    totalPorcentajeDisponible = (((1-totalUsado/totalAlmacenes)*100*redondearA).floor/redondearA).to_s
 
     @stockEjeYBodega.push(totalPorcentajeUso)    
     @stockEjeYBodega.push(totalPorcentajeDisponible)    
-    @stockEjeYGrande.push((almacenGrandeUso.to_f/almacenGrandeTotal.to_f).to_s)
-    @stockEjeYGrande.push((1-almacenGrandeUso.to_f/almacenGrandeTotal.to_f).to_s)
-    @stockEjeYChica.push((almacenChicoUso.to_f/almacenChicoTotal.to_f).to_s)
-    @stockEjeYChica.push((1-almacenChicoUso.to_f/almacenChicoTotal.to_f).to_s)
-    @stockEjeYRecepcion.push((recepcionUso.to_f/recepcionTotal.to_f).to_s)
-    @stockEjeYRecepcion.push((1-recepcionUso.to_f/recepcionTotal.to_f).to_s)
-    @stockEjeYDespacho.push((despachoUso.to_f/despachoTotal.to_f).to_s)
-    @stockEjeYDespacho.push((1-despachoUso.to_f/despachoTotal.to_f).to_s)
-    @stockEjeYPulmon.push((pulmonUso.to_f/pulmonTotal.to_f).to_s)
-    @stockEjeYPulmon.push((1-pulmonUso.to_f/pulmonTotal.to_f).to_s)        
+    @stockEjeYGrande.push((((almacenGrandeUso.to_f/almacenGrandeTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYGrande.push((((1-almacenGrandeUso.to_f/almacenGrandeTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYChica.push((((almacenChicoUso.to_f/almacenChicoTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYChica.push((((1-almacenChicoUso.to_f/almacenChicoTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYRecepcion.push((((recepcionUso.to_f/recepcionTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYRecepcion.push((((1-recepcionUso.to_f/recepcionTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYDespacho.push((((despachoUso.to_f/despachoTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYDespacho.push((((1-despachoUso.to_f/despachoTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYPulmon.push((((pulmonUso.to_f/pulmonTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYPulmon.push((((1-pulmonUso.to_f/pulmonTotal.to_f)*100*redondearA).floor/redondearA).to_s)        
   end
   
   def recibirStock
