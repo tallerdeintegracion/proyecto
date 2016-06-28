@@ -14,7 +14,11 @@ class InventarioController < ApplicationController
   inv = Inventario.new
   inv.run
   end
-
+  def self.recibir
+  
+  inv = Inventario.new
+  inv.rutinaRecibirMaterial
+  end
 end  
 
 
