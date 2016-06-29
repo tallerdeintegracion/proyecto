@@ -7,7 +7,8 @@ class SocialMedium < ActiveRecord::Base
 		require "bunny" # don't forget to put gem "bunny" in your Gemfile 
 		require 'amqp'
 		require 'json'
-		b = Bunny.new("amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com/lbhfijnx")
+		#b = Bunny.new("amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com/lbhfijnx")
+		b = Bunny.new("amqp://uhmlacfa:ooQNlVdc5E2XbtenyuVRHVOLiyeNINQT@jellyfish.rmq.cloudamqp.com/uhmlacfa")
 		b.start
 
 		ch   = b.create_channel
@@ -74,7 +75,9 @@ class SocialMedium < ActiveRecord::Base
 	def sendMessageUrl
 		require "bunny" # don't forget to put gem "bunny" in your Gemfile 
 		require 'amqp'
-		b = Bunny.new("amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com/lbhfijnx")
+		#b = Bunny.new("amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com/lbhfijnx")
+		b = Bunny.new("amqp://uhmlacfa:ooQNlVdc5E2XbtenyuVRHVOLiyeNINQT@jellyfish.rmq.cloudamqp.com/uhmlacfa")
+		
 		#amqp://user:pass@host:10000/vhost
 		#{}"amqp://lbhfijnx:fzM0TDPNOgDF4Gk8xc9ZqOgmNIywmiUG@hyena.rmq.cloudamqp.com:10000/lbhfijnx"
 		puts "bunny " + b.to_s
