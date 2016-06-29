@@ -17,6 +17,10 @@ class HomeController < ApplicationController
   end
 
   def test
+
+        inv = Inventario.new
+        inv.run
+        render :text => "hola"
       #social = SocialMedium.new
       #social.searchMessages
       #social.sendMessageUrl
@@ -51,7 +55,7 @@ class HomeController < ApplicationController
      # facturas.each do |row|
      #   hola = sist.obtenerFactura(row.factura)
      # end
-      #render :text => hola
+    
 
   end
   
