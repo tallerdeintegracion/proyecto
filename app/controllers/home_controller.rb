@@ -444,7 +444,7 @@ class HomeController < ApplicationController
   end
   
   #devuelve un arreglo con el stock total de los 6 sku en orden
-  def checkStockTotal
+  def self.checkStockTotal
     require 'json'
     sist = Sistema.new
     almac = sist.getAlmacenes
