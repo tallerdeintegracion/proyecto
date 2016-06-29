@@ -17,11 +17,12 @@ class HomeController < ApplicationController
   end
 
   def test
-     social = SocialMedium.new
-      social.searchMessages
+      #social = SocialMedium.new
+      #social.searchMessages
       #social.sendMessageUrl
-      social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
-
+      #social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
+      sist = Sistema.new
+      disp = sist.getStockSKUDisponible(31)
     #[8, 6, 14, 31, 49, 55] 
       #inv = Inventario.new
       #sist = Sistema.new
@@ -35,7 +36,7 @@ class HomeController < ApplicationController
       #diaInicial = (13).day.ago.to_date #parte desde las 4am por defecto
       #diaSiguiente = Time.now.tomorrow.to_date
      #render :text => sist.obtenerCartola(Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i, Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i, sist.idBanco)
-     render :text => "hola"
+     render :text => disp.to_s
   end
   
   def self.guardaSaldoDiarioYStock
@@ -395,11 +396,12 @@ class HomeController < ApplicationController
   end
   
   def recibirStock
-    Thread.new do
+    
         inv = Inventario.new
         inv.definirVariables
-        inv.moverInventario(8,200,"571262aaa980ba030058a1f1","571262aaa980ba030058a1f3")
-    end
+        inv.moverInventario(8,200,"571262aaa980ba030058a1f3","571262aaa980ba030058a1f1")
+  
+    render :text => "hola"
   end
 
   def insertPromotion
