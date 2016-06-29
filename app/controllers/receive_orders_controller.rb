@@ -46,13 +46,13 @@ def self.definirVariables
     @sist = Sistema.new
     @returnPoint = 400
 
-    intermedio = JSON.parse(sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+    intermedio = JSON.parse(@sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
    
     @bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
-    @bodegaRecepcion = JSON.parse(sist.getAlmacenes).find {|h1| h1['recepcion'] == true }['_id']
-    @bodegaPulmon = JSON.parse(sist.getAlmacenes).find {|h1| h1['pulmon'] == true }['_id']
-    @bodegaDespacho = JSON.parse(sist.getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
-    @idGrupo = sist.idGrupo
+    @bodegaRecepcion = JSON.parse(@sist.getAlmacenes).find {|h1| h1['recepcion'] == true }['_id']
+    @bodegaPulmon = JSON.parse(@sist.getAlmacenes).find {|h1| h1['pulmon'] == true }['_id']
+    @bodegaDespacho = JSON.parse(@sist.getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
+    @idGrupo = @sist.idGrupo
     @cuentaFabrica = JSON.parse(@sist.getCuentaFabrica)["cuentaId"]
   end 
 
