@@ -1,7 +1,7 @@
 class Inventario < ActiveRecord::Base
 
-  ## Ambiente actual: dev
-  ## Variables a cambiar: cuentaGrupo l35, return l506, l849
+  ## Ambiente actual: prod
+  ## Variables a cambiar: cuentaGrupo l40, return l511, l906
 
   def run
 
@@ -37,7 +37,7 @@ class Inventario < ActiveRecord::Base
     @bodegaRecepcion = JSON.parse(almac).find {|h1| h1['recepcion'] == true }['_id']
     @bodegaPulmon = JSON.parse(almac).find {|h1| h1['pulmon'] == true }['_id']
     @bodegaDespacho = JSON.parse(almac).find {|h1| h1['despacho'] == true }['_id']
-    @cuentaGrupo = "571262c3a980ba030058ab5d" #"572aac69bdb6d403005fb050"
+    @cuentaGrupo = "572aac69bdb6d403005fb050" # "571262c3a980ba030058ab5d" #
     @GrupoProyecto="3"
     @cuentaFabrica = JSON.parse(@sist.getCuentaFabrica)["cuentaId"]
     @horasEntrega = 4
@@ -510,7 +510,7 @@ end
   def sendOc(group , oc)
     url = "http://integra"+ group.to_s + ".ing.puc.cl/api/oc/recibir/" +oc
     puts "--- Enviando orden de compra a: " + url  
-    return ##Solo en el dev
+    # return ##Solo en el dev
     resp = @sist.httpGetRequest( url, nil)
   
     puts "--- Respuesta " + resp
@@ -674,12 +674,19 @@ end
       total = moverInventario(sku,cantidad-100,almacenOrigen,almacenDestino)
       cantidad = 100
     end
-    
-    
     ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
     counter = 0
+
+    cantidadPorMinuto = 30
+    cont = 0
     while counter < cantidad
       begin
+        if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
+          puts "duerme"
+          sleep(30000) ## duermo 30 segundos
+          cont = 0
+        end
+        cont = cont+1
         result = JSON.parse(sist.moverStock(ids[counter]["_id"], almacenDestino))    
         if result["message"]
           puts "No se movio, intentando nuevamente"
@@ -831,8 +838,18 @@ end
     ids = JSON.parse(stock)  
     Rails.logger.debug("debug:: "+ids.to_s)
     counter = 0
+
+    cantidadPorMinuto = 30
+    cont = 0
     while counter < cantidad
       begin  
+        if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
+          puts "duerme"
+          sleep(30000) ## duermo 30 segundos
+          cont = 0
+        end
+        cont = cont+1
+
         movStock = sist.despacharStock(ids[counter]["_id"],direccion,precio, idOC)
         Rails.logger.debug("debug::"+movStock)
         result = JSON.parse(movStock)
@@ -877,9 +894,17 @@ end
     ids = JSON.parse(stock)  
     Rails.logger.debug("debug::"+ids.to_s)
     counter = 0
+
+    cantidadPorMinuto = 30
+    cont = 0
     while counter < cantidad
       begin
-        
+        if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
+          puts "duerme"
+          sleep(30000) ## duermo 30 segundos
+          cont = 0
+        end
+        cont = cont+1
         movStock = sist.moverStockBodega(ids[counter]["_id"],direccion,idOC,precio)
         Rails.logger.debug("debug::"+movStock)
         result = JSON.parse(movStock)
@@ -915,7 +940,7 @@ end
 
     sist = Sistema.new
     require 'json'
-    urlServidor = "http://localhost:3000" #"http://integra3.ing.puc.cl"  
+    urlServidor = "http://integra3.ing.puc.cl"  #"http://localhost:3000" #
     skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
     Thread.new do 
       for i in 0..(skuTrabajados.length-1)

@@ -80,8 +80,15 @@ def self.searchOrders (sftp)
 	
 		# create a temporary directory 
   		Dir.mktmpdir do |dir|
+     cantidadPorMinuto = 5
+     cont = 0
   		data = sftp.download!("/pedidos" , dir , :recursive => true)
-
+        if(cont >= cantidadPorMinuto) # Si ya procese 5
+          puts "duerme"
+          sleep(30000) ## duermo 30 segundos
+          cont = 0
+        end
+        cont = cont+1
   			Dir.glob(dir+"/*.xml") do |fname|
   			# do work on files ending in .xml in the desired directory
   			#puts fname
@@ -120,7 +127,7 @@ def self.processOrder(id , sku , cantidad)
   if(id == id_prueba && @idGrupo == id_proveedor && sku == sku_prueba && cantidad == cantidad_prueba)
     #puts "--- La oreden de compra existe en el sistema"+"\n"
   else
-    rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
+    sist.rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
     Oc.find_or_create_by(oc: id , estados: "defectuosa", canal: oc[0]['canal'].to_s, factura: "", pago: "", sku: oc[0]['sku'].to_s, cantidad: oc[0]['cantidad'].to_s)#los estados son: defectuosa, aceptada, rechazada
     puts "--- ERROR la orden no existe en el sistema o tiene errores"+"\n"
     return 0        
@@ -132,15 +139,12 @@ def self.processOrder(id , sku , cantidad)
  # puts "--- La oc ya ha sido procesada "
 
   if ret == true
-
-     Thread.new do
       fact = JSON.parse(ocs.emitirFactura(id))
       ocBD = Oc.find_by(oc: id)
       ocBD.update(factura: fact["_id"])
       puts "La factura del ftp fue generada" 
       verSiEnviar(fact["_id"])
       puts "La oc del ftp fue despachada" 
-     end
   end
 
 end
