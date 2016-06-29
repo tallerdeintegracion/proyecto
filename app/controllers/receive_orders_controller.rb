@@ -137,13 +137,13 @@ def self.processOrder(id , sku , cantidad)
   ocs = Oc.new
   ret = ocs.analizarOC(id)
  # puts "--- La oc ya ha sido procesada "
-
+  inv = Invetario.new
   if ret == true
       fact = JSON.parse(sist.emitirFactura(id))
       ocBD = Oc.find_by(oc: id)
       ocBD.update(factura: fact["_id"])
       puts "La factura del ftp fue generada" 
-      ocs.verSiEnviar(fact["_id"])
+      inv.verSiEnviar(fact["_id"])
       puts "La oc del ftp fue despachada" 
   end
 
