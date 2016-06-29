@@ -77,7 +77,7 @@ class Sistema < ActiveRecord::Base
    
 	    url = urlReal + "/spree/api/v1/stock_locations/1/stock_items"
 	    #X-Spree-Token header
-	    authHeader = "55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00"
+	    authHeader = "1dcd8409c98c6124d4acd0abccd1e37dc4504ea1d8249ca6"
 	    data =  httpGetRequestSpree(url , authHeader)	
 	    return  data
 
@@ -90,7 +90,7 @@ class Sistema < ActiveRecord::Base
 
 		puts  " se envia a la url " + url
 		#X-Spree-Token header
-		authHeader = '55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00'
+		authHeader = '1dcd8409c98c6124d4acd0abccd1e37dc4504ea1d8249ca6'
 		params = {	'stock_item' => 
 					{'count_on_hand' => cantidad , 
 					'force' => true 

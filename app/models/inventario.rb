@@ -686,7 +686,7 @@ end
       begin
         if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
           puts "duerme"
-          sleep(30000) ## duermo 30 segundos
+          sleep(30) ## duermo 30 segundos
           cont = 0
         end
         cont = cont+1
@@ -746,7 +746,7 @@ end
   def despacharLista(list , direccion , preciototal , idOc)
     sist = Sistema.new
     definirVariables
-    puts"comenzando el despacho "
+    Rails.logger.info "comenzando el despacho "
     
     index = 0
    
@@ -756,26 +756,27 @@ end
       sku = idToSku(index).to_s
       resp = Precio.find_by(sku:sku)
       precio = resp.precioUnitario
-      puts "precio untario " + precio.to_s
+      Rails.logger.info "precio untario " + precio.to_s
      
       fila_sku = Sku.find_by(sku: sku.to_s)
 			fila_sku.increment!(:reservado, stockRequerido.to_i)
      
-      puts "En despacharLista: sku: "+sku.to_s
-      puts "En despacharLista: stockRequerido: "+stockRequerido.to_s
-      puts "En despacharLista: direccion: "+direccion.to_s
-      puts "En despacharLista: precio: "+precio.to_s
-      puts "En despacharLista: idboleta: "+idOc.to_s
+      Rails.logger.info "En despacharLista: sku: "+sku.to_s
+      Rails.logger.info "En despacharLista: stockRequerido: "+stockRequerido.to_s
+      Rails.logger.info "En despacharLista: direccion: "+direccion.to_s
+      Rails.logger.info "En despacharLista: precio: "+precio.to_s
+      Rails.logger.info "En despacharLista: idboleta: "+idOc.to_s
       
       intermedio = JSON.parse(sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+      Rails.logger.info "Obtener almacen"
       almacenOrigen = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
-
+      Rails.logger.info "moviendo"
       moverInventario(sku, stockRequerido, almacenOrigen)
       despacharFTP(sku, stockRequerido, direccion, precio, idOc)     
      end 
 
     end
-     puts"despacho exitoso"
+     Rails.logger.info "despacho exitoso"
   end  
   
 
@@ -847,8 +848,8 @@ end
     while counter < cantidad
       begin  
         if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
-          puts "duerme"
-          sleep(30000) ## duermo 30 segundos
+          Rails.logger.info "duerme"
+          sleep(30) ## duermo 30 segundos
           cont = 0
         end
         cont = cont+1
@@ -904,7 +905,7 @@ end
       begin
         if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
           puts "duerme"
-          sleep(30000) ## duermo 30 segundos
+          sleep(30) ## duermo 30 segundos
           cont = 0
         end
         cont = cont+1

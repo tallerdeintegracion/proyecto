@@ -1,6 +1,6 @@
 class ReceiveOrdersController < ApplicationController
 
-## Aqui no hay que cambiar nada para pasar a o de produccion
+## se cambian las lineas 65 a 70
 
 extend  ApplicationHelper
 extend ReceiveOrdersHelper
