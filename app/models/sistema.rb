@@ -1,23 +1,23 @@
 class Sistema < ActiveRecord::Base
-	## Ambiente Actual: prod
-	## l461 Probablemente hay qye cambiar el token de spree
+	## Ambiente Actual: dev
+	## Probablemente hay qye cambiar el token de spree
 	def idGrupo
-		return  "572aac69bdb6d403005fb044" #"571262b8a980ba030058ab51" #
+		return "571262b8a980ba030058ab51" # "572aac69bdb6d403005fb044"
 	end
 	def idBanco
-		return "572aac69bdb6d403005fb050" #"571262c3a980ba030058ab5d" #
+		return "571262c3a980ba030058ab5d" #"572aac69bdb6d403005fb050"
 	end
 	def bodegaBaseUrl
-		return 'http://integracion-2016-prod.herokuapp.com/bodega' #'http://integracion-2016-dev.herokuapp.com/bodega' #
+		return 'http://integracion-2016-dev.herokuapp.com/bodega' #'http://integracion-2016-prod.herokuapp.com/bodega'
 	end
 	def bancoBaseUrl
-		return 'http://moto.ing.puc.cl/banco' # 'http://mare.ing.puc.cl/banco' #
+		return 'http://mare.ing.puc.cl/banco' #'http://moto.ing.puc.cl/banco'
 	end
 	def ocBaseUrl
-		return 'http://moto.ing.puc.cl/oc' #'http://mare.ing.puc.cl/oc' #
+		return 'http://mare.ing.puc.cl/oc' #'http://moto.ing.puc.cl/oc'
 	end
 	def facturaBaseUrl
-		return 'http://moto.ing.puc.cl/facturas' #'http://mare.ing.puc.cl/facturas' #
+		return 'http://mare.ing.puc.cl/facturas' #'http://moto.ing.puc.cl/facturas'
 	end
 
 
@@ -418,7 +418,7 @@ class Sistema < ActiveRecord::Base
        	begin 
        	 	response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) } 
        	
-       	rescue Errno::ETIMEDOUT  
+       	rescue => ex
        	 	puts "--- Time out de la conexion" 
         	
     	end  
@@ -458,7 +458,7 @@ class Sistema < ActiveRecord::Base
 
 	def findKeys
 		
-		key =  '6xMNP5uAUVjt' #'GKTSVmI778e8Mjg' # 
+		key =  'GKTSVmI778e8Mjg' #'6xMNP5uAUVjt' 
 		return key
 	end
 
