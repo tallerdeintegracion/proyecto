@@ -1,6 +1,6 @@
 class IntegracionpayController < ApplicationController
-## Ambiente: dev 
-## Cambiar: l34
+## Ambiente: prod 
+## Cambiar: l44
    layout false
    
    def pay
@@ -39,10 +39,8 @@ class IntegracionpayController < ApplicationController
       boleta = JSON.parse(bol)
       Boletum.find_or_create_by(boleta_id: boleta["_id"].to_s, orden_id: val.to_s, estado: "Creada", total: ord["total"].to_i)
       
-      #redirect_to "http://integracion-2016-prod.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fconfirm/"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fcancel/"+boleta["_id"].to_s+"&boletaI
-#d="+boleta["_id"].to_s
-        redirect_to "http://integracion-2016-dev.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Flocalhost%3A%0A3000%2Fintegracionpay%2Fconfirm%2F"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Flocalhost%3A%0A3000%2Fintegracionpay%2Fcancel%2F"+boleta["_id"].to_s+"&boletaI
-d="+boleta["_id"].to_s
+      redirect_to "http://integracion-2016-prod.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fconfirm%2F"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Fintegra3.ing.puc.cl%2Fintegracionpay%2Fcancel%2F"+boleta["_id"].to_s+"&boletaId="+boleta["_id"].to_s
+      #redirect_to "http://integracion-2016-dev.herokuapp.com/web/pagoenlinea?callbackUrl=http%3A%2F%2Flocalhost%3A%0A3000%2Fintegracionpay%2Fconfirm%2F"+boleta["_id"].to_s+"&cancelUrl=http%3A%2F%2Flocalhost%3A%0A3000%2Fintegracionpay%2Fcancel%2F"+boleta["_id"].to_s+"&boletaId="+boleta["_id"].to_s
       return
    end
 
@@ -76,6 +74,7 @@ d="+boleta["_id"].to_s
 
         Thread.new do
             inv = Inventario.new
+            puts "Se empezará el despacho"
             inv.despacharLista(despachoUnits, direccion, boleta["total"] , boleta["boleta_id"])
             inv.updateStockSpree()
             Rails.logger.debug("Stock actualizado")
