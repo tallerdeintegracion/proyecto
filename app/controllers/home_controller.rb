@@ -17,14 +17,23 @@ class HomeController < ApplicationController
   end
 
   def test
+
+        inv = Inventario.new
+        inv.run
+        render :text => "hola"
       #social = SocialMedium.new
       #social.searchMessages
       #social.sendMessageUrl
       #social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
 
+    #  sist = Sistema.new
+     # disp = sist.getStockSKUDisponible(31)
+
+
+
     #[8, 6, 14, 31, 49, 55] 
       #inv = Inventario.new
-      sist = Sistema.new
+     # sist = Sistema.new
      # ary = [5, 0, 0, 0,0,0] 37,116
       #despacharLista(ary, false123 , 37116 , idOc)
       #Thread.new do
@@ -32,16 +41,22 @@ class HomeController < ApplicationController
 #        sist.putStockSpree("http://localhost:8080", 2, 1)
       #end
       #render :text => sist.obtenerCartola((0).day.ago.to_time.to_i, Time.now.tomorrow.to_time.to_i, sist.idBanco)
+
+      #diaInicial = (13).day.ago.to_date #parte desde las 4am por defecto
+      #diaSiguiente = Time.now.tomorrow.to_date
+     #render :text => sist.obtenerCartola(Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i, Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i, sist.idBanco)
+
       #diaInicial = (5).day.ago.to_date #parte desde las 4am por defecto
       #diaSiguiente = Time.now.to_date
       #puts "HORA: " + ((Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i)*1000).to_s
       #render :text => sist.obtenerCartola(((Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i)*1000).to_s, ((Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i)*1000).to_s, sist.idBanco)
-      facturas = Oc.where(" DATE(created_at) = ? AND factura IS NOT NULL" , (5).day.ago.to_date)      
-      hola = nil
-      facturas.each do |row|
-        hola = sist.obtenerFactura(row.factura)
-      end
-      render :text => hola
+    #  facturas = Oc.where(" DATE(created_at) = ? AND factura IS NOT NULL" , (5).day.ago.to_date)      
+    #  hola = nil
+     # facturas.each do |row|
+     #   hola = sist.obtenerFactura(row.factura)
+     # end
+    
+
   end
   
   def self.guardaSaldoDiarioYStock
@@ -527,11 +542,12 @@ class HomeController < ApplicationController
 
 
   def recibirStock
-    Thread.new do
+    
         inv = Inventario.new
         inv.definirVariables
-        inv.moverInventario(8,200,"571262aaa980ba030058a1f1","571262aaa980ba030058a1f3")
-    end
+        inv.moverInventario(8,200,"571262aaa980ba030058a1f3","571262aaa980ba030058a1f1")
+  
+    render :text => "hola"
   end
 
   def insertPromotion

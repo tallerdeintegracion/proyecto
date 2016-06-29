@@ -215,7 +215,7 @@ class Sistema < ActiveRecord::Base
 		params={ "canal" => canal , 
 				"cantidad" => cantidad,
 				"sku" => sku,
-				"cliente" => proveedor,
+				"cliente" => cliente,
 				"proveedor" => proveedor,
 				"precioUnitario" =>  precioUnitario,
 				"fechaEntrega" => fechaEntrega,

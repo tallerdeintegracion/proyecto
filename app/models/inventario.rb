@@ -30,7 +30,8 @@ class Inventario < ActiveRecord::Base
     @returnPoint = 2000
     @returnPointProcesados = 400
     almac = @sist.getAlmacenes
-    intermedio = JSON.parse().select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+  
+    intermedio = JSON.parse(almac).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
    
     @bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
     @bodegaChica = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
@@ -249,7 +250,9 @@ end
     
     orden = eval(@sist.crearOrdenDeCompra(canal , cantidad , sku , cliente , proveedor , precioUnitario ,   fechaEntrega , nota ))
     puts " Esto es la orden \n " + orden.to_s
+    #puts " Esto es la orden \n " + orden[0].to_s
     json = orden.to_json
+
     unHash = JSON.parse(json)
     retorno = unHash["_id"]
     puts "id de la orden " + retorno.to_s;
