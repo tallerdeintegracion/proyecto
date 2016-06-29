@@ -143,7 +143,7 @@ def self.processOrder(id , sku , cantidad)
       ocBD = Oc.find_by(oc: id)
       ocBD.update(factura: fact["_id"])
       puts "La factura del ftp fue generada" 
-      verSiEnviar(fact["_id"])
+      ocs.verSiEnviar(fact["_id"])
       puts "La oc del ftp fue despachada" 
   end
 
