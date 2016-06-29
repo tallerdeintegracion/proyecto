@@ -29,30 +29,46 @@
            <option value="1"><%= @diasEjeX[1]%></option> 
            <option value="0"><%= @diasEjeX[0]%></option> 
         </select>
-        <button value="Ver saldo diario" style='width:100px; height:20px' onclick="hacer_click()"/>
-        Ver Detalle</button>
+        <button id=boton value="Ver saldo diario" style='width:120px; height:20px' onclick="hacer_click()"/>Ver Detalle</button>
         </center>
     </div>
+    <div id=info style='width:0; height:0; margin: 10px 10px 10px 10px'> 
+    <center>
+    <textarea id="mytextarea" style='width:0; height:0'></textarea>
+     </center>
+    </div>
+    
 		<script>
 
         function hacer_click()
         {
             var e = document.getElementById("listasaldo");
             var strUser = e.options[e.selectedIndex].value;
-            if (strUser == "0") { alert("<%= @detalleTransacciones[0]%>"); }
-            else if (strUser == "1") {  alert("<%= @detalleTransacciones[1]%>"); }
-            else if (strUser == "2") {  alert("<%= @detalleTransacciones[2]%>"); }
-            else if (strUser == "3") {  alert("<%= @detalleTransacciones[3]%>"); }
-            else if (strUser == "4") {  alert("<%= @detalleTransacciones[4]%>"); }
-            else if (strUser == "5") {  alert("<%= @detalleTransacciones[5]%>"); }
-            else if (strUser == "6") {  alert("<%= @detalleTransacciones[6]%>"); }
-            else if (strUser == "7") {  alert("<%= @detalleTransacciones[7]%>"); }
-            else if (strUser == "8") {  alert("<%= @detalleTransacciones[8]%>"); }
-            else if (strUser == "9") {  alert("<%= @detalleTransacciones[9]%>"); }
-            else if (strUser == "10") {  alert("<%= @detalleTransacciones[10]%>"); }
-            else if (strUser == "11") {  alert("<%= @detalleTransacciones[11]%>"); }
-            else if (strUser == "12") {  alert("<%= @detalleTransacciones[12]%>"); }
-            else if (strUser == "13") {  alert("<%= @detalleTransacciones[13]%>"); }
+            var b = document.getElementById('boton');
+            var t = document.getElementById('mytextarea');
+            var t1 = document.getElementById('info');
+            if (b.innerHTML == "Ver Detalle") 
+            { 
+                b.innerHTML = "No Ver Detalle" 
+                if (strUser == "0") { t.innerHTML = "<%= @detalleTransacciones[0]%>"; }
+                else if (strUser == "1") {  t.innerHTML = "<%= @detalleTransacciones[1]%>"; }
+                else if (strUser == "2") {  t.innerHTML = "<%= @detalleTransacciones[2]%>"; }
+                else if (strUser == "3") {  t.innerHTML = "<%= @detalleTransacciones[3]%>"; }
+                else if (strUser == "4") {  t.innerHTML = "<%= @detalleTransacciones[4]%>"; }
+                else if (strUser == "5") {  t.innerHTML = "<%= @detalleTransacciones[5]%>"; }
+                else if (strUser == "6") {  t.innerHTML = "<%= @detalleTransacciones[6]%>"; }
+                else if (strUser == "7") {  t.innerHTML = "<%= @detalleTransacciones[7]%>"; }
+                else if (strUser == "8") {  t.innerHTML = "<%= @detalleTransacciones[8]%>"; }
+                else if (strUser == "9") {  t.innerHTML = "<%= @detalleTransacciones[9]%>"; }
+                else if (strUser == "10") {  t.innerHTML = "<%= @detalleTransacciones[10]%>"; }
+                else if (strUser == "11") {  t.innerHTML = "<%= @detalleTransacciones[11]%>"; }
+                else if (strUser == "12") {  t.innerHTML = "<%= @detalleTransacciones[12]%>"; }
+                else if (strUser == "13") {  t.innerHTML = "<%= @detalleTransacciones[13]%>"; } 
+                resizeTextarea(500,400);
+            }
+            else { b.innerHTML = "Ver Detalle"; t.innerHTML = "";resizeTextarea(0,0); }  
+            function resizeTextarea(x, y){ t.style.height = y + 'px'; t.style.width = x + 'px';
+            t1.style.height = y + 'px'; t1.style.width = x + 'px'; }
         };
 
         htmlForGraph = "<canvas id='saldos'>";
@@ -121,10 +137,14 @@
            <option value="1"><%= @diasEjeXBoletasP[1]%></option> 
            <option value="0"><%= @diasEjeXBoletasP[0]%></option> 
         </select>
-        <button value="Ver boletas diarias" style='width:100px; height:20px' onclick="click_facturasP()"/>
-        Ver Detalle</button>
+        <button id=boton1 value="Ver boletas diarias" style='width:120px; height:20px' onclick="click_facturasP()"/>Ver Detalle</button>
         </center>
      <canvas id="numeroBoletasP"></canvas>
+    </div>
+    <div id=info1 style='width:0; height:0; margin: 10px 10px 10px 10px'> 
+    <center>
+    <textarea id="mytextarea1" style='width:0; height:0'></textarea>
+     </center>
     </div>
         <script>
 
@@ -132,23 +152,32 @@
         {
             var e = document.getElementById("listaboletasP");
             var strUser = e.options[e.selectedIndex].value;
-            if (strUser == "0") { alert("<%= @detalleBoletasFacturasP[0]%>"); }
-            else if (strUser == "1") {  alert("<%= @detalleBoletasFacturasP[1]%>"); }
-            else if (strUser == "2") {  alert("<%= @detalleBoletasFacturasP[2]%>"); }
-            else if (strUser == "3") {  alert("<%= @detalleBoletasFacturasP[3]%>"); }
-            else if (strUser == "4") {  alert("<%= @detalleBoletasFacturasP[4]%>"); }
-            else if (strUser == "5") {  alert("<%= @detalleBoletasFacturasP[5]%>"); }
-            else if (strUser == "6") {  alert("<%= @detalleBoletasFacturasP[6]%>"); }
-            else if (strUser == "7") {  alert("<%= @detalleBoletasFacturasP[7]%>"); }
-            else if (strUser == "8") {  alert("<%= @detalleBoletasFacturasP[8]%>"); }
-            else if (strUser == "9") {  alert("<%= @detalleBoletasFacturasP[9]%>"); }
-            else if (strUser == "10") {  alert("<%= @detalleBoletasFacturasP[10]%>"); }
-            else if (strUser == "11") {  alert("<%= @detalleBoletasFacturasP[11]%>"); }
-            else if (strUser == "12") {  alert("<%= @detalleBoletasFacturasP[12]%>"); }
-            else if (strUser == "13") {  alert("<%= @detalleBoletasFacturasP[13]%>"); }
+            var b = document.getElementById('boton1');
+            var t = document.getElementById('mytextarea1');
+            var t1 = document.getElementById('info1');
+            if (b.innerHTML == "Ver Detalle") 
+            { 
+                b.innerHTML = "No Ver Detalle" 
+                if (strUser == "0") { t.innerHTML = "<%= @detalleBoletasFacturasP[0]%>"; }
+                else if (strUser == "1") {  t.innerHTML = "<%= @detalleBoletasFacturasP[1]%>"; }
+                else if (strUser == "2") {  t.innerHTML = "<%= @detalleBoletasFacturasP[2]%>"; }
+                else if (strUser == "3") {  t.innerHTML = "<%= @detalleBoletasFacturasP[3]%>"; }
+                else if (strUser == "4") {  t.innerHTML = "<%= @detalleBoletasFacturasP[4]%>"; }
+                else if (strUser == "5") {  t.innerHTML = "<%= @detalleBoletasFacturasP[5]%>"; }
+                else if (strUser == "6") {  t.innerHTML = "<%= @detalleBoletasFacturasP[6]%>"; }
+                else if (strUser == "7") {  t.innerHTML = "<%= @detalleBoletasFacturasP[7]%>"; }
+                else if (strUser == "8") {  t.innerHTML = "<%= @detalleBoletasFacturasP[8]%>"; }
+                else if (strUser == "9") {  t.innerHTML = "<%= @detalleBoletasFacturasP[9]%>"; }
+                else if (strUser == "10") {  t.innerHTML = "<%= @detalleBoletasFacturasP[10]%>"; }
+                else if (strUser == "11") {  t.innerHTML = "<%= @detalleBoletasFacturasP[11]%>"; }
+                else if (strUser == "12") {  t.innerHTML = "<%= @detalleBoletasFacturasP[12]%>"; }
+                else if (strUser == "13") {  t.innerHTML = "<%= @detalleBoletasFacturasP[13]%>"; } 
+                resizeTextarea(500,150);
+            }
+            else { b.innerHTML = "Ver Detalle"; t.innerHTML = "";resizeTextarea(0,0); }  
+            function resizeTextarea(x, y){ t.style.height = y + 'px'; t.style.width = x + 'px';
+            t1.style.height = y + 'px'; t1.style.width = x + 'px'; }           
         };
-
-
         var ctx = document.getElementById("numeroBoletasP");
         var data = {
     labels: ["<%= @diasEjeXBoletasP[0]%>", "<%= @diasEjeXBoletasP[1]%>", "<%= @diasEjeXBoletasP[2]%>", "<%= @diasEjeXBoletasP[3]%>", "<%= @diasEjeXBoletasP[4]%>", "<%= @diasEjeXBoletasP[5]%>", "<%= @diasEjeXBoletasP[6]%>", "<%= @diasEjeXBoletasP[7]%>", "<%= @diasEjeXBoletasP[8]%>", "<%= @diasEjeXBoletasP[9]%>", "<%= @diasEjeXBoletasP[10]%>", "<%= @diasEjeXBoletasP[11]%>", "<%= @diasEjeXBoletasP[12]%>", "<%= @diasEjeXBoletasP[13]%>"],
@@ -234,31 +263,46 @@
            <option value="1"><%= @diasEjeXBoletas[1]%></option> 
            <option value="0"><%= @diasEjeXBoletas[0]%></option> 
         </select>
-        <button value="Ver boletas diarias" style='width:100px; height:20px' onclick="click_facturas()"/>
-        Ver Detalle</button>
+        <button id=boton2 value="Ver boletas diarias" style='width:120px; height:20px' onclick="click_facturas()"/>Ver Detalle</button>
         </center>
 	 <canvas id="numeroBoletas"></canvas>
 	</div>
+    <div id=info2 style='width:0; height:0; margin: 10px 10px 10px 10px'> 
+    <center>
+    <textarea id="mytextarea2" style='width:0; height:0'></textarea>
+     </center>
+    </div>
 		<script>
 
         function click_facturas()
         {
             var e = document.getElementById("listaboletas");
             var strUser = e.options[e.selectedIndex].value;
-            if (strUser == "0") { alert("<%= @detalleBoletasFacturas[0]%>"); }
-            else if (strUser == "1") {  alert("<%= @detalleBoletasFacturas[1]%>"); }
-            else if (strUser == "2") {  alert("<%= @detalleBoletasFacturas[2]%>"); }
-            else if (strUser == "3") {  alert("<%= @detalleBoletasFacturas[3]%>"); }
-            else if (strUser == "4") {  alert("<%= @detalleBoletasFacturas[4]%>"); }
-            else if (strUser == "5") {  alert("<%= @detalleBoletasFacturas[5]%>"); }
-            else if (strUser == "6") {  alert("<%= @detalleBoletasFacturas[6]%>"); }
-            else if (strUser == "7") {  alert("<%= @detalleBoletasFacturas[7]%>"); }
-            else if (strUser == "8") {  alert("<%= @detalleBoletasFacturas[8]%>"); }
-            else if (strUser == "9") {  alert("<%= @detalleBoletasFacturas[9]%>"); }
-            else if (strUser == "10") {  alert("<%= @detalleBoletasFacturas[10]%>"); }
-            else if (strUser == "11") {  alert("<%= @detalleBoletasFacturas[11]%>"); }
-            else if (strUser == "12") {  alert("<%= @detalleBoletasFacturas[12]%>"); }
-            else if (strUser == "13") {  alert("<%= @detalleBoletasFacturas[13]%>"); }
+            var b = document.getElementById('boton2');
+            var t = document.getElementById('mytextarea2');
+            var t1 = document.getElementById('info2');
+            if (b.innerHTML == "Ver Detalle") 
+            { 
+                b.innerHTML = "No Ver Detalle" 
+                if (strUser == "0") { t.innerHTML = "<%= @detalleBoletasFacturas[0]%>"; }
+                else if (strUser == "1") {  t.innerHTML = "<%= @detalleBoletasFacturas[1]%>"; }
+                else if (strUser == "2") {  t.innerHTML = "<%= @detalleBoletasFacturas[2]%>"; }
+                else if (strUser == "3") {  t.innerHTML = "<%= @detalleBoletasFacturas[3]%>"; }
+                else if (strUser == "4") {  t.innerHTML = "<%= @detalleBoletasFacturas[4]%>"; }
+                else if (strUser == "5") {  t.innerHTML = "<%= @detalleBoletasFacturas[5]%>"; }
+                else if (strUser == "6") {  t.innerHTML = "<%= @detalleBoletasFacturas[6]%>"; }
+                else if (strUser == "7") {  t.innerHTML = "<%= @detalleBoletasFacturas[7]%>"; }
+                else if (strUser == "8") {  t.innerHTML = "<%= @detalleBoletasFacturas[8]%>"; }
+                else if (strUser == "9") {  t.innerHTML = "<%= @detalleBoletasFacturas[9]%>"; }
+                else if (strUser == "10") {  t.innerHTML = "<%= @detalleBoletasFacturas[10]%>"; }
+                else if (strUser == "11") {  t.innerHTML = "<%= @detalleBoletasFacturas[11]%>"; }
+                else if (strUser == "12") {  t.innerHTML = "<%= @detalleBoletasFacturas[12]%>"; }
+                else if (strUser == "13") {  t.innerHTML = "<%= @detalleBoletasFacturas[13]%>"; } 
+                resizeTextarea(500,150);
+            }
+            else { b.innerHTML = "Ver Detalle"; t.innerHTML = "";resizeTextarea(0,0); }  
+            function resizeTextarea(x, y){ t.style.height = y + 'px'; t.style.width = x + 'px';
+            t1.style.height = y + 'px'; t1.style.width = x + 'px'; }
         };
 
 
@@ -327,10 +371,12 @@
 
     <h1>II.- Gráficos Logísticos</h1>
 
-    <h2>1) Stock por sku diario</h2>
+    <h2>1) Stock por sku diario (suma de todos los almacenes)</h2>
 
-    <div style="height: 250; width: 450px">  
-     <canvas id="stock"></canvas>     
+    <div style="height: 600; width: 600px">  
+    <center>
+     <canvas id="stock" width="550" height="500"></canvas>    
+     </center> 
     </div>
         <script>      
 
@@ -339,48 +385,48 @@
     labels: ["<%= @diasEjeXStock[0]%>", "<%= @diasEjeXStock[1]%>", "<%= @diasEjeXStock[2]%>", "<%= @diasEjeXStock[3]%>", "<%= @diasEjeXStock[4]%>", "<%= @diasEjeXStock[5]%>", "<%= @diasEjeXStock[6]%>", "<%= @diasEjeXStock[7]%>", "<%= @diasEjeXStock[8]%>", "<%= @diasEjeXStock[9]%>", "<%= @diasEjeXStock[10]%>", "<%= @diasEjeXStock[11]%>", "<%= @diasEjeXStock[12]%>", "<%= @diasEjeXStock[13]%>"],
     datasets: [
         {
-            label: "Mis trigos en dos semanas",
+            label: "Mis trigos en dos semanas                        ",
             fill: false, lineTension: 0.1, backgroundColor: "#4169E1",
             borderColor: "#4169E1",  borderCapStyle: 'butt',
             borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
             pointBorderColor: "#4169E1",
             pointBackgroundColor: "#fff", pointBorderWidth: 1,
-            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
-            pointRadius: 1,  pointHitRadius: 10,
+            pointHoverRadius: 1, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 1,
+            pointRadius: 1,  pointHitRadius: 1,
             data: ["<%= @stockEjeYTrigo[0]%>", "<%= @stockEjeYTrigo[1]%>", "<%= @stockEjeYTrigo[2]%>", "<%= @stockEjeYTrigo[3]%>", "<%= @stockEjeYTrigo[4]%>", "<%= @stockEjeYTrigo[5]%>", "<%= @stockEjeYTrigo[6]%>", "<%= @stockEjeYTrigo[7]%>", "<%= @stockEjeYTrigo[8]%>", "<%= @stockEjeYTrigo[9]%>", "<%= @stockEjeYTrigo[10]%>", "<%= @stockEjeYTrigo[11]%>", "<%= @stockEjeYTrigo[12]%>", "<%= @stockEjeYTrigo[13]%>"] },
             {
-            label: "Mis cremas en dos semanas",
+            label: "Mis cremas en dos semanas                ",
             fill: false, lineTension: 0.1, backgroundColor: "#228B22",
             borderColor: "#228B22",  borderCapStyle: 'butt',
             borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
             pointBorderColor: "#228B22",
             pointBackgroundColor: "#fff", pointBorderWidth: 1,
-            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
-            pointRadius: 1,  pointHitRadius: 10,
+            pointHoverRadius: 1, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 1,
+            pointRadius: 1,  pointHitRadius: 1,
             data: ["<%= @stockEjeYCrema[0]%>", "<%= @stockEjeYCrema[1]%>", "<%= @stockEjeYCrema[2]%>", "<%= @stockEjeYCrema[3]%>", "<%= @stockEjeYCrema[4]%>", "<%= @stockEjeYCrema[5]%>", "<%= @stockEjeYCrema[6]%>", "<%= @stockEjeYCrema[7]%>", "<%= @stockEjeYCrema[8]%>", "<%= @stockEjeYCrema[9]%>", "<%= @stockEjeYCrema[10]%>", "<%= @stockEjeYCrema[11]%>", "<%= @stockEjeYCrema[12]%>", "<%= @stockEjeYCrema[13]%>"] },
             {
-            label: "Mis cebadas en dos semanas",
+            label: "Mis cebadas en dos semanas                    ",
             fill: false, lineTension: 0.1, backgroundColor: "#ff0000",
             borderColor: "#ff0000",  borderCapStyle: 'butt',
             borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
             pointBorderColor: "#ff0000",
             pointBackgroundColor: "#fff", pointBorderWidth: 1,
-            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
-            pointRadius: 1,  pointHitRadius: 10,
+            pointHoverRadius: 1, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 1,
+            pointRadius: 1,  pointHitRadius: 1,
             data: ["<%= @stockEjeYCebada[0]%>", "<%= @stockEjeYCebada[1]%>", "<%= @stockEjeYCebada[2]%>", "<%= @stockEjeYCebada[3]%>", "<%= @stockEjeYCebada[4]%>", "<%= @stockEjeYCebada[5]%>", "<%= @stockEjeYCebada[6]%>", "<%= @stockEjeYCebada[7]%>", "<%= @stockEjeYCebada[8]%>", "<%= @stockEjeYCebada[9]%>", "<%= @stockEjeYCebada[10]%>", "<%= @stockEjeYCebada[11]%>", "<%= @stockEjeYCebada[12]%>", "<%= @stockEjeYCebada[13]%>"] },
             {
-            label: "Mis lanas en dos semanas",
+            label: "Mis lanas en dos semanas                    ",
             fill: false, lineTension: 0.1, backgroundColor: "#000000",
             borderColor: "#000000",  borderCapStyle: 'butt',
             borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
             pointBorderColor: "#000000",
             pointBackgroundColor: "#fff", pointBorderWidth: 1,
-            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
-            pointRadius: 1,  pointHitRadius: 10,
+            pointHoverRadius: 1, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 1,
+            pointRadius: 1,  pointHitRadius: 1,
             data: ["<%= @stockEjeYLana[0]%>", "<%= @stockEjeYLana[1]%>", "<%= @stockEjeYLana[2]%>", "<%= @stockEjeYLana[3]%>", "<%= @stockEjeYLana[4]%>", "<%= @stockEjeYLana[5]%>", "<%= @stockEjeYLana[6]%>", "<%= @stockEjeYLana[7]%>", "<%= @stockEjeYLana[8]%>", "<%= @stockEjeYLana[9]%>", "<%= @stockEjeYLana[10]%>", "<%= @stockEjeYLana[11]%>", "<%= @stockEjeYLana[12]%>", "<%= @stockEjeYLana[13]%>"] },
             {
             label: "Mis leches descremadas en dos semanas",
@@ -389,9 +435,9 @@
             borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
             pointBorderColor: "#4B0082",
             pointBackgroundColor: "#fff", pointBorderWidth: 1,
-            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
-            pointRadius: 1,  pointHitRadius: 10,
+            pointHoverRadius: 1, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 1,
+            pointRadius: 1,  pointHitRadius: 1,
             data: ["<%= @stockEjeYLecheD[0]%>", "<%= @stockEjeYLecheD[1]%>", "<%= @stockEjeYLecheD[2]%>", "<%= @stockEjeYLecheD[3]%>", "<%= @stockEjeYLecheD[4]%>", "<%= @stockEjeYLecheD[5]%>", "<%= @stockEjeYLecheD[6]%>", "<%= @stockEjeYLecheD[7]%>", "<%= @stockEjeYLecheD[8]%>", "<%= @stockEjeYLecheD[9]%>", "<%= @stockEjeYLecheD[10]%>", "<%= @stockEjeYLecheD[11]%>", "<%= @stockEjeYLecheD[12]%>", "<%= @stockEjeYLecheD[13]%>"] },
             {
             label: "Mis galletas integrales en dos semanas",
@@ -400,9 +446,9 @@
             borderDash: [], borderDashOffset: 0.0, borderJoinStyle: 'miter',
             pointBorderColor: "#FF00FF",
             pointBackgroundColor: "#fff", pointBorderWidth: 1,
-            pointHoverRadius: 5, pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 2,
-            pointRadius: 1,  pointHitRadius: 10,
+            pointHoverRadius: 1, pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)", pointHoverBorderWidth: 1,
+            pointRadius: 1,  pointHitRadius: 1,
             data: ["<%= @stockEjeYGalletaI[0]%>", "<%= @stockEjeYGalletaI[1]%>", "<%= @stockEjeYGalletaI[2]%>", "<%= @stockEjeYGalletaI[3]%>", "<%= @stockEjeYGalletaI[4]%>", "<%= @stockEjeYGalletaI[5]%>", "<%= @stockEjeYGalletaI[6]%>", "<%= @stockEjeYGalletaI[7]%>", "<%= @stockEjeYGalletaI[8]%>", "<%= @stockEjeYGalletaI[9]%>", "<%= @stockEjeYGalletaI[10]%>", "<%= @stockEjeYGalletaI[11]%>", "<%= @stockEjeYGalletaI[12]%>", "<%= @stockEjeYGalletaI[13]%>"] }  ] };
         var myChart = new Chart(ctx, {type: 'line', data: data});
         </script>
