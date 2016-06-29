@@ -545,7 +545,7 @@ class HomeController < ApplicationController
     
         inv = Inventario.new
         inv.definirVariables
-        inv.moverInventario(8,200,"571262aaa980ba030058a1f3","571262aaa980ba030058a1f1")
+        inv.moverInventario(params[:sku].to_i,params[:cantidad].to_i,params[:desde],params[:hasta])
   
     render :text => "hola"
   end
