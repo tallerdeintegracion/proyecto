@@ -37,8 +37,11 @@
 <section>
 <div class="container">
 			    	<div class="docs-content" style="">
-	<p><h1>I.- Gráficos Finacieros</h1></p>
-	<p><h2>1) Saldo Cuenta por día</h2></p>
+	<h3>I.- Gráficos Finacieros</h3>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<h2>1) Saldo Cuenta por día</h2>
+	<p>&nbsp;</p>
     <div id="roomForChart" style="height: 450px; width: 650px">
         <center>
          <select id= listasaldo name="diasSaldos" style="margin: 10px 10px 10px 10px">
@@ -57,7 +60,7 @@
            <option value="1"><%= @diasEjeX[1]%></option> 
            <option value="0"><%= @diasEjeX[0]%></option> 
         </select>
-        <button id=boton value="Ver saldo diario" style='width:320px; height:60px' onclick="hacer_click()"/>Ver Detalle</button>
+        <button id=boton value="Ver saldo diario" style='width:220px; height:40px' onclick="hacer_click()"/>Ver Detalle</button>
         </center>
     </div>
     <div id=info style='width:0; height:0; margin: 10px 10px 10px 10px'> 
@@ -146,7 +149,7 @@
 		</script>
 
     <h2>2) Facturas y Boletas emitidas por día (en pesos)</h2>
-
+    <p>&nbsp;</p>
     <div style="height: 450px; width: 650px">
     <center>
          <select id= listaboletasP name="diasBoletasP" style="margin: 10px 10px 10px 10px">
@@ -165,7 +168,7 @@
            <option value="1"><%= @diasEjeXBoletasP[1]%></option> 
            <option value="0"><%= @diasEjeXBoletasP[0]%></option> 
         </select>
-        <button id=boton1 value="Ver boletas diarias" style='width:320px; height:60px' onclick="click_facturasP()"/>Ver Detalle</button>
+        <button id=boton1 value="Ver boletas diarias" style='width:220px; height:40px' onclick="click_facturasP()"/>Ver Detalle</button>
         </center>
      <canvas id="numeroBoletasP"></canvas>
     </div>
@@ -271,7 +274,7 @@
 
 
     <h2>3) Facturas y Boletas emitidas por día (en cantidad)</h2>
-
+    <p>&nbsp;</p>
 
     <div style="height: 450px; width: 650px">
     <center>
@@ -291,7 +294,7 @@
            <option value="1"><%= @diasEjeXBoletas[1]%></option> 
            <option value="0"><%= @diasEjeXBoletas[0]%></option> 
         </select>
-        <button id=boton2 value="Ver boletas diarias" style='width:320px; height:60px' onclick="click_facturas()"/>Ver Detalle</button>
+        <button id=boton2 value="Ver boletas diarias" style='width:220px; height:40px' onclick="click_facturas()"/>Ver Detalle</button>
         </center>
 	 <canvas id="numeroBoletas"></canvas>
 	</div>
@@ -397,8 +400,11 @@
 		});
 		</script>
 
-    <p><h1>II.- Gráficos Logísticos</h1></p>
-
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+    <h3>II.- Gráficos Logísticos</h3>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
     <p><h2>1) Stock por sku diario (suma de todos los almacenes)</h2></p>
 
     <div style="height: 600; width: 600px">  
@@ -668,7 +674,7 @@
             });
             </script>
 
-        <h2>7) Porcentaje uso Almacén Pulmón</h2>
+        <p><h2>7) Porcentaje uso Almacén Pulmón</h2><p>
 
         <div style="height: 250px; width: 450px">
         
