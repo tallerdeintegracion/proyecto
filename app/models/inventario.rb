@@ -19,7 +19,7 @@ class Inventario < ActiveRecord::Base
       
   def rutinaRecibirMaterial
      definirVariables
-     limit = 10
+     limit = 3
      vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal , limit)
     
   end 
