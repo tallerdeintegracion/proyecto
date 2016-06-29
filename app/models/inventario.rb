@@ -833,7 +833,7 @@ end
     Rails.logger.debug("debug:: le empezamos a despachar al ftp")
     total = 0
     if cantidad > 100
-      total = despachaFTP(sku,cantidad-100, direccion,precio,idOC)
+      total = despacharFTP(sku,cantidad-100, direccion,precio,idOC)
       cantidad = 100
     end
     Rails.logger.debug("debug:: cantidad es menor a 100")
