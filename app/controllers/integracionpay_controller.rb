@@ -71,13 +71,13 @@ class IntegracionpayController < ApplicationController
         dir = ::Spree::Address.find_by(id: ord["ship_address_id"])
         direccion = dir["address1"]
         
-
+        Rails.logger.info("Se entrara al thread de despacho")
         Thread.new do
             inv = Inventario.new
-            puts "Se empezará el despacho"
+            Rails.logger.info("Se empezará el despacho")
             inv.despacharLista(despachoUnits, direccion, boleta["total"] , boleta["boleta_id"])
             inv.updateStockSpree()
-            Rails.logger.debug("Stock actualizado")
+            Rails.logger.info("Stock actualizado")
         end
 
 
