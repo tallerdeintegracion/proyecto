@@ -39,16 +39,16 @@ class SocialMedium < ActiveRecord::Base
 			puts "fin " + fin.to_s
 			puts "publicar " + publicar.to_s
 			puts "codigo " + codigo
+			start = Time.strptime(inicio.to_s, '%Q').strftime("%Y-%m-%d %H:%M:%S")
+			ending = Time.strptime(fin.to_s, '%Q').strftime("%Y-%m-%d %H:%M:%S")
 
 			if(ourProduct(sku))
 
-			  start = Time.strptime(inicio.to_s, '%Q').strftime("%Y-%m-%d %H:%M:%S")
-			  ending = Time.strptime(fin.to_s, '%Q').strftime("%Y-%m-%d %H:%M:%S")
-			  insertPromotionSpree(sku.to_i,precio,ending,start,codigo.to_s)
+			  insertPromotionSpree(sku.to_i,precio,start,ending,codigo.to_s)
 			end
 			if(publicar == true )
 				if (ourProduct(sku) == true)
-					publishToSocialMedia(sku , precio, inicio.to_s, fin.to_s , codigo )
+					publishToSocialMedia(sku , precio, start.to_s, ending.to_s , codigo )
 					puts "La promocion a sido publicada en redes sociales"
 				end
 			end
