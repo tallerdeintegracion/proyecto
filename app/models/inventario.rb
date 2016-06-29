@@ -686,7 +686,7 @@ end
       begin
         if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
           puts "duerme"
-          sleep(30000) ## duermo 30 segundos
+          sleep(30) ## duermo 30 segundos
           cont = 0
         end
         cont = cont+1
@@ -849,7 +849,7 @@ end
       begin  
         if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
           Rails.logger.info "duerme"
-          sleep(30000) ## duermo 30 segundos
+          sleep(30) ## duermo 30 segundos
           cont = 0
         end
         cont = cont+1
@@ -905,7 +905,7 @@ end
       begin
         if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
           puts "duerme"
-          sleep(30000) ## duermo 30 segundos
+          sleep(30) ## duermo 30 segundos
           cont = 0
         end
         cont = cont+1
