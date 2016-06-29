@@ -249,7 +249,7 @@ class HomeController < ApplicationController
        cartolaDiaria = JSON.parse(sist.obtenerCartola((Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i)*1000, (Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i)*1000, sist.idBanco))
        puts "UNIX time: " + ((Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i)*1000).to_s + "   " + ((Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i)*1000).to_s
        if cartolaDiaria["data"].length != 0          
-          transaccion = ""
+          transaccion = "Transacciones:" + '\n'
          for u in 0..(cartolaDiaria["data"].length-1)
           transaccion = transaccion + (u+1).to_s + ") id: " + (cartolaDiaria["data"][u]["_id"]).to_s + '\n' + "   origen: " + (cartolaDiaria["data"][u]["origen"]).to_s + '\n' + "   created_at: "+ (cartolaDiaria["data"][u]["created_at"]).to_s + '\n' + "   destino: " + (cartolaDiaria["data"][u]["destino"]).to_s + '\n' + "   monto: " + (cartolaDiaria["data"][u]["monto"]).to_s + '\n'
          end
