@@ -21,11 +21,15 @@ class HomeController < ApplicationController
       #social.searchMessages
       #social.sendMessageUrl
       #social.publishToSocialMedia("8" , 990, "25/06/2016", "23/06/2016" , "codigopromo123 " )
-      sist = Sistema.new
-      disp = sist.getStockSKUDisponible(31)
+
+    #  sist = Sistema.new
+     # disp = sist.getStockSKUDisponible(31)
+
+
+
     #[8, 6, 14, 31, 49, 55] 
       #inv = Inventario.new
-      #sist = Sistema.new
+     # sist = Sistema.new
      # ary = [5, 0, 0, 0,0,0] 37,116
       #despacharLista(ary, false123 , 37116 , idOc)
       #Thread.new do
@@ -33,22 +37,35 @@ class HomeController < ApplicationController
 #        sist.putStockSpree("http://localhost:8080", 2, 1)
       #end
       #render :text => sist.obtenerCartola((0).day.ago.to_time.to_i, Time.now.tomorrow.to_time.to_i, sist.idBanco)
+
       #diaInicial = (13).day.ago.to_date #parte desde las 4am por defecto
       #diaSiguiente = Time.now.tomorrow.to_date
      #render :text => sist.obtenerCartola(Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i, Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i, sist.idBanco)
-     render :text => disp.to_s
+
+      #diaInicial = (5).day.ago.to_date #parte desde las 4am por defecto
+      #diaSiguiente = Time.now.to_date
+      #puts "HORA: " + ((Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i)*1000).to_s
+      #render :text => sist.obtenerCartola(((Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i)*1000).to_s, ((Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i)*1000).to_s, sist.idBanco)
+    #  facturas = Oc.where(" DATE(created_at) = ? AND factura IS NOT NULL" , (5).day.ago.to_date)      
+    #  hola = nil
+     # facturas.each do |row|
+     #   hola = sist.obtenerFactura(row.factura)
+     # end
+      #render :text => hola
+
   end
   
   def self.guardaSaldoDiarioYStock
       sist = Sistema.new
       #skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
       Saldo.find_or_create_by(fecha:(1).day.ago.to_date, monto: JSON.parse(sist.obtenerCuenta(sist.idBanco))[0]["saldo"])
-      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 8, cantidad: sist.getStockSKUDisponible(8))
-      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 6, cantidad: sist.getStockSKUDisponible(6))
-      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 14, cantidad: sist.getStockSKUDisponible(14))
-      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 31, cantidad: sist.getStockSKUDisponible(31))
-      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 49, cantidad: sist.getStockSKUDisponible(49))
-      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 55, cantidad: sist.getStockSKUDisponible(55))
+      stockTotal = checkStockTotal()
+      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 8, cantidad: stockTotal[0])
+      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 6, cantidad: stockTotal[1])
+      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 14, cantidad: stockTotal[2])
+      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 31, cantidad: stockTotal[3])
+      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 49, cantidad: stockTotal[4])
+      Stockfecha.find_or_create_by(fecha:(1).day.ago.to_date, sku: 55, cantidad: stockTotal[5])
   end
 
   def numBoletas date
@@ -144,16 +161,23 @@ class HomeController < ApplicationController
 
   def montoFacturas date
       total = 0    
+      sist = Sistema.new
       facturas = Oc.where(" DATE(created_at) = ? AND factura IS NOT NULL" , date)      
-      facturas.each do |row|
-        total = total + row.pago.to_i
+      facturas.each do |row| 
+        #puts "PRUEBA : " + JSON.parse(sist.obtenerFactura(row.factura))[0]['total'].to_s
+        begin
+          montoTotal = JSON.parse(sist.obtenerFactura(row.factura))[0]['total'].to_s
+          total = total + montoTotal.to_i#.select{|h1|}["total"].to_i
+        rescue Exception => e 
+        end
       end
       return total  
   end
 
   def montoFacturasCanal date
 
-      total = []      
+      total = []   
+      sist = Sistema.new   
       facturasFTP = Oc.where(" DATE(created_at) = ? AND canal = ? AND factura IS NOT NULL" , date, "ftp")
       facturasB2B = Oc.where(" DATE(created_at) = ? AND canal = ? AND factura IS NOT NULL" , date, "b2b")
       facturasB2C = Oc.where(" DATE(created_at) = ? AND canal = ? AND factura IS NOT NULL" , date, "b2c")
@@ -161,13 +185,25 @@ class HomeController < ApplicationController
       contB2B = 0
       contB2C = 0
       facturasFTP.each do |row|
-        contFTP = contFTP + row.pago.to_i
+        begin
+        montoTotal = JSON.parse(sist.obtenerFactura(row.factura))[0]['total'].to_s
+        contFTP = contFTP + montoTotal.to_i
+        rescue Exception => e 
+        end
       end
       facturasB2B.each do |row|
-        contB2B = contB2B + row.pago.to_i
+        begin
+        montoTotal = JSON.parse(sist.obtenerFactura(row.factura))[0]['total'].to_s
+        contB2B = contB2B + montoTotal.to_i
+        rescue Exception => e 
+        end
       end
       facturasB2C.each do |row|
-        contB2C = contB2C + row.pago.to_i
+        begin
+        montoTotal = JSON.parse(sist.obtenerFactura(row.factura))[0]['total'].to_s
+        contB2C = contB2C + montoTotal.to_i
+        rescue Exception => e 
+        end
       end
       
       total.push(contFTP)
@@ -178,7 +214,7 @@ class HomeController < ApplicationController
 
   def dashboard
     
-
+    #pavucontrol
     sist = Sistema.new
     saldoActual = JSON.parse(sist.obtenerCuenta(sist.idBanco))[0]["saldo"]
     @diasEjeX = []
@@ -205,18 +241,20 @@ class HomeController < ApplicationController
        if i != 13
         diaSiguiente = (13-i-1).day.ago.to_date #parte desde las 4am por defecto
        end       
-       cartolaDiaria = JSON.parse(sist.obtenerCartola(Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i, Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i, sist.idBanco))
-       if cartolaDiaria["data"].nil?
-         @detalleTransacciones.push("No hay transacciones para este día")
-       elsif cartolaDiaria["data"].length != 0          
+       #.to_time.to_i)*1000)
+       cartolaDiaria = JSON.parse(sist.obtenerCartola((Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i)*1000, (Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i)*1000, sist.idBanco))
+       puts "UNIX time: " + ((Date.new(diaInicial.year, diaInicial.month, diaInicial.day).to_time.to_i)*1000).to_s + "   " + ((Date.new(diaSiguiente.year, diaSiguiente.month, diaSiguiente.day).to_time.to_i)*1000).to_s
+       if cartolaDiaria["data"].length != 0          
           transaccion = ""
          for u in 0..(cartolaDiaria["data"].length-1)
-          transaccion = transaccion + (cartolaDiaria["data"][u]) + "\n"
+          transaccion = transaccion + (u+1).to_s + ") id: " + (cartolaDiaria["data"][u]["_id"]).to_s + '\n' + "   origen: " + (cartolaDiaria["data"][u]["origen"]).to_s + '\n' + "   created_at: "+ (cartolaDiaria["data"][u]["created_at"]).to_s + '\n' + "   destino: " + (cartolaDiaria["data"][u]["destino"]).to_s + '\n' + "   monto: " + (cartolaDiaria["data"][u]["monto"]).to_s + '\n'
          end
          @detalleTransacciones.push(transaccion)
+         puts "TRANSACCIÓN: " + transaccion
        else 
          @detalleTransacciones.push("No hay transacciones para este día")
        end
+
     end
     #######
     #######
@@ -235,10 +273,11 @@ class HomeController < ApplicationController
         @saldosEjeYBoletas.push(numb)
         @saldosEjeYFacturas.push(numf)       
          
-        canalesBoleta = numBoletasCanal(date)  
+        #la cantidad de boletas van a ser todas b2c
+        canalesBoleta = numb#numBoletasCanal(date)  
         canalesFactura = numFacturasCanal(date)  
-        boletaFactura = "Facturas: " + '\n' + " - ftp  = " + (canalesFactura[0]).to_s + '\n' + " - b2b = " + (canalesFactura[1]).to_s + '\n' + " - b2c  = " + (canalesFactura[2]).to_s + '\n'
-        boletaFactura = boletaFactura + "Boletas: " + '\n' + " - ftp  = " + (canalesBoleta[0]).to_s + '\n' + " - b2b = " + (canalesBoleta[1]).to_s + '\n' + " - b2c  = " + (canalesBoleta[2]).to_s + '\n'
+        boletaFactura = "Facturas: " + '\n' + " - ftp = " + (canalesFactura[0]).to_s + '\n' + " - b2b = " + (canalesFactura[1]).to_s + '\n' + " - b2c = " + (canalesFactura[2]).to_s + '\n'
+        boletaFactura = boletaFactura + "Boletas: " + '\n' + " - ftp = " + (0).to_s + '\n' + " - b2b = " + (0).to_s + '\n' + " - b2c = " + (canalesBoleta).to_s + '\n'
         @detalleBoletasFacturas.push(boletaFactura)
     end
     #######
@@ -258,10 +297,11 @@ class HomeController < ApplicationController
         @saldosEjeYBoletasP.push(montob)
         @saldosEjeYFacturasP.push(montof)       
          
-        canalesBoleta = montoBoletasCanal(date)  
+        #la cantidad de boletas van a ser todas b2c
+        canalesBoleta = montob#montoBoletasCanal(date)  
         canalesFactura = montoFacturasCanal(date)  
-        boletaFactura = "Facturas: " + '\n' + " - ftp  = " + (canalesFactura[0]).to_s + '\n' + " - b2b = " + (canalesFactura[1]).to_s + '\n' + " - b2c  = " + (canalesFactura[2]).to_s + '\n'
-        boletaFactura = boletaFactura + "Boletas: " + '\n' + " - ftp  = " + (canalesBoleta[0]).to_s + '\n' + " - b2b = " + (canalesBoleta[1]).to_s + '\n' + " - b2c  = " + (canalesBoleta[2]).to_s + '\n'
+        boletaFactura = "Facturas: " + '\n' + " - ftp = " + (canalesFactura[0]).to_s + '\n' + " - b2b = " + (canalesFactura[1]).to_s + '\n' + " - b2c = " + (canalesFactura[2]).to_s + '\n'
+        boletaFactura = boletaFactura + "Boletas: " + '\n' + " - ftp = " + (0).to_s + '\n' + " - b2b = " + (0).to_s + '\n' + " - b2c = " + (canalesBoleta).to_s + '\n'
         @detalleBoletasFacturasP.push(boletaFactura)
     end
     #######
@@ -281,7 +321,7 @@ class HomeController < ApplicationController
         #skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
         if i != 13
           resp = Stockfecha.where("DATE(fecha) = ?" , date)
-          if resp.nil?
+          if resp.empty?
             @stockEjeYTrigo.push(0) 
             @stockEjeYCrema.push(0) 
             @stockEjeYCebada.push(0) 
@@ -289,7 +329,8 @@ class HomeController < ApplicationController
             @stockEjeYLecheD.push(0) 
             @stockEjeYGalletaI.push(0)   
           else
-            if resp.length == 6
+            #puts resp.to_s
+            #if resp.length == 6
               resp.each do |row|
                 if row.sku == 8          
                   @stockEjeYTrigo.push(row.cantidad)   
@@ -305,22 +346,24 @@ class HomeController < ApplicationController
                   @stockEjeYGalletaI.push(row.cantidad)  
                 end
               end 
-            else
-              @stockEjeYTrigo.push(0) 
-              @stockEjeYCrema.push(0) 
-              @stockEjeYCebada.push(0) 
-              @stockEjeYLana.push(0) 
-              @stockEjeYLecheD.push(0) 
-              @stockEjeYGalletaI.push(0) 
-            end
+            #else
+            #  @stockEjeYTrigo.push(0) 
+            #  @stockEjeYCrema.push(0) 
+            #  @stockEjeYCebada.push(0) 
+            #  @stockEjeYLana.push(0) 
+            #  @stockEjeYLecheD.push(0) 
+            #  @stockEjeYGalletaI.push(0) 
+            #end
           end
         else
-          @stockEjeYTrigo.push(sist.getStockSKUDisponible(8)) 
-          @stockEjeYCrema.push(sist.getStockSKUDisponible(6)) 
-          @stockEjeYCebada.push(sist.getStockSKUDisponible(14)) 
-          @stockEjeYLana.push(sist.getStockSKUDisponible(31)) 
-          @stockEjeYLecheD.push(sist.getStockSKUDisponible(49)) 
-          @stockEjeYGalletaI.push(sist.getStockSKUDisponible(55))   
+          #puts "stock Crema: " + sist.getStockSKUDisponible(6).to_s
+          stockTotal = checkStockTotal()
+          @stockEjeYTrigo.push(stockTotal[0]) 
+          @stockEjeYCrema.push(stockTotal[1]) 
+          @stockEjeYCebada.push(stockTotal[2]) 
+          @stockEjeYLana.push(stockTotal[3]) 
+          @stockEjeYLecheD.push(stockTotal[4]) 
+          @stockEjeYGalletaI.push(stockTotal[5])   
         end        
     end
     #######
@@ -378,23 +421,122 @@ class HomeController < ApplicationController
     #no se considera la pulmón para sacar el total
     totalAlmacenes = (almacenGrandeTotal + almacenChicoTotal + recepcionTotal + despachoTotal).to_f
     totalUsado = (almacenGrandeUso + almacenChicoUso + recepcionUso + despachoUso).to_f
-    totalPorcentajeUso = (totalUsado/totalAlmacenes).to_s
-    totalPorcentajeDisponible = (1-totalUsado/totalAlmacenes).to_s
+    redondearA = 100.0
+    totalPorcentajeUso = (((totalUsado/totalAlmacenes)*100*redondearA).floor/redondearA).to_s
+    totalPorcentajeDisponible = (((1-totalUsado/totalAlmacenes)*100*redondearA).floor/redondearA).to_s
 
     @stockEjeYBodega.push(totalPorcentajeUso)    
     @stockEjeYBodega.push(totalPorcentajeDisponible)    
-    @stockEjeYGrande.push((almacenGrandeUso.to_f/almacenGrandeTotal.to_f).to_s)
-    @stockEjeYGrande.push((1-almacenGrandeUso.to_f/almacenGrandeTotal.to_f).to_s)
-    @stockEjeYChica.push((almacenChicoUso.to_f/almacenChicoTotal.to_f).to_s)
-    @stockEjeYChica.push((1-almacenChicoUso.to_f/almacenChicoTotal.to_f).to_s)
-    @stockEjeYRecepcion.push((recepcionUso.to_f/recepcionTotal.to_f).to_s)
-    @stockEjeYRecepcion.push((1-recepcionUso.to_f/recepcionTotal.to_f).to_s)
-    @stockEjeYDespacho.push((despachoUso.to_f/despachoTotal.to_f).to_s)
-    @stockEjeYDespacho.push((1-despachoUso.to_f/despachoTotal.to_f).to_s)
-    @stockEjeYPulmon.push((pulmonUso.to_f/pulmonTotal.to_f).to_s)
-    @stockEjeYPulmon.push((1-pulmonUso.to_f/pulmonTotal.to_f).to_s)        
+    @stockEjeYGrande.push((((almacenGrandeUso.to_f/almacenGrandeTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYGrande.push((((1-almacenGrandeUso.to_f/almacenGrandeTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYChica.push((((almacenChicoUso.to_f/almacenChicoTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYChica.push((((1-almacenChicoUso.to_f/almacenChicoTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYRecepcion.push((((recepcionUso.to_f/recepcionTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYRecepcion.push((((1-recepcionUso.to_f/recepcionTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYDespacho.push((((despachoUso.to_f/despachoTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYDespacho.push((((1-despachoUso.to_f/despachoTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYPulmon.push((((pulmonUso.to_f/pulmonTotal.to_f)*100*redondearA).floor/redondearA).to_s)
+    @stockEjeYPulmon.push((((1-pulmonUso.to_f/pulmonTotal.to_f)*100*redondearA).floor/redondearA).to_s)        
   end
   
+  #devuelve un arreglo con el stock total de los 6 sku en orden
+  def checkStockTotal
+    require 'json'
+    sist = Sistema.new
+    almac = sist.getAlmacenes
+    intermedio = JSON.parse(almac).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+    bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
+    bodegaChica = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
+    bodegaRecepcion = JSON.parse(almac).find {|h1| h1['recepcion'] == true }['_id']
+    #bodegaPulmon = JSON.parse(almac).find {|h1| h1['pulmon'] == true }['_id']
+    bodegaDespacho = JSON.parse(almac).find {|h1| h1['despacho'] == true }['_id']
+    principal = JSON.parse(sist.getSKUWithStock(bodegaPrincipal))
+    chica = JSON.parse(sist.getSKUWithStock(bodegaChica))
+    recepcion = JSON.parse(sist.getSKUWithStock(bodegaRecepcion))
+    despacho = JSON.parse(sist.getSKUWithStock(bodegaDespacho))
+    #pulmon = JSON.parse(sist.getSKUWithStock(@bodegaPulmon))
+
+    stock = [] #en orden 8, 6, 14, 31, 49, 55
+    trigo = 0
+    crema = 0
+    cebada = 0
+    lana = 0
+    lecheD = 0
+    galletasI = 0
+    for counter in 0..(principal.length-1)
+      sku = principal[counter]['_id'].to_i
+      if(sku == 8)
+        trigo = trigo + principal[counter]['total'].to_i
+      elsif(sku == 6)
+        crema = crema + principal[counter]['total'].to_i
+      elsif(sku == 14)
+        cebada = cebada + principal[counter]['total'].to_i
+      elsif(sku == 31)
+        lana = lana + principal[counter]['total'].to_i
+      elsif(sku == 49)
+        lecheD = lecheD + principal[counter]['total'].to_i
+      elsif(sku == 55)
+        galletasI = galletasI + principal[counter]['total'].to_i
+      end
+    end
+    for counter in 0..(chica.length-1)
+      sku = chica[counter]['_id'].to_i
+      if(sku == 8)
+        trigo = trigo + chica[counter]['total'].to_i
+      elsif(sku == 6)
+        crema = crema + chica[counter]['total'].to_i
+      elsif(sku == 14)
+        cebada = cebada + chica[counter]['total'].to_i
+      elsif(sku == 31)
+        lana = lana + chica[counter]['total'].to_i
+      elsif(sku == 49)
+        lecheD = lecheD + chica[counter]['total'].to_i
+      elsif(sku == 55)
+        galletasI = galletasI + chica[counter]['total'].to_i
+      end
+    end
+    for counter in 0..(recepcion.length-1)
+      sku = recepcion[counter]['_id'].to_i
+      if(sku == 8)
+        trigo = trigo + recepcion[counter]['total'].to_i
+      elsif(sku == 6)
+        crema = crema + recepcion[counter]['total'].to_i
+      elsif(sku == 14)
+        cebada = cebada + recepcion[counter]['total'].to_i
+      elsif(sku == 31)
+        lana = lana + recepcion[counter]['total'].to_i
+      elsif(sku == 49)
+        lecheD = lecheD + recepcion[counter]['total'].to_i
+      elsif(sku == 55)
+        galletasI = galletasI + recepcion[counter]['total'].to_i
+      end
+    end
+    for counter in 0..(despacho.length-1)
+      sku = despacho[counter]['_id'].to_i
+      if(sku == 8)
+        trigo = trigo + despacho[counter]['total'].to_i
+      elsif(sku == 6)
+        crema = crema + despacho[counter]['total'].to_i
+      elsif(sku == 14)
+        cebada = cebada + despacho[counter]['total'].to_i
+      elsif(sku == 31)
+        lana = lana + despacho[counter]['total'].to_i
+      elsif(sku == 49)
+        lecheD = lecheD + despacho[counter]['total'].to_i
+      elsif(sku == 55)
+        galletasI = galletasI + despacho[counter]['total'].to_i
+      end
+    end
+    stock.push(trigo)
+    stock.push(crema)
+    stock.push(cebada)
+    stock.push(lana)
+    stock.push(lecheD)
+    stock.push(galletasI)
+    return stock      
+  end
+
+
   def recibirStock
     
         inv = Inventario.new

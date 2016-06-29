@@ -29,14 +29,14 @@ class Inventario < ActiveRecord::Base
     @sist = Sistema.new
     @returnPoint = 2000
     @returnPointProcesados = 400
-   
-    intermedio = JSON.parse(@sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+    almac = @sist.getAlmacenes
+    intermedio = JSON.parse().select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
    
     @bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
     @bodegaChica = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
-    @bodegaRecepcion = JSON.parse(@sist.getAlmacenes).find {|h1| h1['recepcion'] == true }['_id']
-    @bodegaPulmon = JSON.parse(@sist.getAlmacenes).find {|h1| h1['pulmon'] == true }['_id']
-    @bodegaDespacho = JSON.parse(@sist.getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
+    @bodegaRecepcion = JSON.parse(almac).find {|h1| h1['recepcion'] == true }['_id']
+    @bodegaPulmon = JSON.parse(almac).find {|h1| h1['pulmon'] == true }['_id']
+    @bodegaDespacho = JSON.parse(almac).find {|h1| h1['despacho'] == true }['_id']
     @cuentaGrupo = "571262c3a980ba030058ab5d" #"572aac69bdb6d403005fb050"
     @GrupoProyecto="3"
     @cuentaFabrica = JSON.parse(@sist.getCuentaFabrica)["cuentaId"]

@@ -84,7 +84,7 @@ d="+boleta["_id"].to_s
 
 
         ## Redireccionamos a spree
-        redirect_to "/spree/orders/"+boleta["orden_id"], :notice => "La orden fue pagada exitosamente. El id de la boleta es"+boleta["boleta_id"].to_s
+        redirect_to "/spree/orders/"+boleta["orden_id"], :notice => "La orden fue pagada exitosamente. El id de la boleta es "+boleta["boleta_id"].to_s
 
     end
 
