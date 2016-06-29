@@ -74,6 +74,7 @@ class IntegracionpayController < ApplicationController
 
         Thread.new do
             inv = Inventario.new
+            puts "Se empezará el despacho"
             inv.despacharLista(despachoUnits, direccion, boleta["total"] , boleta["boleta_id"])
             inv.updateStockSpree()
             Rails.logger.debug("Stock actualizado")
