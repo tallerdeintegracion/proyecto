@@ -246,7 +246,8 @@ def analizarFactura(id)
       Rails.logger.debug("debug:: le avisamos al otro grupo")
 
 
-    end    
+    end
+    return true    
   end
 
 end
