@@ -677,7 +677,7 @@ end
     ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
     counter = 0
 
-    cantidadPorMinuto = 30
+    cantidadPorMinuto = 15
     cont = 0
     while counter < cantidad
       begin
@@ -840,7 +840,7 @@ end
     Rails.logger.debug("debug:: "+ids.to_s)
     counter = 0
 
-    cantidadPorMinuto = 30
+    cantidadPorMinuto = 15
     cont = 0
     while counter < cantidad
       begin  
@@ -896,7 +896,7 @@ end
     Rails.logger.debug("debug::"+ids.to_s)
     counter = 0
 
-    cantidadPorMinuto = 30
+    cantidadPorMinuto = 15
     cont = 0
     while counter < cantidad
       begin
