@@ -138,6 +138,7 @@ def self.processOrder(id , sku , cantidad)
   ret = ocs.analizarOC(id)
  # puts "--- La oc ya ha sido procesada "
   inv = Inventario.new
+  inv.definirVariables()
   if ret == true
       fact = JSON.parse(sist.emitirFactura(id))
       ocBD = Oc.find_by(oc: id)
