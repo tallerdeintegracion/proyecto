@@ -1,0 +1,17 @@
+<%= form_for(@social_medium) do |f| %>
+  <% if @social_medium.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@social_medium.errors.count, "error") %> prohibited this social_medium from being saved:</h2>
+
+      <ul>
+      <% @social_medium.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

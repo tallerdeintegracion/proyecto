@@ -13,7 +13,10 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
-
+gem "amqp", "~> 1.5.0"
+gem "bunny", ">= 2.3.1"
+gem 'twitter', '~> 5.16'
+gem "koala", "~> 2.2"
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -35,6 +38,10 @@ gem 'spree_gateway', '~> 3.1.0.rc1'
 gem 'railties'
 
 gem 'rest-client'
+
+gem 'chartjs-ror'
+
+gem 'chart-js-rails'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

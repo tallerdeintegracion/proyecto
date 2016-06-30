@@ -1,5 +1,8 @@
 class Inventario < ActiveRecord::Base
 
+  ## Ambiente actual: prod
+  ## Variables a cambiar: cuentaGrupo l40, return l511, l906
+
   def run
 
     definirVariables 
@@ -7,24 +10,35 @@ class Inventario < ActiveRecord::Base
     puts "\n \n \n \n "
     puts "#{Time.now}  Inicia revicion de inventario "
     cleanProduccionesDespachadas()
-    vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal)
+    
     checkMateriasPrimas(@bodegaPrincipal)
     checkCompraMaterial(@bodegaPrincipal)
     producirMaterialesProcesados(@bodegaPrincipal)
 
   end
+      
+  def rutinaRecibirMaterial
+     definirVariables
+     limit = 3
+     vaciarAlmacenesRecepcion(@bodegaRecepcion, @bodegaPulmon , @bodegaPrincipal , limit)
+    
+  end 
 
   def definirVariables 
 
     @sist = Sistema.new
     @returnPoint = 2000
     @returnPointProcesados = 400
+    almac = @sist.getAlmacenes
+  
+    intermedio = JSON.parse(almac).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
    
-    @bodegaPrincipal = "572aad41bdb6d403005fb1c1"
-    @bodegaRecepcion = "572aad41bdb6d403005fb1bf"
-    @bodegaPulmon = "572aad41bdb6d403005fb207"
-    @bodegaDespacho = "572aad41bdb6d403005fb1c0"
-    @cuentaGrupo = "572aac69bdb6d403005fb050"
+    @bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
+    @bodegaChica = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
+    @bodegaRecepcion = JSON.parse(almac).find {|h1| h1['recepcion'] == true }['_id']
+    @bodegaPulmon = JSON.parse(almac).find {|h1| h1['pulmon'] == true }['_id']
+    @bodegaDespacho = JSON.parse(almac).find {|h1| h1['despacho'] == true }['_id']
+    @cuentaGrupo = "572aac69bdb6d403005fb050" # "571262c3a980ba030058ab5d" #
     @GrupoProyecto="3"
     @cuentaFabrica = JSON.parse(@sist.getCuentaFabrica)["cuentaId"]
     @horasEntrega = 4
@@ -44,7 +58,8 @@ class Inventario < ActiveRecord::Base
     ocs.destroy_all
   end
 
-  def vaciarAlmacenesRecepcion(bodegaRecepcion , bodegaPulmon, bodegaPrincipal)
+  def vaciarAlmacenesRecepcion(bodegaRecepcion = @bodegaRecepcion , bodegaPulmon = @bodegaPulmon, bodegaPrincipal = @bodegaPrincipal ,limit)
+
     puts "\n"
     puts "2) #{Time.now} Recibiendo material de almacen de recepcion "
     puts "\n"
@@ -52,8 +67,8 @@ class Inventario < ActiveRecord::Base
     
     materias.each do |row|
       sku = row.sku 
-      inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
-      inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+      inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal , limit)
+      inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal , limit)
       puts "--- Recibiendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
     end
 
@@ -61,15 +76,15 @@ class Inventario < ActiveRecord::Base
     materias.each do |row|
      
       sku = row.sku 
-      inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal)
-      inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal)
+      inicialRececpcion = recibirMaterial(sku, bodegaRecepcion, bodegaPrincipal , limit)
+      inicialPulmon = recibirMaterial(sku, bodegaPulmon, bodegaPrincipal , limit)
       puts "--- Recibiendo sku " + sku + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
       ingrediente = Formula.where("sku = ?"  , sku)
     
       ingrediente.each do |ing|
         skuMaterial = ing.skuIngerdiente  
-        inicialRececpcion = recibirMaterial(skuMaterial, bodegaRecepcion, bodegaPrincipal)
-        inicialPulmon =recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal)
+        inicialRececpcion = recibirMaterial(skuMaterial, bodegaRecepcion, bodegaPrincipal , limit)
+        inicialPulmon =recibirMaterial(skuMaterial, bodegaPulmon, bodegaPrincipal , limit)
         puts "--- Recibiendo sku " + skuMaterial + " Recepcion: " + inicialRececpcion.to_s + " Pulmon: " + inicialPulmon.to_s 
       end 
 
@@ -83,14 +98,19 @@ class Inventario < ActiveRecord::Base
 
   end
 
-  def recibirMaterial( sku , almacenRecepcion , bodegaMateriasPrimas)
+  def recibirMaterial( sku , almacenRecepcion , bodegaMateriasPrimas , limit)
             
       stock = checkStock(sku ,almacenRecepcion) 
       stockInicial = stock  
-      moverInventario(sku, stock, almacenRecepcion, bodegaMateriasPrimas)
+
+      if (stock < limit)
+        limit = stock
+      end  
+
+      moverInventario(sku, limit, almacenRecepcion, bodegaMateriasPrimas)
       return stockInicial
   end
-
+=begin
 def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     sist = Sistema.new
     #puts "Almacen de destino " + almacenDestino
@@ -118,17 +138,13 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
       end
 
       puts "Movido correctamente, N= "+ counter.to_s
-      skuDB = Sku.find_by(sku: sku)
-      #skuDB.update(reservado: skuDB["reservado"].to_i-1) //
-      skuDB.increment!(:reservado, -1)
-
       counter = counter+1
 
     end
     return total+counter
 
-  end
-
+end
+=end
   def checkMateriasPrimas(bodega)
     puts "\n"
     puts " 3) #{Time.now}  Revisando si es necesario producir materias primas"  
@@ -234,7 +250,9 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     
     orden = eval(@sist.crearOrdenDeCompra(canal , cantidad , sku , cliente , proveedor , precioUnitario ,   fechaEntrega , nota ))
     puts " Esto es la orden \n " + orden.to_s
+    #puts " Esto es la orden \n " + orden[0].to_s
     json = orden.to_json
+
     unHash = JSON.parse(json)
     retorno = unHash["_id"]
     puts "id de la orden " + retorno.to_s;
@@ -495,6 +513,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
   def sendOc(group , oc)
     url = "http://integra"+ group.to_s + ".ing.puc.cl/api/oc/recibir/" +oc
     puts "--- Enviando orden de compra a: " + url  
+    # return ##Solo en el dev
     resp = @sist.httpGetRequest( url, nil)
   
     puts "--- Respuesta " + resp
@@ -551,10 +570,8 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
   end     
 
   def verSiEnviar(idFactura)
-    
-    Rails.logger.debug("debug:: seguimos en el despacho")
+    definirVariables()
     idOC = Oc.find_by(factura: idFactura)["oc"]
-    Rails.logger.debug("debug:: seguimos en el despacho")
     despacharOC(idOC) 
 
   end
@@ -579,12 +596,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     intermedio = JSON.parse(sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
     almacenOrigen = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
 
-    cant = moverInventarioDespacho(sku, cantidad, almacenOrigen)
-    Rails.logger.debug("debug:: movemos al despacho")
 
-    if cant != cantidad
-      return false
-    end
     #se diferencia del despacho según el canal  
     if canal == "b2b"
       Rails.logger.debug("debug:: despacho es b2b")
@@ -601,20 +613,43 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
       puts "grupo destino es el " + grupoDestino + " y el almacén tiene id " + almacenId.to_s + "\n" 
       puts "Se despacha al cliente"
       Thread.new do
-        despacharCliente(sku,cantidad,almacenId,precio,idOC)
-      end
-      ocDB = Oc.find_by(oc: idOC)
-      ocDB.update(estados: "Despachada")
-
-      Rails.logger.debug("debug::"+variable.to_s)
-      
+        i = 0
+        cantidad1 = cantidad.to_i
+        Rails.logger.debug("debug:: se despachara en varias rondas la cantidad de "+cantidad1.to_s)
+        while cantidad1 > 0 
+          begin
+            Rails.logger.debug("debug:: Ronda " + i.to_s)
+            i = i + 1
+            ca = 99
+            if(cantidad1 <= 99)
+              ca = cantidad1
+            end
+            Rails.logger.debug("debug:: movemos "+ca.to_s+" al despacho")
+            cant = moverInventario(sku, ca, almacenOrigen)
+            if cant != ca
+              ca = cant
+            end
+            Rails.logger.debug("debug:: intentamos despachar "+ca.to_s)
+            despacharCliente(sku,ca,almacenId,precio,idOC)
+            ocDB = Oc.find_by(oc: idOC)
+            cantidad1 = cantidad1 - ca
+          rescue => ex
+            Rails.logger.debug("debug:: problema")
+          end
+        end
+        Rails.logger.debug("debug:: Se ha terminado el despacho")
+      end      
     elsif canal == "ftp"
       ## QUE CHUCHA ES DIRECCIÓN
       puts "Se despacha al ftp"
       direccion="estadireccion"
-      Thread.new do
-        despacharFTP(sku,cantidad,direccion,precio,idOC)
+      cant = moverInventario(sku, cantidad, almacenOrigen)
+      Rails.logger.debug("debug:: movemos al despacho")
+      if cant != cantidad
+        return false
       end
+      Rails.logger.debug("debug:: despachamos")
+      despacharFTP(sku,cantidad,direccion,precio,idOC)
       ocDB = Oc.find_by(oc: idOC)
       puts "FTP despachado"
       ocDB.update(estados: "Despachada")
@@ -624,42 +659,59 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
   end
 
 
- def moverInventarioDespacho(sku, cantidad, almacenOrigen)
+ def moverInventario(sku, cantidad, almacenOrigen, almacenDestino = @bodegaDespacho)
     sist = Sistema.new
-    almacenDestino = JSON.parse(sist.getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
-    puts "Almacen de despacho " + almacenDestino
+    puts "Moviendo al almacen: " + almacenDestino
+    descontar = false
+    if almacenDestino == @bodegaDespacho
+      descontar = true
+    end
     ## Falta confirmar que exista el stock necesario
     
     ## Ejecutamos el código para mover la cantidad necesaria de 100 en 100
     total = 0
     if cantidad > 100
-      total = moverInventarioDespacho(sku,cantidad-100,almacenOrigen,almacenDestino)
+      total = moverInventario(sku,cantidad-100,almacenOrigen,almacenDestino)
       cantidad = 100
     end
-    
-      
     ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
     counter = 0
+
+    cantidadPorMinuto = 30
+    cont = 0
     while counter < cantidad
       begin
+        if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
+          puts "duerme"
+          sleep(30) ## duermo 30 segundos
+          cont = 0
+        end
+        cont = cont+1
         result = JSON.parse(sist.moverStock(ids[counter]["_id"], almacenDestino))    
         if result["message"]
           puts "No se movio, intentando nuevamente"
-          ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad-counter))
-          counter = counter-1
+          puts cantidad.to_s
+          total = total + counter
+          cantidad = cantidad - counter
+          counter = 0
+          ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
+        else 
+          puts "Movido correctamente, N= "+ (total+counter).to_s
+          if descontar
+            skuDB = Sku.find_by(sku: sku)
+            skuDB.increment!(:reservado, -1)
+          end
+          counter = counter+1
         end
       rescue => ex
         puts "No se movio, intentando nuevamente"
-        ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad-counter))
-        counter = counter-1
+        puts cantidad.to_s
+        puts ids.to_s
+        total = total + counter
+        cantidad = cantidad - counter
+        counter = 0
+        ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
       end
-
-      puts "Movido correctamente, N= "+ counter.to_s
-      skuDB = Sku.find_by(sku: sku)
-      #skuDB.update(reservado: skuDB["reservado"].to_i-1)
-      skuDB.increment!(:reservado, -1)
-      counter = counter+1
-
     end
     return total+counter
 
@@ -691,7 +743,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
   def despacharLista(list , direccion , preciototal , idOc)
     sist = Sistema.new
     definirVariables
-    puts"comenzando el despacho "
+    Rails.logger.info "comenzando el despacho "
     
     index = 0
    
@@ -701,26 +753,27 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
       sku = idToSku(index).to_s
       resp = Precio.find_by(sku:sku)
       precio = resp.precioUnitario
-      puts "precio untario " + precio.to_s
+      Rails.logger.info "precio untario " + precio.to_s
      
       fila_sku = Sku.find_by(sku: sku.to_s)
 			fila_sku.increment!(:reservado, stockRequerido.to_i)
      
-      puts "En despacharLista: sku: "+sku.to_s
-      puts "En despacharLista: stockRequerido: "+stockRequerido.to_s
-      puts "En despacharLista: direccion: "+direccion.to_s
-      puts "En despacharLista: precio: "+precio.to_s
-      puts "En despacharLista: idboleta: "+idOc.to_s
+      Rails.logger.info "En despacharLista: sku: "+sku.to_s
+      Rails.logger.info "En despacharLista: stockRequerido: "+stockRequerido.to_s
+      Rails.logger.info "En despacharLista: direccion: "+direccion.to_s
+      Rails.logger.info "En despacharLista: precio: "+precio.to_s
+      Rails.logger.info "En despacharLista: idboleta: "+idOc.to_s
       
       intermedio = JSON.parse(sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+      Rails.logger.info "Obtener almacen"
       almacenOrigen = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
-
-      moverInventarioDespacho(sku, stockRequerido, almacenOrigen)
+      Rails.logger.info "moviendo"
+      moverInventario(sku, stockRequerido, almacenOrigen)
       despacharFTP(sku, stockRequerido, direccion, precio, idOc)     
      end 
 
     end
-     puts"despacho exitoso"
+     Rails.logger.info "despacho exitoso"
   end  
   
 
@@ -745,7 +798,27 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
       return 55
     end
   end 
-
+  def SKUToId(id) 
+    #[8, 6, 14, 31, 49, 55] 
+    if id == 8
+      return 1
+    end
+    if id == 6
+      return 2
+    end
+    if id == 14
+      return 3
+    end
+    if id == 31
+      return 4
+    end
+    if id == 49
+      return 5
+    end
+    if id == 55
+      return 6
+    end
+  end 
   
   def despacharFTP(sku, cantidad, direccion,precio,idOC)
     sist = Sistema.new
@@ -757,34 +830,48 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     Rails.logger.debug("debug:: le empezamos a despachar al ftp")
     total = 0
     if cantidad > 100
-      total = despachaFTP(sku,cantidad-100, direccion,precio,idOC)
+      total = despacharFTP(sku,cantidad-100, direccion,precio,idOC)
       cantidad = 100
     end
     Rails.logger.debug("debug:: cantidad es menor a 100")
     stock = sist.getStock(almacenOrigen, sku , cantidad)
-    Rails.logger.debug("debug::"+stock)
+    Rails.logger.debug("debug:: "+stock)
     ids = JSON.parse(stock)  
-    Rails.logger.debug("debug::"+ids.to_s)
+    Rails.logger.debug("debug:: "+ids.to_s)
     counter = 0
+
+    cantidadPorMinuto = 30
+    cont = 0
     while counter < cantidad
-      begin
-        
+      begin  
+        if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
+          Rails.logger.info "duerme"
+          sleep(30) ## duermo 30 segundos
+          cont = 0
+        end
+        cont = cont+1
+
         movStock = sist.despacharStock(ids[counter]["_id"],direccion,precio, idOC)
         Rails.logger.debug("debug::"+movStock)
         result = JSON.parse(movStock)
             
         if result["message"]
           Rails.logger.debug("debug::"+"No se despacho, intentando nuevamente")
-          ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad-counter))
-          counter = counter-1
+          total = total + counter
+          cantidad = cantidad - counter
+          counter = 0
+          ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
+        else 
+          puts "Despachado correctamente, N= "+ (total+counter).to_s
+          counter = counter+1
         end
       rescue => ex
         Rails.logger.debug("debug::"+"No se despacho, intentando nuevamente")
-        ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad-counter))
-        counter = counter-1
+        total = total + counter
+        cantidad = cantidad - counter
+        counter = 0
+        ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
       end
-      Rails.logger.debug("debug::"+"Despachado correctamente, N= "+ counter.to_s)
-      counter = counter+1
     end
     return total+counter
   end
@@ -808,25 +895,39 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
     ids = JSON.parse(stock)  
     Rails.logger.debug("debug::"+ids.to_s)
     counter = 0
+
+    cantidadPorMinuto = 30
+    cont = 0
     while counter < cantidad
       begin
-        
+        if(cont >= cantidadPorMinuto) # Si ya movi la cantidad en un minuto
+          puts "duerme"
+          sleep(30) ## duermo 30 segundos
+          cont = 0
+        end
+        cont = cont+1
         movStock = sist.moverStockBodega(ids[counter]["_id"],direccion,idOC,precio)
         Rails.logger.debug("debug::"+movStock)
         result = JSON.parse(movStock)
             
         if result["message"]
           Rails.logger.debug("debug::"+"No se despacho, intentando nuevamente")
-          ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad-counter))
-          counter = counter-1
+          total = total + counter
+          cantidad = cantidad - counter
+          counter = 0
+          ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
+        else
+          Rails.logger.debug("debug::"+"Despachado correctamente, N= "+ (total+counter).to_s)
+          counter = counter+1
         end
       rescue => ex
         Rails.logger.debug("debug::"+"No se despacho, intentando nuevamente")
-        ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad-counter))
-        counter = counter-1
+        total = total + counter
+        cantidad = cantidad - counter
+        counter = 0
+        ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
       end
-      Rails.logger.debug("debug::"+"Despachado correctamente, N= "+ counter.to_s)
-      counter = counter+1
+
     end
     return total+counter
   end
@@ -840,7 +941,7 @@ def moverInventario(sku, cantidad, almacenOrigen,almacenDestino)
 
     sist = Sistema.new
     require 'json'
-    urlServidor = "http://integra3.ing.puc.cl"  
+    urlServidor = "http://integra3.ing.puc.cl"  #"http://localhost:3000" #
     skuTrabajados = [8, 6, 14, 31, 49, 55] #están en orden según el id de spree
     Thread.new do 
       for i in 0..(skuTrabajados.length-1)

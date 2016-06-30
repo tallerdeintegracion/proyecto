@@ -1,5 +1,8 @@
 class Oc < ActiveRecord::Base
 
+## Ambiente actual: prod
+## Modificar en l34,l165,l240
+
 def recibirOC(id)
 
     sist = Sistema.new
@@ -28,7 +31,7 @@ def recibirOC(id)
       Rails.logger.debug("debug:: buscamos al otro grupo")
 
       nOtroGrupo = Grupo.find_by(idGrupo: oc[0]["cliente"])["nGrupo"]
-      #url = "http://localhost:8080/api/facturas/recibir/" + fact["_id"]
+      #url = "http://localhost:3000/api/facturas/recibir/" + fact["_id"]
       url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/facturas/recibir/"  + fact["_id"]
       Rails.logger.debug("debug:: le avisamos al otro grupo")
 
@@ -131,19 +134,21 @@ def analizarFactura(id)
     
     ##Confirmamos que no la hayamos pagado ya
     oc = SentOrder.find_by(oc: idoc)
-    if oc != nil
-      if oc["estado"] == "Pagada"
-        return false
-      end
-    end    
+
+    if oc == nil
+      return false
+    end
+    if oc["estado"] == "Pagada"
+      return false
+    end
+
     response = pagarFactura(factura)
     ## Falta confirmar si se pago correctamente
     Thread.new do
         avisarTransferencia(factura,response)
     end
     ## Actualizamos la oc
-    ocBD = SentOrder.find_by(oc: idoc)
-    ocBD.update(estado: "Pagada")
+    oc.update(estado: "Pagada")
     return true
   end
   
@@ -159,7 +164,7 @@ def analizarFactura(id)
   def avisarTransferencia(factura,response)
     sist = Sistema.new
     nOtroGrupo = Grupo.find_by(idGrupo: factura[0]["proveedor"])["nGrupo"]
-    #url = "http://localhost:8080/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
+    #url = "http://localhost:3000/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
     url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/pagos/recibir/" + response["_id"] + "?idfactura=" + factura[0]["_id"]
     Rails.logger.debug("debug:: se avisa la transferencia")
 
@@ -229,12 +234,13 @@ def analizarFactura(id)
     Rails.logger.debug("debug:: Datos actualizados")
     
     invent = Inventario.new    
+    invent.definirVariables
     Thread.new do
       Rails.logger.debug("debug:: intentamos despachar")
       ## Gatillamos el envio desde aqui si es posible?
       res = invent.verSiEnviar(idFactura)
       nOtroGrupo = Grupo.find_by(factura: idFactura)["nGrupo"]
-      #url = "http://localhost/api/despacho/recibir/" + fact["_id"]
+      #url = "http://localhost:3000/api/despacho/recibir/" + fact["_id"]
       url = "http://integra" + nOtroGrupo.to_s + ".ing.puc.cl/api/despacho/recibir/" + idFactura
       ans = sist.httpGetRequest(url ,nil)
       Rails.logger.debug("debug:: le avisamos al otro grupo")

@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Fecha:</strong>
+  <%= @stockfecha.fecha %>
+</p>
+
+<p>
+  <strong>Sku:</strong>
+  <%= @stockfecha.sku %>
+</p>
+
+<p>
+  <strong>Cantidad:</strong>
+  <%= @stockfecha.cantidad %>
+</p>
+
+<%= link_to 'Edit', edit_stockfecha_path(@stockfecha) %> |
+<%= link_to 'Back', stockfechas_path %>

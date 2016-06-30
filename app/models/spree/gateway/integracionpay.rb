@@ -1,7 +1,70 @@
 require 'rest_client'
 module Spree
   class Gateway::Integracionpay < Gateway
-    
+    #preference :merchant_id_no, :string
+    #preference :access_code, :string
+    #preference :secure_secret, :string
+
+    def auto_capture?
+      false
+    end
+
+    # Spree usually grabs these from a Credit Card object but when using
+    # Commbank's 3 Party where we wouldn't keep the credit card object
+    # as that's entered outside of the store forms
+    def actions
+      %w{capture}
+    end
+
+    # Indicates whether its possible to void the payment.
+    def can_void?(payment)
+      !payment.void?
+    end
+
+    # Indicates whether its possible to capture the payment
+    def can_capture?(payment)
+      payment.pending? || payment.checkout?
+    end
+
+    def method_type
+      'integracionpay'
+    end
+
+    def capture(*args)
+     # ActiveMerchant::Billing::Response.new(true, "", {}, {})
+    end
+
+    def source_required?
+      false
+    end
+
+    def provider_class
+      self.class
+    end
+
+    def provider
+      self
+    end
+
+    def purchase
+        # This is normally delegated to the payment, but don't do that. Handle it here.
+        # This is a hack copied from the Spree Better Paypal Express gem.
+        Class.new do
+          def success?; true; end
+          def authorization; nil; end
+        end.new
+    end
+    def authorize
+        # This is normally delegated to the payment, but don't do that. Handle it here.
+        # This is a hack copied from the Spree Better Paypal Express gem.
+        Class.new do
+          def success?; true; end
+          def authorization; nil; end
+        end.new
+    end
+
+
+=begin 
     def provider_class
       Gateway::Integracionpay
     end
@@ -37,6 +100,6 @@ module Spree
       def pay(amount, id) 
         result = RestClient.get "http://url?id=1sdfawd"        
       end
-      
+=end
   end
 end

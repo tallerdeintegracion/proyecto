@@ -1,0 +1,29 @@
+<%= form_for(@stockfecha) do |f| %>
+  <% if @stockfecha.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@stockfecha.errors.count, "error") %> prohibited this stockfecha from being saved:</h2>
+
+      <ul>
+      <% @stockfecha.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :fecha %><br>
+    <%= f.date_select :fecha %>
+  </div>
+  <div class="field">
+    <%= f.label :sku %><br>
+    <%= f.number_field :sku %>
+  </div>
+  <div class="field">
+    <%= f.label :cantidad %><br>
+    <%= f.number_field :cantidad %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

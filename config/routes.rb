@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  resources :stockfechas
+  resources :stockdia
+  resources :saldos
+  resources :social_media
   resources :boleta
   resources :boleta
   resources :boleta
@@ -11,6 +15,7 @@ Rails.application.routes.draw do
   mount Spree::Core::Engine, at: '/spree'
 
   patch '/integracionpay', :to =>  "integracionpay#pay", :as => :integracionpay
+  get '/integracionpay' =>  "integracionpay#pay"
   get '/integracionpay/confirm/:id' => "integracionpay#confirm"
   get '/integracionpay/cancel/:id' => "integracionpay#cancel"
 
@@ -62,7 +67,7 @@ end
 #  post 'api/pagos/recibir/:id' => 'api#pagosRecibir'
 #  post 'api/oc/recibir/:id' => 'api#ocRecibir'
 
- 
+  get 'socialmedia/search'
   get 'inventario/run'
   get 'home/bodegas'
   get 'home/test'
@@ -99,7 +104,8 @@ end
   
   get 'inventario/vaciar'
   get 'inventario/mover' => 'inventario#moverMiStock'
-  
+  get 'saldos/show'
+  get 'stockfechas/show'
   get 'home/index'
   
   get 'home/listaOrdenesCompra'
@@ -109,7 +115,19 @@ end
   root 'home#index'
 
   get 'home/test'
+
+  get 'home/dashboard'
+  get 'home/recibirStock'
+
+  get 'home/insertPromotion'
+  get 'home/updatePromotions'
   
+Spree::Core::Engine.add_routes do
+  namespace :api, :defaults => { :format => 'json' } do
+    resources :option_values
+  end
+end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

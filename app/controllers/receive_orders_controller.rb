@@ -1,5 +1,7 @@
 class ReceiveOrdersController < ApplicationController
-  
+
+## se cambian las lineas 65 a 70
+
 extend  ApplicationHelper
 extend ReceiveOrdersHelper
 extend InventarioHelper
@@ -29,7 +31,7 @@ def self.run
 end
 
 def self.definirVariables 
-      
+=begin      
     @returnPoint = 400
     @bodegaPrincipal = "572aad41bdb6d403005fb1c1"
     @bodegaRecepcion = "572aad41bdb6d403005fb1bf"
@@ -39,7 +41,19 @@ def self.definirVariables
     sist = Sistema.new
     @cuentaFabrica = JSON.parse(sist.getCuentaFabrica)["cuentaId"]
     @idGrupo = "572aac69bdb6d403005fb044"
+=end
 
+    @sist = Sistema.new
+    @returnPoint = 400
+
+    intermedio = JSON.parse(@sist.getAlmacenes).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+   
+    @bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
+    @bodegaRecepcion = JSON.parse(@sist.getAlmacenes).find {|h1| h1['recepcion'] == true }['_id']
+    @bodegaPulmon = JSON.parse(@sist.getAlmacenes).find {|h1| h1['pulmon'] == true }['_id']
+    @bodegaDespacho = JSON.parse(@sist.getAlmacenes).find {|h1| h1['despacho'] == true }['_id']
+    @idGrupo = @sist.idGrupo
+    @cuentaFabrica = JSON.parse(@sist.getCuentaFabrica)["cuentaId"]
   end 
 
 
@@ -66,8 +80,15 @@ def self.searchOrders (sftp)
 	
 		# create a temporary directory 
   		Dir.mktmpdir do |dir|
+     cantidadPorMinuto = 5
+     cont = 0
   		data = sftp.download!("/pedidos" , dir , :recursive => true)
-
+        if(cont >= cantidadPorMinuto) # Si ya procese 5
+          puts "duerme"
+          sleep(30000) ## duermo 30 segundos
+          cont = 0
+        end
+        cont = cont+1
   			Dir.glob(dir+"/*.xml") do |fname|
   			# do work on files ending in .xml in the desired directory
   			#puts fname
@@ -106,7 +127,7 @@ def self.processOrder(id , sku , cantidad)
   if(id == id_prueba && @idGrupo == id_proveedor && sku == sku_prueba && cantidad == cantidad_prueba)
     #puts "--- La oreden de compra existe en el sistema"+"\n"
   else
-    rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
+    sist.rechazarOrdenDeCompra(id, "OC no existe en el sistema o tiene errores")
     Oc.find_or_create_by(oc: id , estados: "defectuosa", canal: oc[0]['canal'].to_s, factura: "", pago: "", sku: oc[0]['sku'].to_s, cantidad: oc[0]['cantidad'].to_s)#los estados son: defectuosa, aceptada, rechazada
     puts "--- ERROR la orden no existe en el sistema o tiene errores"+"\n"
     return 0        
@@ -116,17 +137,14 @@ def self.processOrder(id , sku , cantidad)
   ocs = Oc.new
   ret = ocs.analizarOC(id)
  # puts "--- La oc ya ha sido procesada "
-
+  inv = Inventario.new
   if ret == true
-
-     Thread.new do
-      fact = JSON.parse(ocs.emitirFactura(id))
+      fact = JSON.parse(sist.emitirFactura(id))
       ocBD = Oc.find_by(oc: id)
       ocBD.update(factura: fact["_id"])
       puts "La factura del ftp fue generada" 
-      verSiEnviar(fact["_id"])
+      inv.verSiEnviar(fact["_id"])
       puts "La oc del ftp fue despachada" 
-     end
   end
 
 end

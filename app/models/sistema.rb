@@ -1,22 +1,23 @@
 class Sistema < ActiveRecord::Base
-
+	## Ambiente Actual: dev
+	## Probablemente hay qye cambiar el token de spree
 	def idGrupo
-		return "572aac69bdb6d403005fb044"
+		return "572aac69bdb6d403005fb044"# "571262b8a980ba030058ab51" #
 	end
 	def idBanco
-		return "572aac69bdb6d403005fb050"
+		return "572aac69bdb6d403005fb050"#"571262c3a980ba030058ab5d" #
 	end
 	def bodegaBaseUrl
-		return 'http://integracion-2016-prod.herokuapp.com/bodega'
+		return 'http://integracion-2016-prod.herokuapp.com/bodega' #'http://integracion-2016-dev.herokuapp.com/bodega' #
 	end
 	def bancoBaseUrl
-		return 'http://moto.ing.puc.cl/banco'
+		return 'http://moto.ing.puc.cl/banco' #'http://mare.ing.puc.cl/banco' #
 	end
 	def ocBaseUrl
-		return 'http://moto.ing.puc.cl/oc'
+		return 'http://moto.ing.puc.cl/oc' #'http://mare.ing.puc.cl/oc' #
 	end
 	def facturaBaseUrl
-		return 'http://moto.ing.puc.cl/facturas'
+		return 'http://moto.ing.puc.cl/facturas' #'http://mare.ing.puc.cl/facturas' #
 	end
 
 
@@ -76,7 +77,7 @@ class Sistema < ActiveRecord::Base
    
 	    url = urlReal + "/spree/api/v1/stock_locations/1/stock_items"
 	    #X-Spree-Token header
-	    authHeader = "55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00"
+	    authHeader = "1dcd8409c98c6124d4acd0abccd1e37dc4504ea1d8249ca6"
 	    data =  httpGetRequestSpree(url , authHeader)	
 	    return  data
 
@@ -89,7 +90,7 @@ class Sistema < ActiveRecord::Base
 
 		puts  " se envia a la url " + url
 		#X-Spree-Token header
-		authHeader = '55556cabf397aebfd4ecffa7676f332b3fe2f6cbdbfd7c00'
+		authHeader = '1dcd8409c98c6124d4acd0abccd1e37dc4504ea1d8249ca6'
 		params = {	'stock_item' => 
 					{'count_on_hand' => cantidad , 
 					'force' => true 
@@ -214,7 +215,7 @@ class Sistema < ActiveRecord::Base
 		params={ "canal" => canal , 
 				"cantidad" => cantidad,
 				"sku" => sku,
-				"cliente" => proveedor,
+				"cliente" => cliente,
 				"proveedor" => proveedor,
 				"precioUnitario" =>  precioUnitario,
 				"fechaEntrega" => fechaEntrega,
@@ -417,7 +418,7 @@ class Sistema < ActiveRecord::Base
        	begin 
        	 	response = Net::HTTP.new(uri.host, uri.port).start {|http| http.request(request) } 
        	
-       	rescue Errno::ETIMEDOUT  
+       	rescue => ex
        	 	puts "--- Time out de la conexion" 
         	
     	end  
@@ -457,7 +458,7 @@ class Sistema < ActiveRecord::Base
 
 	def findKeys
 		
-		key =  '6xMNP5uAUVjt' #'GKTSVmI778e8Mjg' 
+		key =  '6xMNP5uAUVjt' # 'GKTSVmI778e8Mjg' #
 		return key
 	end
 
