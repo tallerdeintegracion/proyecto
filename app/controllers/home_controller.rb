@@ -361,7 +361,7 @@ class HomeController < ApplicationController
           end
         else
           #puts "stock Crema: " + sist.getStockSKUDisponible(6).to_s
-          stockTotal = checkStockTotal()
+          stockTotal = checkStockTotal2()
           @stockEjeYTrigo.push(stockTotal[0]) 
           @stockEjeYCrema.push(stockTotal[1]) 
           @stockEjeYCebada.push(stockTotal[2]) 
@@ -444,7 +444,103 @@ class HomeController < ApplicationController
   end
   
   #devuelve un arreglo con el stock total de los 6 sku en orden
-  def checkStockTotal
+  def self.checkStockTotal
+    require 'json'
+    sist = Sistema.new
+    almac = sist.getAlmacenes
+    intermedio = JSON.parse(almac).select {|h1| h1['despacho'] == false && h1['pulmon'] == false && h1['recepcion'] == false }
+    bodegaPrincipal = intermedio.max_by { |quote| quote["totalSpace"].to_f }["_id"]
+    bodegaChica = intermedio.min_by { |quote| quote["totalSpace"].to_f }["_id"]
+    bodegaRecepcion = JSON.parse(almac).find {|h1| h1['recepcion'] == true }['_id']
+    #bodegaPulmon = JSON.parse(almac).find {|h1| h1['pulmon'] == true }['_id']
+    bodegaDespacho = JSON.parse(almac).find {|h1| h1['despacho'] == true }['_id']
+    principal = JSON.parse(sist.getSKUWithStock(bodegaPrincipal))
+    chica = JSON.parse(sist.getSKUWithStock(bodegaChica))
+    recepcion = JSON.parse(sist.getSKUWithStock(bodegaRecepcion))
+    despacho = JSON.parse(sist.getSKUWithStock(bodegaDespacho))
+    #pulmon = JSON.parse(sist.getSKUWithStock(@bodegaPulmon))
+
+    stock = [] #en orden 8, 6, 14, 31, 49, 55
+    trigo = 0
+    crema = 0
+    cebada = 0
+    lana = 0
+    lecheD = 0
+    galletasI = 0
+    for counter in 0..(principal.length-1)
+      sku = principal[counter]['_id'].to_i
+      if(sku == 8)
+        trigo = trigo + principal[counter]['total'].to_i
+      elsif(sku == 6)
+        crema = crema + principal[counter]['total'].to_i
+      elsif(sku == 14)
+        cebada = cebada + principal[counter]['total'].to_i
+      elsif(sku == 31)
+        lana = lana + principal[counter]['total'].to_i
+      elsif(sku == 49)
+        lecheD = lecheD + principal[counter]['total'].to_i
+      elsif(sku == 55)
+        galletasI = galletasI + principal[counter]['total'].to_i
+      end
+    end
+    for counter in 0..(chica.length-1)
+      sku = chica[counter]['_id'].to_i
+      if(sku == 8)
+        trigo = trigo + chica[counter]['total'].to_i
+      elsif(sku == 6)
+        crema = crema + chica[counter]['total'].to_i
+      elsif(sku == 14)
+        cebada = cebada + chica[counter]['total'].to_i
+      elsif(sku == 31)
+        lana = lana + chica[counter]['total'].to_i
+      elsif(sku == 49)
+        lecheD = lecheD + chica[counter]['total'].to_i
+      elsif(sku == 55)
+        galletasI = galletasI + chica[counter]['total'].to_i
+      end
+    end
+    for counter in 0..(recepcion.length-1)
+      sku = recepcion[counter]['_id'].to_i
+      if(sku == 8)
+        trigo = trigo + recepcion[counter]['total'].to_i
+      elsif(sku == 6)
+        crema = crema + recepcion[counter]['total'].to_i
+      elsif(sku == 14)
+        cebada = cebada + recepcion[counter]['total'].to_i
+      elsif(sku == 31)
+        lana = lana + recepcion[counter]['total'].to_i
+      elsif(sku == 49)
+        lecheD = lecheD + recepcion[counter]['total'].to_i
+      elsif(sku == 55)
+        galletasI = galletasI + recepcion[counter]['total'].to_i
+      end
+    end
+    for counter in 0..(despacho.length-1)
+      sku = despacho[counter]['_id'].to_i
+      if(sku == 8)
+        trigo = trigo + despacho[counter]['total'].to_i
+      elsif(sku == 6)
+        crema = crema + despacho[counter]['total'].to_i
+      elsif(sku == 14)
+        cebada = cebada + despacho[counter]['total'].to_i
+      elsif(sku == 31)
+        lana = lana + despacho[counter]['total'].to_i
+      elsif(sku == 49)
+        lecheD = lecheD + despacho[counter]['total'].to_i
+      elsif(sku == 55)
+        galletasI = galletasI + despacho[counter]['total'].to_i
+      end
+    end
+    stock.push(trigo)
+    stock.push(crema)
+    stock.push(cebada)
+    stock.push(lana)
+    stock.push(lecheD)
+    stock.push(galletasI)
+    return stock      
+  end
+
+  def checkStockTotal2
     require 'json'
     sist = Sistema.new
     almac = sist.getAlmacenes
