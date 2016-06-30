@@ -570,7 +570,7 @@ end
   end     
 
   def verSiEnviar(idFactura)
-    
+    definirVariables()
     idOC = Oc.find_by(factura: idFactura)["oc"]
     despacharOC(idOC) 
 
@@ -643,19 +643,16 @@ end
       ## QUE CHUCHA ES DIRECCIÓN
       puts "Se despacha al ftp"
       direccion="estadireccion"
-      Thread.new do
-        cant = moverInventario(sku, cantidad, almacenOrigen)
-        Rails.logger.debug("debug:: movemos al despacho")
-        if cant != cantidad
-          return false
-        end
-        Rails.logger.debug("debug:: despachamos")
-        despacharFTP(sku,cantidad,direccion,precio,idOC)
-        ocDB = Oc.find_by(oc: idOC)
-        puts "FTP despachado"
-        ocDB.update(estados: "Despachada")
-
+      cant = moverInventario(sku, cantidad, almacenOrigen)
+      Rails.logger.debug("debug:: movemos al despacho")
+      if cant != cantidad
+        return false
       end
+      Rails.logger.debug("debug:: despachamos")
+      despacharFTP(sku,cantidad,direccion,precio,idOC)
+      ocDB = Oc.find_by(oc: idOC)
+      puts "FTP despachado"
+      ocDB.update(estados: "Despachada")
     end
   return true
 
