@@ -637,6 +637,8 @@ end
             Rails.logger.debug("debug:: problema")
           end
         end
+        ocDB = Oc.find_by(oc: idOC)
+        ocDB.update(estados: "Despachada")
         Rails.logger.debug("debug:: Se ha terminado el despacho")
       end      
     elsif canal == "ftp"
