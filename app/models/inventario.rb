@@ -637,6 +637,8 @@ end
             Rails.logger.debug("debug:: problema")
           end
         end
+        ocDB = Oc.find_by(oc: idOC)
+        ocDB.update(estados: "Despachada")
         Rails.logger.debug("debug:: Se ha terminado el despacho")
       end      
     elsif canal == "ftp"
@@ -677,7 +679,7 @@ end
     ids = JSON.parse(sist.getStock(almacenOrigen , sku , cantidad))
     counter = 0
 
-    cantidadPorMinuto = 30
+    cantidadPorMinuto = 15
     cont = 0
     while counter < cantidad
       begin
@@ -840,7 +842,7 @@ end
     Rails.logger.debug("debug:: "+ids.to_s)
     counter = 0
 
-    cantidadPorMinuto = 30
+    cantidadPorMinuto = 15
     cont = 0
     while counter < cantidad
       begin  
@@ -896,7 +898,7 @@ end
     Rails.logger.debug("debug::"+ids.to_s)
     counter = 0
 
-    cantidadPorMinuto = 30
+    cantidadPorMinuto = 15
     cont = 0
     while counter < cantidad
       begin
