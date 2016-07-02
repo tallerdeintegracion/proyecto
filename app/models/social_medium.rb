@@ -46,9 +46,9 @@ class SocialMedium < ActiveRecord::Base
 
 			  insertPromotionSpree(sku.to_i,precio,start,ending,codigo.to_s)
 			end
-			if(publicar == true )
+			if(publicar.to_s == "true" )
 				if (ourProduct(sku) == true)
-					publishToSocialMedia(sku , precio, start.to_s, ending.to_s , codigo )
+					publishToSocialMedia(sku.to_s , precio.to_s, start.to_s, ending.to_s , codigo )
 					puts "La promocion a sido publicada en redes sociales"
 				end
 			end
